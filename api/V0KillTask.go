@@ -3,10 +3,9 @@ package api
 import (
 	"net/http"
 
+	mesosutil "github.com/AVENTER-UG/mesos-util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
-
-	mesos "github.com/AVENTER-UG/mesos-compose/mesos"
 )
 
 // V0KillTask will kill the given task id
@@ -24,7 +23,7 @@ func V0KillTask(w http.ResponseWriter, r *http.Request) {
 
 	if vars["id"] != "" {
 		id := vars["id"]
-		ret := mesos.Kill(id)
+		ret := mesosutil.Kill(id)
 
 		logrus.Error("V0TaskKill: ", ret)
 

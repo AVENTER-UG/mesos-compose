@@ -3,12 +3,11 @@ package mesos
 import (
 	"github.com/sirupsen/logrus"
 
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
-
+	mesosutil "github.com/AVENTER-UG/mesos-util"
 	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
 )
 
-func defaultResources(cmd cfg.Command) []mesosproto.Resource {
+func defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
 	CPU := "cpus"
 	MEM := "mem"
 	cpu := cmd.CPU
@@ -63,30 +62,14 @@ func defaultResources(cmd cfg.Command) []mesosproto.Resource {
 	return res
 }
 
-// getOffer get out the offer for the mesos task
-func getOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (mesosproto.Offer, []mesosproto.OfferID) {
-	offerIds := []mesosproto.OfferID{}
-
-	count := 0
-	for n, offer := range offers.Offers {
-		logrus.Debug("Got Offer From:", offer.GetHostname())
-		offerIds = append(offerIds, offer.ID)
-
-		count = n
-	}
-
-	return offers.Offers[count], offerIds
-
-}
-
 // HandleOffers will handle the offers event of mesos
 func HandleOffers(offers *mesosproto.Event_Offers) error {
-	_, offerIds := getOffer(offers, cfg.Command{})
+	_, offerIds := mesosutil.GetOffer(offers, mesosutil.Command{})
 
 	select {
-	case cmd := <-config.CommandChan:
+	case cmd := <-framework.CommandChan:
 
-		takeOffer, offerIds := getOffer(offers, cmd)
+		takeOffer, offerIds := mesosutil.GetOffer(offers, cmd)
 		logrus.Debug("Take Offer From:", takeOffer.GetHostname())
 
 		var taskInfo []mesosproto.TaskInfo
@@ -114,26 +97,17 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 					}}}}}
 
 		logrus.Info("Offer Accept: ", takeOffer.GetID(), " On Node: ", takeOffer.GetHostname())
-		err := Call(accept)
+		err := mesosutil.Call(accept)
 		if err != nil {
 			logrus.Error("Handle Offers: ", err)
 		}
 
 		// decline unneeded offer
 		logrus.Info("Offer Decline: ", offerIds)
-		decline := &mesosproto.Call{
-			Type:    mesosproto.Call_DECLINE,
-			Decline: &mesosproto.Call_Decline{OfferIDs: offerIds},
-		}
-		return Call(decline)
+		return mesosutil.Call(mesosutil.DeclineOffer(offerIds))
 	default:
 		// decline unneeded offer
 		logrus.Info("Decline unneeded offer: ", offerIds)
-		decline := &mesosproto.Call{
-			Type:    mesosproto.Call_DECLINE,
-			Decline: &mesosproto.Call_Decline{OfferIDs: offerIds},
-		}
-		return Call(decline)
-
+		return mesosutil.Call(mesosutil.DeclineOffer(offerIds))
 	}
 }

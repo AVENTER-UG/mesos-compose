@@ -23,6 +23,7 @@ func SetConfig(cfg *cfg.Config) {
 func Commands() *mux.Router {
 	rtr := mux.NewRouter()
 	rtr.HandleFunc("/v0/task/kill/{id}", V0KillTask).Methods("GET")
+	rtr.HandleFunc("/v0/compose", V0ComposePush).Methods("PUT")
 
 	return rtr
 }

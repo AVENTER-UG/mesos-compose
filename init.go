@@ -4,6 +4,7 @@ import (
 	"os"
 	"strings"
 
+	mesosutil "github.com/AVENTER-UG/mesos-util"
 	util "github.com/AVENTER-UG/util"
 	"github.com/Showmax/go-fqdn"
 
@@ -11,19 +12,20 @@ import (
 )
 
 var config cfg.Config
+var framework mesosutil.FrameworkConfig
 
 func init() {
-	config.FrameworkUser = util.Getenv("FRAMEWORK_USER", "root")
-	config.FrameworkName = "mc" + util.Getenv("FRAMEWORK_NAME", "")
-	config.FrameworkRole = util.Getenv("FRAMEWORK_ROLE", "mc")
-	config.FrameworkPort = util.Getenv("FRAMEWORK_PORT", "10000")
-	config.FrameworkHostname = util.Getenv("FRAMEWORK_HOSTNAME", fqdn.Get())
-	config.FrameworkInfoFilePath = util.Getenv("FRAMEWORK_STATEFILE_PATH", "/tmp")
+	framework.FrameworkUser = util.Getenv("FRAMEWORK_USER", "root")
+	framework.FrameworkName = "mc" + util.Getenv("FRAMEWORK_NAME", "")
+	framework.FrameworkRole = util.Getenv("FRAMEWORK_ROLE", "mc")
+	framework.FrameworkPort = util.Getenv("FRAMEWORK_PORT", "10000")
+	framework.FrameworkHostname = util.Getenv("FRAMEWORK_HOSTNAME", fqdn.Get())
+	framework.FrameworkInfoFilePath = util.Getenv("FRAMEWORK_STATEFILE_PATH", "/tmp")
+	framework.Username = os.Getenv("MESOS_USERNAME")
+	framework.Password = os.Getenv("MESOS_PASSWORD")
+	framework.MesosMasterServer = os.Getenv("MESOS_MASTER")
+	framework.MesosCNI = util.Getenv("MESOS_CNI", "weave")
 	config.Principal = os.Getenv("MESOS_PRINCIPAL")
-	config.Username = os.Getenv("MESOS_USERNAME")
-	config.Password = os.Getenv("MESOS_PASSWORD")
-	config.MesosMasterServer = os.Getenv("MESOS_MASTER")
-	config.MesosCNI = util.Getenv("MESOS_CNI", "weave")
 	config.LogLevel = util.Getenv("LOGLEVEL", "info")
 	config.Domain = util.Getenv("DOMAIN", "local")
 	config.Credentials.Username = os.Getenv("AUTH_USERNAME")
@@ -34,9 +36,9 @@ func init() {
 
 	// The comunication to the mesos server should be via ssl or not
 	if strings.Compare(os.Getenv("MESOS_SSL"), "true") == 0 {
-		config.MesosSSL = true
+		framework.MesosSSL = true
 	} else {
-		config.MesosSSL = false
+		framework.MesosSSL = false
 	}
 
 }

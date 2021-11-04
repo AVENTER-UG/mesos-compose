@@ -3,11 +3,11 @@ package mesos
 import (
 	"strconv"
 
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosutil "github.com/AVENTER-UG/mesos-util"
 	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
 )
 
-func prepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd cfg.Command) ([]mesosproto.TaskInfo, error) {
+func prepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Command) ([]mesosproto.TaskInfo, error) {
 	contype := mesosproto.ContainerInfo_DOCKER.Enum()
 
 	// Set Container Network Mode
@@ -28,9 +28,9 @@ func prepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd cfg.Command) 
 
 	// Save state of the new task
 	newTaskID := "mcomp_" + cmd.TaskName + "_" + strconv.Itoa(int(cmd.TaskID))
-	tmp := config.State[newTaskID]
+	tmp := framework.State[newTaskID]
 	tmp.Command = cmd
-	config.State[newTaskID] = tmp
+	framework.State[newTaskID] = tmp
 
 	var msg mesosproto.TaskInfo
 

@@ -3,6 +3,7 @@ module github.com/AVENTER-UG/mesos-compose
 go 1.17
 
 require (
+	github.com/AVENTER-UG/mesos-util v0.0.8
 	github.com/AVENTER-UG/util v0.1.1
 	github.com/Showmax/go-fqdn v1.0.0
 	github.com/gogo/protobuf v1.3.2

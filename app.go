@@ -8,7 +8,7 @@ import (
 
 	"github.com/AVENTER-UG/mesos-compose/api"
 	"github.com/AVENTER-UG/mesos-compose/mesos"
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosutil "github.com/AVENTER-UG/mesos-util"
 
 	util "github.com/AVENTER-UG/util"
 	"github.com/sirupsen/logrus"
@@ -21,40 +21,41 @@ func main() {
 	util.SetLogging(config.LogLevel, config.EnableSyslog, config.AppName)
 	logrus.Println(config.AppName + " build " + MinVersion)
 
-	listen := fmt.Sprintf(":%s", config.FrameworkPort)
+	listen := fmt.Sprintf(":%s", framework.FrameworkPort)
 
 	failoverTimeout := 5000.0
 	checkpoint := true
-	webuiurl := fmt.Sprintf("http://%s%s", config.FrameworkHostname, listen)
+	webuiurl := fmt.Sprintf("http://%s%s", framework.FrameworkHostname, listen)
 
-	config.FrameworkInfoFile = fmt.Sprintf("%s/%s", config.FrameworkInfoFilePath, "framework.json")
-	config.CommandChan = make(chan cfg.Command, 100)
-	config.Hostname = config.FrameworkHostname
+	framework.FrameworkInfoFile = fmt.Sprintf("%s/%s", framework.FrameworkInfoFilePath, "framework.json")
+	framework.CommandChan = make(chan mesosutil.Command, 100)
+	config.Hostname = framework.FrameworkHostname
 	config.Listen = listen
 
-	config.State = map[string]cfg.State{}
+	framework.State = map[string]mesosutil.State{}
 
-	config.FrameworkInfo.User = config.FrameworkUser
-	config.FrameworkInfo.Name = config.FrameworkName
-	config.FrameworkInfo.WebUiURL = &webuiurl
-	config.FrameworkInfo.FailoverTimeout = &failoverTimeout
-	config.FrameworkInfo.Checkpoint = &checkpoint
-	config.FrameworkInfo.Principal = &config.Principal
-	config.FrameworkInfo.Role = &config.FrameworkRole
+	framework.FrameworkInfo.User = framework.FrameworkUser
+	framework.FrameworkInfo.Name = framework.FrameworkName
+	framework.FrameworkInfo.WebUiURL = &webuiurl
+	framework.FrameworkInfo.FailoverTimeout = &failoverTimeout
+	framework.FrameworkInfo.Checkpoint = &checkpoint
+	framework.FrameworkInfo.Principal = &config.Principal
+	framework.FrameworkInfo.Role = &framework.FrameworkRole
 	//	config.FrameworkInfo.Capabilities = []mesosproto.FrameworkInfo_Capability{
 	//		{Type: mesosproto.FrameworkInfo_Capability_RESERVATION_REFINEMENT},
 	//	}
 
 	// Load the old state if its exist
-	frameworkJSON, err := ioutil.ReadFile(config.FrameworkInfoFile)
+	frameworkJSON, err := ioutil.ReadFile(framework.FrameworkInfoFile)
 	if err == nil {
 		json.Unmarshal([]byte(frameworkJSON), &config)
-		mesos.Reconcile()
+		mesosutil.Reconcile()
 	}
 	// The Hostname should ever be set after reading the state file.
-	config.FrameworkInfo.Hostname = &config.FrameworkHostname
+	framework.FrameworkInfo.Hostname = &framework.FrameworkHostname
 
 	mesos.SetConfig(&config)
+	mesosutil.SetConfig(&framework)
 	api.SetConfig(&config)
 
 	http.Handle("/", api.Commands())
@@ -62,5 +63,9 @@ func main() {
 	go func() {
 		http.ListenAndServe(listen, nil)
 	}()
-	logrus.Fatal(mesos.Subscribe())
+	logrus.Fatal(mesosutil.Subscribe(
+		mesos.HandleOffers,
+		mesos.RestartFailedContainer,
+		mesos.Heartbeat,
+	))
 }
