@@ -1,0 +1,11 @@
+run.sh
+init
+test
+k3sframe
+stop.sh
+docs/book
+bootstrap/.owncloudsync.log
+bootstrap/*.db
+bootstrap/*.db-shm
+bootstrap/*.db-wal
+mesos_cli/m3s/__pycache__
