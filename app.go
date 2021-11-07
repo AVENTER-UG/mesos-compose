@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -9,13 +10,25 @@ import (
 	"github.com/AVENTER-UG/mesos-compose/api"
 	"github.com/AVENTER-UG/mesos-compose/mesos"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
-
 	util "github.com/AVENTER-UG/util"
+	goredis "github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 )
 
 // MinVersion is the version number of this program
 var MinVersion string
+
+// init the redis cache
+func initCache() {
+	client := goredis.NewClient(&goredis.Options{
+		Addr: config.RedisServer,
+		DB:   1,
+	})
+	config.RedisCTX = context.Background()
+	pong, err := client.Ping(config.RedisCTX).Result()
+	logrus.Debug("Redis Health: ", pong, err)
+	config.RedisClient = client
+}
 
 func main() {
 	util.SetLogging(config.LogLevel, config.EnableSyslog, config.AppName)
@@ -51,9 +64,11 @@ func main() {
 		json.Unmarshal([]byte(frameworkJSON), &config)
 		mesosutil.Reconcile()
 	}
+
 	// The Hostname should ever be set after reading the state file.
 	framework.FrameworkInfo.Hostname = &framework.FrameworkHostname
 
+	initCache()
 	mesos.SetConfig(&config, &framework)
 	mesosutil.SetConfig(&framework)
 	api.SetConfig(&config, &framework)

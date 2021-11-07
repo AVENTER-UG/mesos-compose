@@ -5,6 +5,8 @@ import (
 	//"encoding/json"
 
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
+
 	//"io/ioutil"
 	"net/http"
 
@@ -52,4 +54,14 @@ func CheckAuth(r *http.Request, w http.ResponseWriter) bool {
 
 	w.WriteHeader(http.StatusUnauthorized)
 	return false
+}
+
+func getRedisKey(key string) string {
+	val, err := config.RedisClient.Get(config.RedisCTX, key).Result()
+	if err != nil {
+		logrus.Error("getRedisKey: ", err)
+	}
+	logrus.Debug("getRedisKey:", val)
+
+	return val
 }

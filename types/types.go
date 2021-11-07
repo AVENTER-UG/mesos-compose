@@ -1,8 +1,11 @@
 package types
 
 import (
+	"context"
+
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
+	goredis "github.com/go-redis/redis/v8"
 )
 
 // Config is a struct of the framework configuration
@@ -21,6 +24,9 @@ type Config struct {
 	CPU             float64
 	Memory          float64
 	FrameworkConfig mesosutil.FrameworkConfig
+	RedisServer     string
+	RedisClient     *goredis.Client
+	RedisCTX        context.Context
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework
@@ -93,7 +99,6 @@ type Command struct {
 	Arguments          []string                                          `protobuf:"bytes,7,rep,name=arguments" json:"arguments,omitempty"`
 	Discovery          mesosproto.DiscoveryInfo                          `protobuf:"bytes,12,opt,name=discovery" json:"discovery,omitempty"`
 	Executor           mesosproto.ExecutorInfo
-	InternalID         int
 	TaskID             uint64
 	Memory             float64
 	CPU                float64
