@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"strconv"
 	"strings"
 
 	mesosutil "github.com/AVENTER-UG/mesos-util"
@@ -25,6 +26,8 @@ func init() {
 	framework.Password = os.Getenv("MESOS_PASSWORD")
 	framework.MesosMasterServer = os.Getenv("MESOS_MASTER")
 	framework.MesosCNI = util.Getenv("MESOS_CNI", "weave")
+	config.CPU, _ = strconv.ParseFloat(util.Getenv("DEFAULT_CPU", "0.001"), 64)
+	config.Memory, _ = strconv.ParseFloat(util.Getenv("DEFAULT_CONTAINER", "50"), 64)
 	config.Principal = os.Getenv("MESOS_PRINCIPAL")
 	config.LogLevel = util.Getenv("LOGLEVEL", "info")
 	config.Domain = util.Getenv("DOMAIN", "local")

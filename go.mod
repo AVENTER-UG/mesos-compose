@@ -3,12 +3,13 @@ module github.com/AVENTER-UG/mesos-compose
 go 1.17
 
 require (
-	github.com/AVENTER-UG/mesos-util v0.0.8
-	github.com/AVENTER-UG/util v0.1.1
+	github.com/AVENTER-UG/mesos-util v0.0.10
+	github.com/AVENTER-UG/util v0.2.0
 	github.com/Showmax/go-fqdn v1.0.0
 	github.com/gogo/protobuf v1.3.2
 	github.com/gorilla/mux v1.8.0
 	github.com/sirupsen/logrus v1.8.1
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
 
 require (

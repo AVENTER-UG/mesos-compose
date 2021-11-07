@@ -65,7 +65,7 @@ func defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
 // HandleOffers will handle the offers event of mesos
 func HandleOffers(offers *mesosproto.Event_Offers) error {
 	_, offerIds := mesosutil.GetOffer(offers, mesosutil.Command{})
-
+	logrus.Debug("Handle Offers")
 	select {
 	case cmd := <-framework.CommandChan:
 
@@ -77,7 +77,7 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 
 		logrus.Debug("Schedule Command: ", cmd.Command)
 
-		taskInfo, _ = prepareTaskInfoExecuteContainer(takeOffer.AgentID, cmd)
+		taskInfo, _ = mesosutil.PrepareTaskInfoExecuteContainer(takeOffer.AgentID, cmd, defaultResources)
 
 		logrus.Debug("HandleOffers cmd: ", taskInfo)
 

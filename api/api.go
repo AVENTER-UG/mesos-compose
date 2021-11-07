@@ -9,21 +9,24 @@ import (
 	"net/http"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosutil "github.com/AVENTER-UG/mesos-util"
 )
 
 // Service include all the current vars and global config
 var config *cfg.Config
+var framework *mesosutil.FrameworkConfig
 
 // SetConfig set the global config
-func SetConfig(cfg *cfg.Config) {
+func SetConfig(cfg *cfg.Config, frm *mesosutil.FrameworkConfig) {
 	config = cfg
+	framework = frm
 }
 
 // Commands is the main function of this package
 func Commands() *mux.Router {
 	rtr := mux.NewRouter()
 	rtr.HandleFunc("/v0/task/kill/{id}", V0KillTask).Methods("GET")
-	rtr.HandleFunc("/v0/compose", V0ComposePush).Methods("PUT")
+	rtr.HandleFunc("/v0/compose/{project}", V0ComposePush).Methods("PUT")
 
 	return rtr
 }

@@ -54,18 +54,14 @@ func main() {
 	// The Hostname should ever be set after reading the state file.
 	framework.FrameworkInfo.Hostname = &framework.FrameworkHostname
 
-	mesos.SetConfig(&config)
+	mesos.SetConfig(&config, &framework)
 	mesosutil.SetConfig(&framework)
-	api.SetConfig(&config)
+	api.SetConfig(&config, &framework)
 
 	http.Handle("/", api.Commands())
 
 	go func() {
 		http.ListenAndServe(listen, nil)
 	}()
-	logrus.Fatal(mesosutil.Subscribe(
-		mesos.HandleOffers,
-		mesos.RestartFailedContainer,
-		mesos.Heartbeat,
-	))
+	logrus.Fatal(mesos.Subscribe())
 }
