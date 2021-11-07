@@ -49,7 +49,7 @@ type Service struct {
 	Labels      Labels   `yaml:"labels"`
 	NetworkMode string   `yaml:"network_mode"`
 	Privileged  bool     `yaml:"priviliged"`
-	Command     string   `yaml:"command"`
+	Command     []string `yaml:"command"`
 	Deploy      Deploy   `yaml:"deploy"`
 	Hostname    string   `yaml:"hostname"`
 }

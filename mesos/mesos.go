@@ -59,7 +59,6 @@ func Heartbeat() {
 
 // Subscribe to the mesos backend
 func Subscribe() error {
-
 	subscribeCall := &mesosproto.Call{
 		FrameworkID: framework.FrameworkInfo.ID,
 		Type:        mesosproto.Call_SUBSCRIBE,
