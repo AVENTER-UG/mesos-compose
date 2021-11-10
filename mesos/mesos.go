@@ -53,10 +53,6 @@ func RestartFailedContainer() {
 	}
 }
 
-// Heartbeat
-func Heartbeat() {
-}
-
 // Subscribe to the mesos backend
 func Subscribe() error {
 	subscribeCall := &mesosproto.Call{

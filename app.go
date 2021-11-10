@@ -2,9 +2,7 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/AVENTER-UG/mesos-compose/api"
@@ -57,13 +55,6 @@ func main() {
 	//	config.FrameworkInfo.Capabilities = []mesosproto.FrameworkInfo_Capability{
 	//		{Type: mesosproto.FrameworkInfo_Capability_RESERVATION_REFINEMENT},
 	//	}
-
-	// Load the old state if its exist
-	frameworkJSON, err := ioutil.ReadFile(framework.FrameworkInfoFile)
-	if err == nil {
-		json.Unmarshal([]byte(frameworkJSON), &config)
-		mesosutil.Reconcile()
-	}
 
 	// The Hostname should ever be set after reading the state file.
 	framework.FrameworkInfo.Hostname = &framework.FrameworkHostname

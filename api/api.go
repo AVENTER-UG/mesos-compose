@@ -5,7 +5,6 @@ import (
 	//"encoding/json"
 
 	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
 
 	//"io/ioutil"
 	"net/http"
@@ -28,7 +27,9 @@ func SetConfig(cfg *cfg.Config, frm *mesosutil.FrameworkConfig) {
 func Commands() *mux.Router {
 	rtr := mux.NewRouter()
 	rtr.HandleFunc("/v0/task/kill/{id}", V0KillTask).Methods("GET")
+	rtr.HandleFunc("/v0/task/show", V0ShowAllTasks).Methods("GET")
 	rtr.HandleFunc("/v0/compose/{project}", V0ComposePush).Methods("PUT")
+	rtr.HandleFunc("/v0/compose/{project}/update", V0ComposeUpdate).Methods("PUT")
 
 	return rtr
 }
@@ -54,14 +55,4 @@ func CheckAuth(r *http.Request, w http.ResponseWriter) bool {
 
 	w.WriteHeader(http.StatusUnauthorized)
 	return false
-}
-
-func getRedisKey(key string) string {
-	val, err := config.RedisClient.Get(config.RedisCTX, key).Result()
-	if err != nil {
-		logrus.Error("getRedisKey: ", err)
-	}
-	logrus.Debug("getRedisKey:", val)
-
-	return val
 }

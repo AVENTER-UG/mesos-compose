@@ -99,9 +99,10 @@ type Command struct {
 	Arguments          []string                                          `protobuf:"bytes,7,rep,name=arguments" json:"arguments,omitempty"`
 	Discovery          mesosproto.DiscoveryInfo                          `protobuf:"bytes,12,opt,name=discovery" json:"discovery,omitempty"`
 	Executor           mesosproto.ExecutorInfo
-	TaskID             uint64
+	TaskID             string
 	Memory             float64
 	CPU                float64
 	Agent              string
 	Labels             []mesosproto.Label
+	State              string
 }
