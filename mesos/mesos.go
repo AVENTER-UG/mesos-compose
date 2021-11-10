@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"crypto/tls"
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
@@ -111,14 +109,14 @@ func Subscribe() error {
 			logrus.Info("FrameworkId: ", event.Subscribed.GetFrameworkID())
 			framework.FrameworkInfo.ID = event.Subscribed.GetFrameworkID()
 			framework.MesosStreamID = res.Header.Get("Mesos-Stream-Id")
-			// Save framework info
-			persConf, _ := json.Marshal(&config)
-			err = ioutil.WriteFile(framework.FrameworkInfoFile, persConf, 0644)
-			if err != nil {
-				logrus.Error("Write FrameWork State File: ", err)
-			}
+			/*
+				err = ioutil.WriteFile(framework.FrameworkInfoFile, persConf, 0644)
+				if err != nil {
+					logrus.Error("Write FrameWork State File: ", err)
+				}
+			*/
 		case mesosproto.Event_UPDATE:
-			logrus.Debug("Update", mesosutil.HandleUpdate(&event))
+			logrus.Debug("Update", HandleUpdate(&event))
 		case mesosproto.Event_HEARTBEAT:
 			Heartbeat()
 		case mesosproto.Event_OFFERS:

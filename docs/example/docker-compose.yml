@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  app:
+    image: alpine:latest
+    command: ["sleep","10"]
+    restart: always
+    volumes:
+      - /tmp:/tmp
+    environment:
+      - MYSQL_HOST=test
+    labels:
+      biz.aventer.mesos_compose.container_type: "DOCKER"
+    network_mode: "BRIDGE"
+    network:
+      - default
+    deploy:
+      resources:
+        limits:
+          cpus: "0.001"
+          memory: "50"
+
+networks:
+  default:
+    external: true
+    name: weave
+
