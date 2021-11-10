@@ -10,6 +10,7 @@ Mesos Framework to use docker-compose files.
 - Apache Mesos min 1.6.0
 - Mesos with SSL and Authentication is optional
 - Redis Database
+- Docker Compose Spec 3.9
 
 ## Example
 
@@ -44,7 +45,7 @@ networks:
 
 ```
 
-Push these compose file to the framework. Ever single docker-compose need to have a project name.
+Push these compose file to the framework. Every docker-compose need to have a own project name.
 
 ```bash
 curl -X PUT http://localhost:10000/v0/compose/<PROJECTNAME> --data-binary @docs/example/docker-compose.yml
@@ -53,3 +54,10 @@ curl -X PUT http://localhost:10000/v0/compose/<PROJECTNAME> --data-binary @docs/
 ![image_2021-11-08-11-33-09](vx_images/image_2021-11-08-11-33-09.png)
 
 ![image_2021-11-08-11-33-47](vx_images/image_2021-11-08-11-33-47.png)
+
+To scale the service, just execute the same call again. To update a already existing docker-compose project, call:
+
+```bash
+curl -X PUT http://localhost:10000/v0/compose/<PROJECTNAME>/update --data-binary @docs/example/docker-compose.yml
+```
+
