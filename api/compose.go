@@ -2,8 +2,11 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
+	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
@@ -25,7 +28,7 @@ func mapComposeServiceToMesosTask(service cfg.Service, network map[string]cfg.Ne
 	cmd.TaskName = config.PrefixTaskName + "_" + vars["project"] + "_" + name
 	cmd.CPU = getCPU(service)
 	cmd.Memory = getMemory(service)
-	cmd.ContainerType = service.Labels.ContainerType
+	cmd.ContainerType = getLabelValueByKey("biz.aventer.mesos_compose.container_type", service)
 	cmd.ContainerImage = service.Image
 	cmd.NetworkMode = service.NetworkMode
 	cmd.NetworkInfo = []mesosproto.NetworkInfo{{
@@ -36,6 +39,7 @@ func mapComposeServiceToMesosTask(service cfg.Service, network map[string]cfg.Ne
 	cmd.Privileged = service.Privileged
 	cmd.Hostname = getHostname(service)
 	cmd.Command = getCommand(service)
+	cmd.Labels = getLabels(service)
 
 	if cmd.Command != "" {
 		cmd.Shell = true
@@ -43,12 +47,10 @@ func mapComposeServiceToMesosTask(service cfg.Service, network map[string]cfg.Ne
 		cmd.Shell = false
 	}
 
-	var hostport uint32
-	hostport = 31859
 	protocol := "tcp"
 	cmd.DockerPortMappings = []mesosproto.ContainerInfo_DockerInfo_PortMapping{
 		{
-			HostPort:      hostport,
+			HostPort:      uint32(getRandomHostPort(service)),
 			ContainerPort: 10422,
 			Protocol:      &protocol,
 		},
@@ -103,5 +105,37 @@ func getCommand(service cfg.Service) string {
 		return comm
 	}
 
+	return ""
+}
+
+// Get random hostportnumber
+func getRandomHostPort(service cfg.Service) int {
+	rand.Seed(time.Now().UnixNano())
+	v := rand.Intn(framework.PortRangeTo-framework.PortRangeFrom) + framework.PortRangeFrom
+
+	return v
+}
+
+// Get the labels of the compose file
+func getLabels(service cfg.Service) []mesosproto.Label {
+	var label []mesosproto.Label
+
+	for k, v := range service.Labels {
+		var tmp mesosproto.Label
+		tmp.Key = k
+		tmp.Value = func() *string { x := fmt.Sprint(v); return &x }()
+		label = append(label, tmp)
+	}
+
+	return label
+}
+
+// Return the value of the given key
+func getLabelValueByKey(label string, service cfg.Service) string {
+	for k, v := range service.Labels {
+		if label == k {
+			return fmt.Sprint(v)
+		}
+	}
 	return ""
 }

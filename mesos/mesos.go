@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"crypto/tls"
+	"encoding/json"
 	"net/http"
 	"strconv"
 	"strings"
@@ -31,24 +32,6 @@ var marshaller = jsonpb.Marshaler{
 func SetConfig(cfg *cfg.Config, frm *mesosutil.FrameworkConfig) {
 	config = cfg
 	framework = frm
-}
-
-// Restart failed container
-func RestartFailedContainer() {
-	if framework.State != nil {
-		for _, element := range framework.State {
-			if element.Status != nil {
-				switch *element.Status.State {
-				case mesosproto.TASK_FAILED, mesosproto.TASK_ERROR:
-					mesosutil.DeleteOldTask(element.Status.TaskID)
-				case mesosproto.TASK_KILLED:
-					mesosutil.DeleteOldTask(element.Status.TaskID)
-				case mesosproto.TASK_LOST:
-					mesosutil.DeleteOldTask(element.Status.TaskID)
-				}
-			}
-		}
-	}
 }
 
 // Subscribe to the mesos backend
@@ -109,19 +92,19 @@ func Subscribe() error {
 			logrus.Info("FrameworkId: ", event.Subscribed.GetFrameworkID())
 			framework.FrameworkInfo.ID = event.Subscribed.GetFrameworkID()
 			framework.MesosStreamID = res.Header.Get("Mesos-Stream-Id")
-			/*
-				err = ioutil.WriteFile(framework.FrameworkInfoFile, persConf, 0644)
-				if err != nil {
-					logrus.Error("Write FrameWork State File: ", err)
-				}
-			*/
+
+			// store framework configuration
+			d, _ := json.Marshal(&framework)
+			err := config.RedisClient.Set(config.RedisCTX, "framework", d, 0).Err()
+			if err != nil {
+				logrus.Error("Framework save config and state into redis Error: ", err)
+			}
 		case mesosproto.Event_UPDATE:
 			logrus.Debug("Update", HandleUpdate(&event))
 		case mesosproto.Event_HEARTBEAT:
 			Heartbeat()
 		case mesosproto.Event_OFFERS:
 			// Search Failed containers and restart them
-			RestartFailedContainer()
 			logrus.Debug("Offer Got")
 			err = HandleOffers(event.Offers)
 			if err != nil {

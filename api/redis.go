@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosutil "github.com/AVENTER-UG/mesos-util"
 	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
 	goredis "github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
@@ -31,7 +31,7 @@ func GetRedisKey(key string) string {
 	return val
 }
 
-func GetTaskFromEvent(update *mesosproto.Event_Update) cfg.Command {
+func GetTaskFromEvent(update *mesosproto.Event_Update) mesosutil.Command {
 	// search matched taskid in redis and update the status
 	keys := GetAllRedisKeys("*")
 	for keys.Next(config.RedisCTX) {
@@ -39,7 +39,7 @@ func GetTaskFromEvent(update *mesosproto.Event_Update) cfg.Command {
 		key := GetRedisKey(keys.Val())
 
 		// update the status of the matches task
-		var task cfg.Command
+		var task mesosutil.Command
 		json.Unmarshal([]byte(key), &task)
 		if task.TaskID == update.Status.TaskID.Value {
 			task.State = update.Status.State.String()
@@ -48,5 +48,5 @@ func GetTaskFromEvent(update *mesosproto.Event_Update) cfg.Command {
 		}
 	}
 
-	return cfg.Command{}
+	return mesosutil.Command{}
 }

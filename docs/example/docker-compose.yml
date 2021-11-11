@@ -2,7 +2,7 @@ version: '3.9'
 services:
   app:
     image: alpine:latest
-    command: ["sleep","10"]
+    command: ["sleep","100"]
     restart: always
     volumes:
       - /tmp:/tmp
@@ -10,6 +10,10 @@ services:
       - MYSQL_HOST=test
     labels:
       biz.aventer.mesos_compose.container_type: "DOCKER"
+      traefik.enable: "true"
+      traefik.http.routers.test.entrypoints: "web"
+      traefik.http.routers.test.service: "test-http"
+      traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
     network_mode: "BRIDGE"
     network:
       - default

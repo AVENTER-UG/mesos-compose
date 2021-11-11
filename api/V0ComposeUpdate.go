@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosutil "github.com/AVENTER-UG/mesos-util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
@@ -38,7 +39,7 @@ func V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 			logrus.Info("keys: ", keys.Val())
 			// get the values of the current key
 			key := GetRedisKey(keys.Val())
-			var task cfg.Command
+			var task mesosutil.Command
 			json.Unmarshal([]byte(key), &task)
 			mapComposeServiceToMesosTask(data.Services[service], data.Networks, vars, service, task.TaskID)
 		}
