@@ -40,20 +40,12 @@ func mapComposeServiceToMesosTask(service cfg.Service, network map[string]cfg.Ne
 	cmd.Hostname = getHostname(service)
 	cmd.Command = getCommand(service)
 	cmd.Labels = getLabels(service)
+	cmd.DockerPortMappings = getDockerPorts(service)
 
 	if cmd.Command != "" {
 		cmd.Shell = true
 	} else {
 		cmd.Shell = false
-	}
-
-	protocol := "tcp"
-	cmd.DockerPortMappings = []mesosproto.ContainerInfo_DockerInfo_PortMapping{
-		{
-			HostPort:      uint32(getRandomHostPort(service)),
-			ContainerPort: 10422,
-			Protocol:      &protocol,
-		},
 	}
 
 	// store mesos task in db
@@ -104,7 +96,6 @@ func getCommand(service cfg.Service) string {
 		comm := strings.Join(service.Command, " ")
 		return comm
 	}
-
 	return ""
 }
 
@@ -112,7 +103,6 @@ func getCommand(service cfg.Service) string {
 func getRandomHostPort(service cfg.Service) int {
 	rand.Seed(time.Now().UnixNano())
 	v := rand.Intn(framework.PortRangeTo-framework.PortRangeFrom) + framework.PortRangeFrom
-
 	return v
 }
 
@@ -126,7 +116,6 @@ func getLabels(service cfg.Service) []mesosproto.Label {
 		tmp.Value = func() *string { x := fmt.Sprint(v); return &x }()
 		label = append(label, tmp)
 	}
-
 	return label
 }
 
@@ -138,4 +127,28 @@ func getLabelValueByKey(label string, service cfg.Service) string {
 		}
 	}
 	return ""
+}
+
+// Get the ports of the compose file
+func getDockerPorts(service cfg.Service) []mesosproto.ContainerInfo_DockerInfo_PortMapping {
+	var ports []mesosproto.ContainerInfo_DockerInfo_PortMapping
+	for _, c := range service.Ports {
+		p := strings.Split(c, ":")
+		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
+		ps, _ := strconv.Atoi(p[1])
+		tmp.ContainerPort = uint32(ps)
+		tmp.HostPort = uint32(getRandomHostPort(service))
+		tmp.Protocol = func() *string { x := "tcp"; return &x }()
+
+		// check if this is a udp protocol
+		proto := strings.Split(p[1], "/")
+		if len(proto) > 1 {
+			if proto[1] == "udp" {
+				tmp.Protocol = func() *string { x := "udp"; return &x }()
+			}
+		}
+
+		ports = append(ports, tmp)
+	}
+	return ports
 }

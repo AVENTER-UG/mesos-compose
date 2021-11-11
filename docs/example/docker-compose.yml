@@ -15,6 +15,8 @@ services:
       traefik.http.routers.test.service: "test-http"
       traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
     network_mode: "BRIDGE"
+    ports:
+      - "8080:8080"
     network:
       - default
     deploy:
