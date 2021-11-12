@@ -30,6 +30,6 @@ func V0ComposePush(w http.ResponseWriter, r *http.Request) {
 	logrus.Println(data)
 
 	for service := range data.Services {
-		mapComposeServiceToMesosTask(data.Services[service], data.Networks, vars, service, "")
+		mapComposeServiceToMesosTask(data.Services[service], data, vars, service, "")
 	}
 }

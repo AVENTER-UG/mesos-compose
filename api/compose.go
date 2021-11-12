@@ -16,7 +16,7 @@ import (
 )
 
 // Map the compose parameters into a mesos task
-func mapComposeServiceToMesosTask(service cfg.Service, network map[string]cfg.Networks, vars map[string]string, name string, taskID string) {
+func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars map[string]string, name string, taskID string) {
 	var cmd mesosutil.Command
 
 	// if taskID is 0, then its a new task and we have to create a new ID
@@ -31,9 +31,11 @@ func mapComposeServiceToMesosTask(service cfg.Service, network map[string]cfg.Ne
 	cmd.ContainerType = getLabelValueByKey("biz.aventer.mesos_compose.container_type", service)
 	cmd.ContainerImage = service.Image
 	cmd.NetworkMode = service.NetworkMode
-	cmd.NetworkInfo = []mesosproto.NetworkInfo{{
-		Name: func() *string { x := network[service.Network[0]].Name; return &x }(),
-	}}
+	if len(data.Networks) > 0 {
+		cmd.NetworkInfo = []mesosproto.NetworkInfo{{
+			Name: func() *string { x := data.Networks[service.Network[0]].Name; return &x }(),
+		}}
+	}
 
 	cmd.TaskID = newTaskID
 	cmd.Privileged = service.Privileged
@@ -42,6 +44,7 @@ func mapComposeServiceToMesosTask(service cfg.Service, network map[string]cfg.Ne
 	cmd.Labels = getLabels(service)
 	cmd.DockerPortMappings = getDockerPorts(service)
 	cmd.Environment.Variables = getEnvironment(service)
+	cmd.Volumes = getVolumes(service, data)
 
 	cmd.Discovery = mesosproto.DiscoveryInfo{
 		Visibility: 2,
@@ -152,7 +155,7 @@ func getDockerPorts(service cfg.Service) []mesosproto.ContainerInfo_DockerInfo_P
 		// check if this is a udp protocol
 		proto := strings.Split(p[1], "/")
 		if len(proto) > 1 {
-			if proto[1] == "udp" {
+			if strings.ToLower(proto[1]) == "udp" {
 				tmp.Protocol = func() *string { x := "udp"; return &x }()
 			}
 		}
@@ -211,4 +214,39 @@ func getEnvironment(service cfg.Service) []mesosproto.Environment_Variable {
 		env = append(env, tmp)
 	}
 	return env
+}
+
+// Get the environment of the compose file
+func getVolumes(service cfg.Service, data cfg.Compose) []mesosproto.Volume {
+	var volume []mesosproto.Volume
+	for _, c := range service.Volumes {
+		var tmp mesosproto.Volume
+		p := strings.Split(c, ":")
+		if len(p) != 2 {
+			continue
+		}
+		tmp.ContainerPath = p[1]
+		tmp.Mode = mesosproto.RW.Enum()
+		if len(p) == 3 {
+			if strings.ToLower(p[2]) == "ro" {
+				tmp.Mode = mesosproto.RO.Enum()
+			}
+		}
+		if strings.ToLower(getLabelValueByKey("biz.aventer.mesos_compose.container_type", service)) == "docker" {
+			driver := "local"
+			if data.Volumes[p[0]].Driver != "" {
+				driver = data.Volumes[p[0]].Driver
+			}
+
+			tmp.Source = &mesosproto.Volume_Source{
+				Type: mesosproto.Volume_Source_DOCKER_VOLUME,
+				DockerVolume: &mesosproto.Volume_Source_DockerVolume{
+					Name:   p[0],
+					Driver: func() *string { x := driver; return &x }(),
+				},
+			}
+		}
+		volume = append(volume, tmp)
+	}
+	return volume
 }

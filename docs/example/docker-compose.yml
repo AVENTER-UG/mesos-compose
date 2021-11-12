@@ -5,7 +5,7 @@ services:
     command: ["sleep", "10"]
     restart: always
     volumes:
-      - /tmp:/tmp
+      - "12345test:/tmp"
     environment:
       - MYSQL_HOST=test
     labels:
@@ -30,3 +30,6 @@ networks:
     external: true
     name: weave
 
+volumes:
+  12345test:
+    driver: rexray

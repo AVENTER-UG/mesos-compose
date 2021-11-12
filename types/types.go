@@ -39,6 +39,7 @@ type Compose struct {
 	Version  string              `yaml:"version"`
 	Services map[string]Service  `yaml:"services"`
 	Networks map[string]Networks `yaml:"networks"`
+	Volumes  map[string]Volumes  `yaml:"volumes"`
 }
 
 // Web
@@ -72,4 +73,8 @@ type Networks struct {
 	External bool   `yaml:"external"`
 	Name     string `yaml:"name"`
 	Driver   string `yaml:"driver"`
+}
+
+type Volumes struct {
+	Driver string `yaml:"driver"`
 }

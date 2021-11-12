@@ -41,7 +41,7 @@ func V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 			key := GetRedisKey(keys.Val())
 			var task mesosutil.Command
 			json.Unmarshal([]byte(key), &task)
-			mapComposeServiceToMesosTask(data.Services[service], data.Networks, vars, service, task.TaskID)
+			mapComposeServiceToMesosTask(data.Services[service], data, vars, service, task.TaskID)
 		}
 	}
 }
