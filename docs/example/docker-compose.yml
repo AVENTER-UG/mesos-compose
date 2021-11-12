@@ -1,7 +1,8 @@
 version: '3.9'
 services:
   app:
-    image: nginx:latest
+    image: alpine:latest
+    command: ["sleep", "10"]
     restart: always
     volumes:
       - /tmp:/tmp

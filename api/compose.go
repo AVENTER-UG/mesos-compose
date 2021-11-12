@@ -41,6 +41,7 @@ func mapComposeServiceToMesosTask(service cfg.Service, network map[string]cfg.Ne
 	cmd.Command = getCommand(service)
 	cmd.Labels = getLabels(service)
 	cmd.DockerPortMappings = getDockerPorts(service)
+	cmd.Environment.Variables = getEnvironment(service)
 
 	cmd.Discovery = mesosproto.DiscoveryInfo{
 		Visibility: 2,
@@ -167,6 +168,9 @@ func getDiscoveryInfoPorts(service cfg.Service, cmd mesosutil.Command) []mesospr
 	for _, c := range service.Ports {
 		var tmp mesosproto.Port
 		p := strings.Split(c, ":")
+		if len(p) != 2 {
+			continue
+		}
 		// thats the containerport
 		ps, _ := strconv.Atoi(p[1])
 		// create the name of the port
@@ -191,4 +195,20 @@ func getHostPortByContainerPort(port int, cmd mesosutil.Command) (uint32, *strin
 		}
 	}
 	return 0, nil
+}
+
+// Get the environment of the compose file
+func getEnvironment(service cfg.Service) []mesosproto.Environment_Variable {
+	var env []mesosproto.Environment_Variable
+	for _, c := range service.Environment {
+		var tmp mesosproto.Environment_Variable
+		p := strings.Split(c, "=")
+		if len(p) != 2 {
+			continue
+		}
+		tmp.Name = p[0]
+		tmp.Value = func() *string { x := p[1]; return &x }()
+		env = append(env, tmp)
+	}
+	return env
 }
