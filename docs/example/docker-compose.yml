@@ -1,8 +1,7 @@
 version: '3.9'
 services:
   app:
-    image: alpine:latest
-    command: ["sleep","100"]
+    image: nginx:latest
     restart: always
     volumes:
       - /tmp:/tmp
@@ -12,17 +11,17 @@ services:
       biz.aventer.mesos_compose.container_type: "DOCKER"
       traefik.enable: "true"
       traefik.http.routers.test.entrypoints: "web"
-      traefik.http.routers.test.service: "test-http"
+      traefik.http.routers.test.service: "mc_test_app_80"
       traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
     network_mode: "BRIDGE"
     ports:
-      - "8080:8080"
+      - "8080:80"
     network:
       - default
     deploy:
       resources:
         limits:
-          cpus: "0.001"
+          cpus: "0.01"
           memory: "50"
 
 networks:

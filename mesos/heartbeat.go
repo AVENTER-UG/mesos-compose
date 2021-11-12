@@ -11,16 +11,27 @@ import (
 func Heartbeat() {
 	keys := api.GetAllRedisKeys("*")
 	for keys.Next(config.RedisCTX) {
-		logrus.Info("keys: ", keys.Val())
 		// get the values of the current key
 		key := api.GetRedisKey(keys.Val())
 
 		var task mesosutil.Command
 		json.Unmarshal([]byte(key), &task)
 
+		if task.TaskID == "" {
+			continue
+		}
+
 		if task.State == "" {
 			framework.CommandChan <- task
-			logrus.Info("Scheduled Mesos Task")
+
+			task.State = "__NEW"
+			data, _ := json.Marshal(task)
+			err := config.RedisClient.Set(config.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
+			if err != nil {
+				logrus.Error("HandleUpdate Redis set Error: ", err)
+			}
+
+			logrus.Info("Scheduled Mesos Task: ", task.TaskName)
 
 		}
 

@@ -15,8 +15,6 @@ func GetAllRedisKeys(pattern string) *goredis.ScanIterator {
 		logrus.Error("getAllRedisKeys: ", err)
 	}
 
-	logrus.Debug("getAllRedisKeys: ")
-
 	return val
 }
 
@@ -25,8 +23,6 @@ func GetRedisKey(key string) string {
 	if err != nil {
 		logrus.Error("getRedisKey: ", err)
 	}
-
-	logrus.Debug("getRedisKey:", val)
 
 	return val
 }
@@ -42,8 +38,6 @@ func GetTaskFromEvent(update *mesosproto.Event_Update) mesosutil.Command {
 		var task mesosutil.Command
 		json.Unmarshal([]byte(key), &task)
 		if task.TaskID == update.Status.TaskID.Value {
-			task.State = update.Status.State.String()
-
 			return task
 		}
 	}

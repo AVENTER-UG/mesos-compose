@@ -40,15 +40,7 @@ func mapComposeServiceToMesosTask(service cfg.Service, network map[string]cfg.Ne
 	cmd.Hostname = getHostname(service)
 	cmd.Command = getCommand(service)
 	cmd.Labels = getLabels(service)
-	cmd.DockerPortMappings = getDockerPorts(service)
-
-	cmd.Discovery = mesosproto.DiscoveryInfo{
-		Visibility: 2,
-		Name:       &cmd.TaskName,
-		Ports: &mesosproto.Ports{
-			Ports: getDiscoveryInfoPorts(service, cmd),
-		},
-	}
+	cmd.DockerPortMappings = getPorts(service)
 
 	if cmd.Command != "" {
 		cmd.Shell = true
@@ -138,57 +130,18 @@ func getLabelValueByKey(label string, service cfg.Service) string {
 }
 
 // Get the ports of the compose file
-func getDockerPorts(service cfg.Service) []mesosproto.ContainerInfo_DockerInfo_PortMapping {
+func getPorts(service cfg.Service) []mesosproto.ContainerInfo_DockerInfo_PortMapping {
 	var ports []mesosproto.ContainerInfo_DockerInfo_PortMapping
-	for _, c := range service.Ports {
-		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
+	for h, c := range service.Ports {
 		p := strings.Split(c, ":")
-		ps, _ := strconv.Atoi(p[1])
-		tmp.ContainerPort = uint32(ps)
+		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
+		p, _ := strconv.Atoi(p[1])
+		tmp.ContainerPort = uint32(p)
 		tmp.HostPort = uint32(getRandomHostPort(service))
 		tmp.Protocol = func() *string { x := "tcp"; return &x }()
 
-		// check if this is a udp protocol
-		proto := strings.Split(p[1], "/")
-		if len(proto) > 1 {
-			if proto[1] == "udp" {
-				tmp.Protocol = func() *string { x := "udp"; return &x }()
-			}
-		}
-
 		ports = append(ports, tmp)
 	}
+	logrus.Debug(ports)
 	return ports
-}
-
-// Get the discoveryinfo ports of the compose file
-func getDiscoveryInfoPorts(service cfg.Service, cmd mesosutil.Command) []mesosproto.Port {
-	var port []mesosproto.Port
-	for _, c := range service.Ports {
-		var tmp mesosproto.Port
-		p := strings.Split(c, ":")
-		// thats the containerport
-		ps, _ := strconv.Atoi(p[1])
-		// create the name of the port
-		name := cmd.TaskName + "_" + p[1]
-
-		// get the random hostport
-		tmp.Number, tmp.Protocol = getHostPortByContainerPort(ps, cmd)
-		tmp.Name = func() *string { x := name; return &x }()
-
-		port = append(port, tmp)
-	}
-
-	return port
-}
-
-// get the random hostport and protcol of the container port
-func getHostPortByContainerPort(port int, cmd mesosutil.Command) (uint32, *string) {
-	for _, v := range cmd.DockerPortMappings {
-		ps := v.ContainerPort
-		if uint32(port) == ps {
-			return v.HostPort, v.Protocol
-		}
-	}
-	return 0, nil
 }
