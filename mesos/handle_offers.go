@@ -9,7 +9,7 @@ import (
 
 // HandleOffers will handle the offers event of mesos
 func HandleOffers(offers *mesosproto.Event_Offers) error {
-	_, offerIds := mesosutil.GetOffer(offers, mesosutil.Command{})
+	var offerIds []mesosproto.OfferID
 	select {
 	case cmd := <-framework.CommandChan:
 		if cmd.TaskID == "" {
@@ -18,6 +18,10 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 
 		takeOffer, offerIds := mesosutil.GetOffer(offers, cmd)
 		logrus.Debug("Take Offer From:", takeOffer.GetHostname())
+
+		if offerIds == nil {
+			return nil
+		}
 
 		var taskInfo []mesosproto.TaskInfo
 		RefuseSeconds := 5.0
@@ -43,6 +47,7 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 		err := mesosutil.Call(accept)
 		if err != nil {
 			logrus.Error("Handle Offers: ", err)
+			return err
 		}
 
 		// decline unneeded offer
@@ -53,4 +58,6 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 		logrus.Info("Decline unneeded offer: ", offerIds)
 		return mesosutil.Call(mesosutil.DeclineOffer(offerIds))
 	}
+
+	return nil
 }

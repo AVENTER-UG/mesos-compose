@@ -32,4 +32,4 @@ networks:
 
 volumes:
   12345test:
-    driver: rexray
+    driver: local 
