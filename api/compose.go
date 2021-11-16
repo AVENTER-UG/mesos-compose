@@ -144,12 +144,13 @@ func getLabelValueByKey(label string, service cfg.Service) string {
 // Get the ports of the compose file
 func getDockerPorts(service cfg.Service) []mesosproto.ContainerInfo_DockerInfo_PortMapping {
 	var ports []mesosproto.ContainerInfo_DockerInfo_PortMapping
-	for _, c := range service.Ports {
+	hostport := uint32(getRandomHostPort(service))
+	for i, c := range service.Ports {
 		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
 		p := strings.Split(c, ":")
 		ps, _ := strconv.Atoi(p[1])
 		tmp.ContainerPort = uint32(ps)
-		tmp.HostPort = uint32(getRandomHostPort(service))
+		tmp.HostPort = uint32(hostport + uint32(i))
 		tmp.Protocol = func() *string { x := "tcp"; return &x }()
 
 		// check if this is a udp protocol
