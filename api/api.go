@@ -26,10 +26,12 @@ func SetConfig(cfg *cfg.Config, frm *mesosutil.FrameworkConfig) {
 // Commands is the main function of this package
 func Commands() *mux.Router {
 	rtr := mux.NewRouter()
-	rtr.HandleFunc("/v0/task/kill/{id}", V0KillTask).Methods("PUT")
 	rtr.HandleFunc("/v0/task/show", V0ShowAllTasks).Methods("GET")
 	rtr.HandleFunc("/v0/compose/{project}", V0ComposePush).Methods("PUT")
 	rtr.HandleFunc("/v0/compose/{project}/update", V0ComposeUpdate).Methods("PUT")
+	rtr.HandleFunc("/v0/compose/{project}/{servicename}/restart", V0ComposeRestartService).Methods("PUT")
+	rtr.HandleFunc("/v0/compose/{project}/{servicename}/{taskid}", V0ComposeKillTask).Methods("DELETE")
+	rtr.HandleFunc("/v0/compose/{project}/{servicename}", V0ComposeKillService).Methods("DELETE")
 
 	return rtr
 }

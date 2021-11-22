@@ -12,14 +12,14 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 	var offerIds []mesosproto.OfferID
 	select {
 	case cmd := <-framework.CommandChan:
-		if cmd.TaskID == "" {
-			return nil
-		}
 
 		takeOffer, offerIds := mesosutil.GetOffer(offers, cmd)
+		if takeOffer.GetHostname() == "" {
+			return nil
+		}
 		logrus.Debug("Take Offer From:", takeOffer.GetHostname())
 
-		if offerIds == nil {
+		if cmd.TaskID == "" {
 			return nil
 		}
 
