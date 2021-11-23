@@ -25,7 +25,7 @@ func V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
 
-	if vars["project"] == "" || vars["servicename"] == "" || vars["taskid"] == "" {
+	if vars["project"] == "" || vars["servicename"] == "" {
 		w.Write(d)
 		return
 	}

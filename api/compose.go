@@ -223,7 +223,7 @@ func getVolumes(service cfg.Service, data cfg.Compose) []mesosproto.Volume {
 	for _, c := range service.Volumes {
 		var tmp mesosproto.Volume
 		p := strings.Split(c, ":")
-		if len(p) != 2 {
+		if len(p) < 2 {
 			continue
 		}
 		tmp.ContainerPath = p[1]
