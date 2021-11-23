@@ -10,6 +10,7 @@
 - Add Restart of Mesos Tasks
 - Add Kill Service 
 - Add Kill single task of a service
+- Add Framework Suppress if there is nothing to schedule
 
 
 

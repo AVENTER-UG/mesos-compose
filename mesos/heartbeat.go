@@ -33,6 +33,10 @@ func Heartbeat() {
 			}
 
 			logrus.Info("Scheduled Mesos Task: ", task.TaskName)
+		}
+
+		if task.State == "__NEW" {
+			mesosutil.Revive()
 			suppress = false
 		}
 	}
