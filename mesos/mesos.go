@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	api "github.com/AVENTER-UG/mesos-compose/api"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
@@ -101,6 +102,10 @@ func Subscribe() error {
 			}
 		case mesosproto.Event_UPDATE:
 			logrus.Debug("Update", HandleUpdate(&event))
+			err := api.SaveConfig()
+			if err != nil {
+				api.ErrorMessage(1, "Event_UPDATE", "Could not save config data")
+			}
 		case mesosproto.Event_HEARTBEAT:
 			Heartbeat()
 		case mesosproto.Event_OFFERS:

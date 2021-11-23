@@ -70,6 +70,12 @@ func main() {
 		json.Unmarshal([]byte(key), &framework)
 	}
 
+	// load framework config from DB
+	key = api.GetRedisKey("framework_config")
+	if key != "" {
+		json.Unmarshal([]byte(key), &config)
+	}
+
 	http.Handle("/", api.Commands())
 
 	go func() {

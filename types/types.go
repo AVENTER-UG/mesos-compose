@@ -78,3 +78,10 @@ type Networks struct {
 type Volumes struct {
 	Driver string `yaml:"driver"`
 }
+
+// ErrorMsg hold the structure of error messages
+type ErrorMsg struct {
+	Message  string
+	Number   int
+	Function string
+}
