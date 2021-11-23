@@ -10,6 +10,7 @@ import (
 
 func Heartbeat() {
 	keys := api.GetAllRedisKeys("*")
+	suppress := true
 	for keys.Next(config.RedisCTX) {
 		// get the values of the current key
 		key := api.GetRedisKey(keys.Val())
@@ -32,8 +33,11 @@ func Heartbeat() {
 			}
 
 			logrus.Info("Scheduled Mesos Task: ", task.TaskName)
-
+			suppress = false
 		}
+	}
 
+	if suppress {
+		mesosutil.SuppressFramework()
 	}
 }
