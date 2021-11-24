@@ -30,11 +30,15 @@ func HandleUpdate(event *mesosproto.Event) error {
 		},
 	}
 
-	logrus.Debug(update.Status.State.String())
-
 	// get the task of the current event, change the state
 	task := api.GetTaskFromEvent(update)
 	task.State = update.Status.State.String()
+
+	if task.TaskID == "" {
+		return nil
+	}
+
+	logrus.Debug(task.State)
 
 	switch *update.Status.State {
 	case mesosproto.TASK_FAILED:
@@ -42,16 +46,22 @@ func HandleUpdate(event *mesosproto.Event) error {
 		task.State = ""
 	case mesosproto.TASK_KILLED:
 		// remove task
+		api.DelRedisKey(task.TaskName + ":" + task.TaskID)
 	case mesosproto.TASK_LOST:
 		// restart task
 		task.State = ""
+	case mesosproto.TASK_ERROR:
+		// restart task
+		task.State = ""
+	case mesosproto.TASK_RUNNING:
+		task.Agent = update.Status.GetAgentID().Value
 	}
 
 	// save the new state
 	data, _ := json.Marshal(task)
 	err := config.RedisClient.Set(config.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
 	if err != nil {
-		logrus.Error("HandleUpdate Error: ", err)
+		logrus.Error("HandleUpdate Redis set Error: ", err)
 	}
 	return mesosutil.Call(msg)
 }

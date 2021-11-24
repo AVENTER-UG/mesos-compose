@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosutil "github.com/AVENTER-UG/mesos-util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
@@ -17,7 +18,13 @@ func V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	auth := CheckAuth(r, w)
 
+	logrus.Debug("HTTP PUT V0ComposeUpdate")
+	d := ErrorMessage(2, "V0ComposeUpdate", "nok")
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("Api-Service", "v0")
+
 	if vars == nil || !auth {
+		w.Write(d)
 		return
 	}
 
@@ -26,6 +33,8 @@ func V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 	err := yaml.NewDecoder(r.Body).Decode(&data)
 
 	if err != nil {
+		d := ErrorMessage(2, "V0ComposeUpdate", err.Error())
+		w.Write(d)
 		logrus.Error("Error: ", err)
 	}
 
@@ -35,12 +44,13 @@ func V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 		keys := GetAllRedisKeys(taskName + ":*")
 
 		for keys.Next(config.RedisCTX) {
-			logrus.Info("keys: ", keys.Val())
 			// get the values of the current key
 			key := GetRedisKey(keys.Val())
-			var task cfg.Command
+			var task mesosutil.Command
 			json.Unmarshal([]byte(key), &task)
-			mapComposeServiceToMesosTask(data.Services[service], data.Networks, vars, service, task.TaskID)
+			mapComposeServiceToMesosTask(data.Services[service], data, vars, service, task.TaskID)
 		}
 	}
+	d = ErrorMessage(0, "V0ComposeUpdate", "ok")
+	w.Write(d)
 }

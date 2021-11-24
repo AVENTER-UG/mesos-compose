@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -38,7 +39,6 @@ func main() {
 	checkpoint := true
 	webuiurl := fmt.Sprintf("http://%s%s", framework.FrameworkHostname, listen)
 
-	framework.FrameworkInfoFile = fmt.Sprintf("%s/%s", framework.FrameworkInfoFilePath, "framework.json")
 	framework.CommandChan = make(chan mesosutil.Command, 100)
 	config.Hostname = framework.FrameworkHostname
 	config.Listen = listen
@@ -60,9 +60,21 @@ func main() {
 	framework.FrameworkInfo.Hostname = &framework.FrameworkHostname
 
 	initCache()
-	mesos.SetConfig(&config, &framework)
 	mesosutil.SetConfig(&framework)
 	api.SetConfig(&config, &framework)
+	mesos.SetConfig(&config, &framework)
+
+	// load framework state from database if they exist
+	key := api.GetRedisKey("framework")
+	if key != "" {
+		json.Unmarshal([]byte(key), &framework)
+	}
+
+	// load framework config from DB
+	key = api.GetRedisKey("framework_config")
+	if key != "" {
+		json.Unmarshal([]byte(key), &config)
+	}
 
 	http.Handle("/", api.Commands())
 

@@ -3,35 +3,44 @@ package api
 import (
 	"encoding/json"
 
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosutil "github.com/AVENTER-UG/mesos-util"
 	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
 	goredis "github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 )
 
+// GetAllRedisKeys get out all redis keys to a patter
 func GetAllRedisKeys(pattern string) *goredis.ScanIterator {
 	val := config.RedisClient.Scan(config.RedisCTX, 0, pattern, 0).Iterator()
 	if err := val.Err(); err != nil {
 		logrus.Error("getAllRedisKeys: ", err)
 	}
 
-	logrus.Debug("getAllRedisKeys: ")
-
 	return val
 }
 
+// GetRedisKey get out the data of a key
 func GetRedisKey(key string) string {
 	val, err := config.RedisClient.Get(config.RedisCTX, key).Result()
 	if err != nil {
 		logrus.Error("getRedisKey: ", err)
 	}
 
-	logrus.Debug("getRedisKey:", val)
+	return val
+}
+
+// DelRedisKey will delete a redis key
+func DelRedisKey(key string) int64 {
+	val, err := config.RedisClient.Del(config.RedisCTX, key).Result()
+	if err != nil {
+		logrus.Error("delRedisKey: ", err)
+	}
 
 	return val
 }
 
-func GetTaskFromEvent(update *mesosproto.Event_Update) cfg.Command {
+// GetTaskFromEvent get out the key by a mesos event
+func GetTaskFromEvent(update *mesosproto.Event_Update) mesosutil.Command {
 	// search matched taskid in redis and update the status
 	keys := GetAllRedisKeys("*")
 	for keys.Next(config.RedisCTX) {
@@ -39,14 +48,23 @@ func GetTaskFromEvent(update *mesosproto.Event_Update) cfg.Command {
 		key := GetRedisKey(keys.Val())
 
 		// update the status of the matches task
-		var task cfg.Command
+		var task mesosutil.Command
 		json.Unmarshal([]byte(key), &task)
 		if task.TaskID == update.Status.TaskID.Value {
-			task.State = update.Status.State.String()
-
 			return task
 		}
 	}
 
-	return cfg.Command{}
+	return mesosutil.Command{}
+}
+
+// SaveConfig store the current framework config
+func SaveConfig() error {
+	data, _ := json.Marshal(config)
+	err := config.RedisClient.Set(config.RedisCTX, "framework_config", data, 0).Err()
+	if err != nil {
+		logrus.Error("getRedisKey: ", err)
+		return err
+	}
+	return nil
 }
