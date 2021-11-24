@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// GetAllRedisKeys get out all redis keys to a patter
 func GetAllRedisKeys(pattern string) *goredis.ScanIterator {
 	val := config.RedisClient.Scan(config.RedisCTX, 0, pattern, 0).Iterator()
 	if err := val.Err(); err != nil {
@@ -18,6 +19,7 @@ func GetAllRedisKeys(pattern string) *goredis.ScanIterator {
 	return val
 }
 
+// GetRedisKey get out the data of a key
 func GetRedisKey(key string) string {
 	val, err := config.RedisClient.Get(config.RedisCTX, key).Result()
 	if err != nil {
@@ -27,6 +29,17 @@ func GetRedisKey(key string) string {
 	return val
 }
 
+// DelRedisKey will delete a redis key
+func DelRedisKey(key string) int64 {
+	val, err := config.RedisClient.Del(config.RedisCTX, key).Result()
+	if err != nil {
+		logrus.Error("delRedisKey: ", err)
+	}
+
+	return val
+}
+
+// GetTaskFromEvent get out the key by a mesos event
 func GetTaskFromEvent(update *mesosproto.Event_Update) mesosutil.Command {
 	// search matched taskid in redis and update the status
 	keys := GetAllRedisKeys("*")

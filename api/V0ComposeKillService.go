@@ -21,8 +21,8 @@ func V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 	}
 
 	logrus.Debug("HTTP DELETE V0ComposeKillService")
-	d := []byte("nok")
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	d := ErrorMessage(2, "V0ComposeKillService", "nok")
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
 
 	if vars["project"] == "" || vars["servicename"] == "" {
@@ -44,6 +44,6 @@ func V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 		mesosutil.Kill(task.TaskID, task.Agent)
 		logrus.Debug("V0ComposeKillService: " + config.PrefixTaskName + "_" + project + "_" + servicename + ":" + taskID)
 	}
-	d = []byte("ok")
+	d = ErrorMessage(0, "V0ComposeKillService", "ok")
 	w.Write(d)
 }

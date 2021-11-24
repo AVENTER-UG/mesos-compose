@@ -22,8 +22,8 @@ func V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 	}
 
 	logrus.Debug("HTTP PUT V0ComposeRestartService")
-	d := []byte("nok")
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	d := ErrorMessage(2, "V0ComposePush", "nok")
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
 
 	if vars["project"] == "" || vars["servicename"] == "" {
@@ -37,7 +37,6 @@ func V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 	keys := GetAllRedisKeys(config.PrefixTaskName + "_" + project + "_" + servicename + ":*")
 
 	for keys.Next(config.RedisCTX) {
-		logrus.Info("keys: ", keys.Val())
 		key := GetRedisKey(keys.Val())
 		var task mesosutil.Command
 		json.Unmarshal([]byte(key), &task)
@@ -50,10 +49,12 @@ func V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 		data, _ := json.Marshal(task)
 		err := config.RedisClient.Set(config.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
 		if err != nil {
+			d = ErrorMessage(2, "V0ComposeRestartService", err.Error())
 			logrus.Error("V0ComposeRestartService Redis set Error: ", err)
+			w.Write(d)
 		}
 	}
 
-	d = []byte("ok")
+	d = ErrorMessage(0, "V0ComposeRestartService", "ok")
 	w.Write(d)
 }

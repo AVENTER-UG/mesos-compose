@@ -31,7 +31,7 @@ func init() {
 	config.Principal = os.Getenv("MESOS_PRINCIPAL")
 	config.CPU, _ = strconv.ParseFloat(util.Getenv("DEFAULT_CPU", "0.001"), 64)
 	config.Memory, _ = strconv.ParseFloat(util.Getenv("DEFAULT_CONTAINER", "50"), 64)
-	configconfig.Principal = os.Getenv("MESOS_PRINCIPAL").LogLevel = util.Getenv("LOGLEVEL", "info")
+	config.LogLevel = util.Getenv("LOGLEVEL", "info")
 	config.Domain = util.Getenv("DOMAIN", "local")
 	config.Credentials.Username = os.Getenv("AUTH_USERNAME")
 	config.Credentials.Password = os.Getenv("AUTH_PASSWORD")
