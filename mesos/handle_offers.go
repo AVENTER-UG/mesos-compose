@@ -9,7 +9,6 @@ import (
 
 // HandleOffers will handle the offers event of mesos
 func HandleOffers(offers *mesosproto.Event_Offers) error {
-	var offerIds []mesosproto.OfferID
 	select {
 	case cmd := <-framework.CommandChan:
 
@@ -55,6 +54,7 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 		return mesosutil.Call(mesosutil.DeclineOffer(offerIds))
 	default:
 		// decline unneeded offer
+		_, offerIds := mesosutil.GetOffer(offers, mesosutil.Command{})
 		logrus.Info("Decline unneeded offer: ", offerIds)
 		return mesosutil.Call(mesosutil.DeclineOffer(offerIds))
 	}

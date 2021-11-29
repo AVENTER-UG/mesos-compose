@@ -47,6 +47,7 @@ func HandleUpdate(event *mesosproto.Event) error {
 	case mesosproto.TASK_KILLED:
 		// remove task
 		api.DelRedisKey(task.TaskName + ":" + task.TaskID)
+		return mesosutil.Call(msg)
 	case mesosproto.TASK_LOST:
 		// restart task
 		task.State = ""
