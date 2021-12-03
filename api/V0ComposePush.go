@@ -1,9 +1,12 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosutil "github.com/AVENTER-UG/mesos-util"
+	util "github.com/AVENTER-UG/util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
@@ -38,9 +41,10 @@ func V0ComposePush(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for service := range data.Services {
-		mapComposeServiceToMesosTask(data.Services[service], data, vars, service, "")
+		mapComposeServiceToMesosTask(data.Services[service], data, vars, service, mesosutil.Command{})
 	}
 
-	d = ErrorMessage(0, "V0ComposePush", "ok")
+	out, _ := json.Marshal(&data)
+	d = ErrorMessage(0, "V0ComposePush", util.PrettyJSON(out))
 	w.Write(d)
 }

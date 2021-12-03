@@ -110,18 +110,20 @@ func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Com
 		}
 	}
 
-	msg.Container = &mesosproto.ContainerInfo{
-		Type:     contype,
-		Volumes:  cmd.Volumes,
-		Hostname: &cmd.Hostname,
-		Docker: &mesosproto.ContainerInfo_DockerInfo{
-			Image:        cmd.ContainerImage,
-			Network:      networkMode,
-			PortMappings: cmd.DockerPortMappings,
-			Privileged:   &cmd.Privileged,
-			Parameters:   cmd.DockerParameter,
-		},
-		NetworkInfos: cmd.NetworkInfo,
+	msg.Container = &mesosproto.ContainerInfo{}
+	msg.Container.Type = contype
+	msg.Container.Volumes = cmd.Volumes
+	msg.Container.Docker = &mesosproto.ContainerInfo_DockerInfo{
+		Image:        cmd.ContainerImage,
+		Network:      networkMode,
+		PortMappings: cmd.DockerPortMappings,
+		Privileged:   &cmd.Privileged,
+		Parameters:   cmd.DockerParameter,
+	}
+	msg.Container.NetworkInfos = cmd.NetworkInfo
+
+	if cmd.Hostname != "" {
+		msg.Container.Hostname = &cmd.Hostname
 	}
 
 	if cmd.Discovery != (mesosproto.DiscoveryInfo{}) {

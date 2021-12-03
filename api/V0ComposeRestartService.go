@@ -34,7 +34,7 @@ func V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 	project := vars["project"]
 	servicename := vars["servicename"]
 
-	keys := GetAllRedisKeys(config.PrefixTaskName + "_" + project + "_" + servicename + ":*")
+	keys := GetAllRedisKeys(config.PrefixTaskName + ":" + project + ":" + servicename + ":*")
 
 	for keys.Next(config.RedisCTX) {
 		key := GetRedisKey(keys.Val())

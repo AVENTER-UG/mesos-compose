@@ -6,6 +6,7 @@ import (
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
+	util "github.com/AVENTER-UG/util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
@@ -39,7 +40,7 @@ func V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for service := range data.Services {
-		taskName := config.PrefixTaskName + "_" + vars["project"] + "_" + service
+		taskName := config.PrefixTaskName + ":" + vars["project"] + ":" + service
 		// get all keys that start with the taskname
 		keys := GetAllRedisKeys(taskName + ":*")
 
@@ -48,9 +49,11 @@ func V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 			key := GetRedisKey(keys.Val())
 			var task mesosutil.Command
 			json.Unmarshal([]byte(key), &task)
-			mapComposeServiceToMesosTask(data.Services[service], data, vars, service, task.TaskID)
+			mapComposeServiceToMesosTask(data.Services[service], data, vars, service, task)
 		}
 	}
-	d = ErrorMessage(0, "V0ComposeUpdate", "ok")
+
+	out, _ := json.Marshal(&data)
+	d = ErrorMessage(0, "V0ComposeUpdate", util.PrettyJSON(out))
 	w.Write(d)
 }

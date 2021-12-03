@@ -16,16 +16,18 @@ import (
 )
 
 // Map the compose parameters into a mesos task
-func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars map[string]string, name string, taskID string) {
+func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars map[string]string, name string, task mesosutil.Command) {
 	var cmd mesosutil.Command
 
-	// if taskID is 0, then its a new task and we have to create a new ID
-	newTaskID := taskID
-	if taskID == "" {
-		newTaskID, _ = util.GenUUID()
+	// if task is set then its not a new task and we have to save old needed parameter
+	newTaskID, _ := util.GenUUID()
+	if task.TaskID != "" {
+		newTaskID = task.TaskID
+		cmd.State = task.State
+		cmd.Agent = task.Agent
 	}
 
-	cmd.TaskName = config.PrefixTaskName + "_" + vars["project"] + "_" + name
+	cmd.TaskName = config.PrefixTaskName + ":" + vars["project"] + ":" + name
 	cmd.CPU = getCPU(service)
 	cmd.Memory = getMemory(service)
 	cmd.ContainerType = getLabelValueByKey("biz.aventer.mesos_compose.container_type", service)
@@ -94,6 +96,11 @@ func getHostname(service cfg.Service) string {
 	if service.Hostname != "" {
 		return service.Hostname
 	}
+
+	if strings.ToLower(service.NetworkMode) == "host" {
+		return ""
+	}
+
 	uuid, err := util.GenUUID()
 
 	if err != nil {
@@ -178,7 +185,7 @@ func getDiscoveryInfoPorts(service cfg.Service, cmd mesosutil.Command) []mesospr
 		// thats the containerport
 		ps, _ := strconv.Atoi(p[1])
 		// create the name of the port
-		name := cmd.TaskName + "_" + p[1]
+		name := cmd.TaskName + ":" + p[1]
 
 		// get the random hostport
 		tmp.Number, tmp.Protocol = getHostPortByContainerPort(ps, cmd)
