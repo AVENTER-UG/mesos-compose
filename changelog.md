@@ -1,6 +1,6 @@
 # Changelog
 
-## dev
+## v0.2.0
 
 - Start with changelog
 - Add Docker Ports
@@ -13,6 +13,11 @@
 - Add Framework Suppress if there is nothing to schedule
 - Remove tasks after they are killed
 - Add reconcile after frameware resubscribe
+
+
+## v0.1.0 
+
+- First inn
 
 
 
