@@ -100,6 +100,7 @@ func Subscribe() error {
 			if err != nil {
 				logrus.Error("Framework save config and state into redis Error: ", err)
 			}
+			Reconcile()
 		case mesosproto.Event_UPDATE:
 			logrus.Debug("Update", HandleUpdate(&event))
 			err := api.SaveConfig()
@@ -118,5 +119,41 @@ func Subscribe() error {
 		default:
 			logrus.Debug("DEFAULT EVENT: ", event.Offers)
 		}
+	}
+}
+
+// Reconcile will reconcile the task states after the framework was restarted
+func Reconcile() {
+	logrus.Info("Reconcile Tasks")
+	var oldTasks []mesosproto.Call_Reconcile_Task
+	keys := api.GetAllRedisKeys("*")
+	for keys.Next(config.RedisCTX) {
+		key := api.GetRedisKey(keys.Val())
+
+		var task mesosutil.Command
+		json.Unmarshal([]byte(key), &task)
+
+		if task.TaskID == "" {
+			continue
+		}
+
+		oldTasks = append(oldTasks, mesosproto.Call_Reconcile_Task{
+			TaskID: mesosproto.TaskID{
+				Value: task.TaskID,
+			},
+			AgentID: &mesosproto.AgentID{
+				Value: task.Agent,
+			},
+		})
+		logrus.Debug("Reconcile Task: ", task.TaskID)
+	}
+	err := mesosutil.Call(&mesosproto.Call{
+		Type:      mesosproto.Call_RECONCILE,
+		Reconcile: &mesosproto.Call_Reconcile{Tasks: oldTasks},
+	})
+
+	if err != nil {
+		api.ErrorMessage(3, "Reconcile_Error", err.Error())
+		logrus.Debug("Reconcile Error: ", err)
 	}
 }
