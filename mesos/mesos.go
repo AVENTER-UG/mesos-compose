@@ -100,7 +100,6 @@ func Subscribe() error {
 			if err != nil {
 				logrus.Error("Framework save config and state into redis Error: ", err)
 			}
-
 			Reconcile()
 		case mesosproto.Event_UPDATE:
 			logrus.Debug("Update", HandleUpdate(&event))

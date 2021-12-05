@@ -47,6 +47,7 @@ func V0ComposeKillTask(w http.ResponseWriter, r *http.Request) {
 			w.Write(d)
 			return
 		}
+
 		logrus.Debug("V0ComposeKillTask: " + config.PrefixTaskName + ":" + project + ":" + servicename + ":" + taskID)
 		d = ErrorMessage(0, "V0ComposeKillTask", "ok")
 	}
