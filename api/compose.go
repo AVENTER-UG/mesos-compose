@@ -154,20 +154,32 @@ func getDockerPorts(service cfg.Service) []mesosproto.ContainerInfo_DockerInfo_P
 	hostport := uint32(getRandomHostPort(service))
 	for i, c := range service.Ports {
 		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
-		p := strings.Split(c, ":")
-		ps, _ := strconv.Atoi(p[1])
-		tmp.ContainerPort = uint32(ps)
-		tmp.HostPort = uint32(hostport + uint32(i))
-		tmp.Protocol = func() *string { x := "tcp"; return &x }()
+		var port int
+		// "<hostport>:<containerport>"
+		// "<hostip>:<hostport>:<containerport>"
+		count := strings.Count(c, ":")
+
+		var p []string
+		var proto []string
+		if count > 0 {
+			p = strings.Split(c, ":")
+			port, _ = strconv.Atoi(p[count])
+			proto = strings.Split(p[count], "/")
+		} else {
+			port, _ = strconv.Atoi(c)
+			proto = strings.Split(c, "/")
+		}
 
 		// check if this is a udp protocol
-		proto := strings.Split(p[1], "/")
+		tmp.Protocol = func() *string { x := "tcp"; return &x }()
 		if len(proto) > 1 {
 			if strings.ToLower(proto[1]) == "udp" {
 				tmp.Protocol = func() *string { x := "udp"; return &x }()
 			}
 		}
 
+		tmp.ContainerPort = uint32(port)
+		tmp.HostPort = uint32(hostport + uint32(i))
 		ports = append(ports, tmp)
 	}
 	return ports
@@ -175,26 +187,33 @@ func getDockerPorts(service cfg.Service) []mesosproto.ContainerInfo_DockerInfo_P
 
 // Get the discoveryinfo ports of the compose file
 func getDiscoveryInfoPorts(service cfg.Service, cmd mesosutil.Command) []mesosproto.Port {
-	var port []mesosproto.Port
+	var disport []mesosproto.Port
 	for _, c := range service.Ports {
-		var tmp mesosproto.Port
-		p := strings.Split(c, ":")
-		if len(p) != 2 {
-			continue
+		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
+		var tmpport mesosproto.Port
+		var port int
+		// "<hostport>:<containerport>"
+		// "<hostip>:<hostport>:<containerport>"
+		count := strings.Count(c, ":")
+		var p []string
+		if count > 0 {
+			p = strings.Split(c, ":")
+			port, _ = strconv.Atoi(p[count])
+		} else {
+			port, _ = strconv.Atoi(c)
 		}
-		// thats the containerport
-		ps, _ := strconv.Atoi(p[1])
+
 		// create the name of the port
-		name := cmd.TaskName + ":" + p[1]
+		name := cmd.TaskName + ":" + p[count]
 
 		// get the random hostport
-		tmp.Number, tmp.Protocol = getHostPortByContainerPort(ps, cmd)
-		tmp.Name = func() *string { x := name; return &x }()
+		tmpport.Number, tmp.Protocol = getHostPortByContainerPort(port, cmd)
+		tmpport.Name = func() *string { x := name; return &x }()
 
-		port = append(port, tmp)
+		disport = append(disport, tmpport)
 	}
 
-	return port
+	return disport
 }
 
 // get the random hostport and protcol of the container port
