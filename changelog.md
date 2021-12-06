@@ -1,5 +1,9 @@
 # Changelog
 
+## Master
+
+- Add Redis Authentication Support
+
 ## v0.2.0
 
 - Start with changelog

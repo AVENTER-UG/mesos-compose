@@ -24,6 +24,7 @@ type Config struct {
 	RedisServer    string
 	RedisClient    *goredis.Client
 	RedisCTX       context.Context
+	RedisPassword  string
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework
