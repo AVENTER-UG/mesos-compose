@@ -25,6 +25,9 @@ type Config struct {
 	RedisClient    *goredis.Client
 	RedisCTX       context.Context
 	RedisPassword  string
+	SkipSSL        bool
+	SSLKey         string
+	SSLCrt         string
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework
@@ -53,7 +56,7 @@ type Service struct {
 	Image       string                 `yaml:"image"`
 	Labels      map[string]interface{} `yaml:"labels"`
 	NetworkMode string                 `yaml:"network_mode"`
-	Privileged  bool                   `yaml:"priviliged"`
+	Privileged  bool                   `yaml:"privileged"`
 	Command     []string               `yaml:"command"`
 	Deploy      Deploy                 `yaml:"deploy"`
 	Hostname    string                 `yaml:"hostname"`

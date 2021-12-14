@@ -69,6 +69,5 @@ func ErrorMessage(number int, function string, msg string) []byte {
 	err.Message = msg
 
 	data, _ := json.Marshal(err)
-	return []byte(data)
-
+	return data
 }

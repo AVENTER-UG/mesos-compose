@@ -17,7 +17,7 @@
 - Add Framework Suppress if there is nothing to schedule
 - Remove tasks after they are killed
 - Add reconcile after frameware resubscribe
-
+- Add TLS Server Support (env variable SSL_CRT_BASE64, SSL_KEY_BASE64)
 
 ## v0.1.0 
 

@@ -49,7 +49,8 @@ func Subscribe() error {
 	logrus.Debug(body)
 	client := &http.Client{}
 	client.Transport = &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		// #nosec G402
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: config.SkipSSL},
 	}
 
 	protocol := "https"
@@ -65,6 +66,7 @@ func Subscribe() error {
 	if err != nil {
 		logrus.Fatal(err)
 	}
+	defer res.Body.Close()
 
 	reader := bufio.NewReader(res.Body)
 
@@ -96,14 +98,14 @@ func Subscribe() error {
 
 			// store framework configuration
 			d, _ := json.Marshal(&framework)
-			err := config.RedisClient.Set(config.RedisCTX, "framework", d, 0).Err()
+			err = config.RedisClient.Set(config.RedisCTX, "framework", d, 0).Err()
 			if err != nil {
 				logrus.Error("Framework save config and state into redis Error: ", err)
 			}
 			Reconcile()
 		case mesosproto.Event_UPDATE:
 			logrus.Debug("Update", HandleUpdate(&event))
-			err := api.SaveConfig()
+			err = api.SaveConfig()
 			if err != nil {
 				api.ErrorMessage(1, "Event_UPDATE", "Could not save config data")
 			}

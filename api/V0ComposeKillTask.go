@@ -52,5 +52,4 @@ func V0ComposeKillTask(w http.ResponseWriter, r *http.Request) {
 		d = ErrorMessage(0, "V0ComposeKillTask", "ok")
 	}
 	w.Write(d)
-	return
 }

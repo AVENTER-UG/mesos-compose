@@ -40,6 +40,8 @@ func init() {
 	config.PrefixHostname = util.Getenv("PREFIX_HOSTNAME", "mc")
 	config.RedisServer = util.Getenv("REDIS_SERVER", "127.0.0.1:6379")
 	config.RedisPassword = os.Getenv("REDIS_PASSWORD")
+	config.SSLKey = os.Getenv("SSL_KEY_BASE64")
+	config.SSLCrt = os.Getenv("SSL_CRT_BASE64")
 
 	// The comunication to the mesos server should be via ssl or not
 	if strings.Compare(os.Getenv("MESOS_SSL"), "true") == 0 {
@@ -48,4 +50,10 @@ func init() {
 		framework.MesosSSL = false
 	}
 
+	// Skip SSL Verification
+	if strings.Compare(os.Getenv("SKIP_SSL"), "true") == 0 {
+		config.SkipSSL = true
+	} else {
+		config.SkipSSL = false
+	}
 }

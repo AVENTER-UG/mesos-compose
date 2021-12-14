@@ -70,7 +70,6 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 	if err != nil {
 		logrus.Error("Cloud not store Mesos Task in Redis: ", err)
 	}
-
 }
 
 // Get the CPU value from the compose file, or the default one if it's unset
@@ -119,8 +118,9 @@ func getCommand(service cfg.Service) string {
 }
 
 // Get random hostportnumber
-func getRandomHostPort(service cfg.Service) int {
+func getRandomHostPort() int {
 	rand.Seed(time.Now().UnixNano())
+	// #nosec G404
 	v := rand.Intn(framework.PortRangeTo-framework.PortRangeFrom) + framework.PortRangeFrom
 	return v
 }
@@ -151,7 +151,7 @@ func getLabelValueByKey(label string, service cfg.Service) string {
 // Get the ports of the compose file
 func getDockerPorts(service cfg.Service) []mesosproto.ContainerInfo_DockerInfo_PortMapping {
 	var ports []mesosproto.ContainerInfo_DockerInfo_PortMapping
-	hostport := uint32(getRandomHostPort(service))
+	hostport := uint32(getRandomHostPort())
 	for i, c := range service.Ports {
 		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
 		var port int
@@ -179,7 +179,7 @@ func getDockerPorts(service cfg.Service) []mesosproto.ContainerInfo_DockerInfo_P
 		}
 
 		tmp.ContainerPort = uint32(port)
-		tmp.HostPort = uint32(hostport + uint32(i))
+		tmp.HostPort = hostport + uint32(i)
 		ports = append(ports, tmp)
 	}
 	return ports

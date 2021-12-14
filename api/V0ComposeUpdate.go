@@ -34,7 +34,7 @@ func V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 	err := yaml.NewDecoder(r.Body).Decode(&data)
 
 	if err != nil {
-		d := ErrorMessage(2, "V0ComposeUpdate", err.Error())
+		d = ErrorMessage(2, "V0ComposeUpdate", err.Error())
 		w.Write(d)
 		logrus.Error("Error: ", err)
 	}

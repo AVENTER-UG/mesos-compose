@@ -58,6 +58,4 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 		logrus.Info("Decline unneeded offer: ", offerIds)
 		return mesosutil.Call(mesosutil.DeclineOffer(offerIds))
 	}
-
-	return nil
 }
