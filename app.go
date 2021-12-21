@@ -77,7 +77,7 @@ func main() {
 	mesos.SetConfig(&config, &framework)
 
 	// load framework state from database if they exist
-	key := api.GetRedisKey("framework")
+	key := api.GetRedisKey(framework.FrameworkName + ":framework")
 	if key != "" {
 		json.Unmarshal([]byte(key), &framework)
 	}

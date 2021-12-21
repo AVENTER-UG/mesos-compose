@@ -61,7 +61,7 @@ func GetTaskFromEvent(update *mesosproto.Event_Update) mesosutil.Command {
 // SaveConfig store the current framework config
 func SaveConfig() error {
 	data, _ := json.Marshal(config)
-	err := config.RedisClient.Set(config.RedisCTX, "framework_config", data, 0).Err()
+	err := config.RedisClient.Set(config.RedisCTX, framework.FrameworkName+":framework_config", data, 0).Err()
 	if err != nil {
 		logrus.Error("getRedisKey: ", err)
 		return err

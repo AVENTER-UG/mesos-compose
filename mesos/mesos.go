@@ -98,7 +98,7 @@ func Subscribe() error {
 
 			// store framework configuration
 			d, _ := json.Marshal(&framework)
-			err = config.RedisClient.Set(config.RedisCTX, "framework", d, 0).Err()
+			err = config.RedisClient.Set(config.RedisCTX, framework.FrameworkName+":framework", d, 0).Err()
 			if err != nil {
 				logrus.Error("Framework save config and state into redis Error: ", err)
 			}
