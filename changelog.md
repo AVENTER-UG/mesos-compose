@@ -5,6 +5,8 @@
 - Add Redis Authentication Support
 - Change DB items framework and framework_config to be saved with the
   frameworkName as prefix.
+- The default prefix of hostname and tasks are the FrameworkName.
+- Optimize framework suppress
 
 ## v0.2.0
 

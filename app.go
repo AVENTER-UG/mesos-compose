@@ -16,8 +16,11 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// MinVersion is the version number of this program
-var MinVersion string
+// BuildVersion of m3s
+var BuildVersion string
+
+// GitVersion is the revision and commit number
+var GitVersion string
 
 // init the redis cache
 func initCache() {
@@ -46,7 +49,7 @@ func decodeBase64Cert(pemCert string) []byte {
 
 func main() {
 	util.SetLogging(config.LogLevel, config.EnableSyslog, config.AppName)
-	logrus.Println(config.AppName + " build " + MinVersion)
+	logrus.Println(config.AppName + " build " + BuildVersion + " git " + GitVersion)
 
 	listen := fmt.Sprintf(":%s", framework.FrameworkPort)
 
@@ -57,6 +60,7 @@ func main() {
 	framework.CommandChan = make(chan mesosutil.Command, 100)
 	config.Hostname = framework.FrameworkHostname
 	config.Listen = listen
+	config.Suppress = false
 
 	framework.State = map[string]mesosutil.State{}
 

@@ -36,12 +36,12 @@ func init() {
 	config.Credentials.Username = os.Getenv("AUTH_USERNAME")
 	config.Credentials.Password = os.Getenv("AUTH_PASSWORD")
 	config.AppName = "Mesos Compose Framework"
-	config.PrefixTaskName = util.Getenv("PREFIX_TASKNAME", "mc")
-	config.PrefixHostname = util.Getenv("PREFIX_HOSTNAME", "mc")
 	config.RedisServer = util.Getenv("REDIS_SERVER", "127.0.0.1:6379")
 	config.RedisPassword = os.Getenv("REDIS_PASSWORD")
 	config.SSLKey = os.Getenv("SSL_KEY_BASE64")
 	config.SSLCrt = os.Getenv("SSL_CRT_BASE64")
+	config.PrefixTaskName = util.Getenv("PREFIX_TASKNAME", framework.FrameworkName)
+	config.PrefixHostname = util.Getenv("PREFIX_HOSTNAME", framework.FrameworkName)
 
 	// The comunication to the mesos server should be via ssl or not
 	if strings.Compare(os.Getenv("MESOS_SSL"), "true") == 0 {

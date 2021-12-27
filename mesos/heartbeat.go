@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// Heartbeat - The Apache Mesos heatbeat function
 func Heartbeat() {
 	keys := api.GetAllRedisKeys("*")
 	suppress := true
@@ -25,6 +26,7 @@ func Heartbeat() {
 		if task.State == "" {
 			framework.CommandChan <- task
 
+			mesosutil.Revive()
 			task.State = "__NEW"
 			data, _ := json.Marshal(task)
 			err := config.RedisClient.Set(config.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
@@ -36,12 +38,13 @@ func Heartbeat() {
 		}
 
 		if task.State == "__NEW" {
-			mesosutil.Revive()
 			suppress = false
+			config.Suppress = false
 		}
 	}
 
-	if suppress {
+	if suppress && !config.Suppress {
 		mesosutil.SuppressFramework()
+		config.Suppress = true
 	}
 }

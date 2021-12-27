@@ -28,6 +28,7 @@ type Config struct {
 	SkipSSL        bool
 	SSLKey         string
 	SSLCrt         string
+	Suppress       bool
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework
@@ -36,7 +37,7 @@ type UserCredentials struct {
 	Password string
 }
 
-// Yaml2Go
+// Compose - The main structure of the supported docker-compose syntax
 type Compose struct {
 	Version  string              `yaml:"version"`
 	Services map[string]Service  `yaml:"services"`
@@ -44,7 +45,7 @@ type Compose struct {
 	Volumes  map[string]Volumes  `yaml:"volumes"`
 }
 
-// Web
+// Service - The docker-compose service parameters
 type Service struct {
 	Network     []string               `yaml:"network"`
 	Build       string                 `yaml:"build"`
@@ -62,6 +63,7 @@ type Service struct {
 	Hostname    string                 `yaml:"hostname"`
 }
 
+// Deploy - The mesos resources to deploy a task
 type Deploy struct {
 	Resources struct {
 		Limits struct {
@@ -71,12 +73,14 @@ type Deploy struct {
 	} `yaml:"resources"`
 }
 
+// Networks - The docker-compose network syntax
 type Networks struct {
 	External bool   `yaml:"external"`
 	Name     string `yaml:"name"`
 	Driver   string `yaml:"driver"`
 }
 
+// Volumes - The docker-compose volumes syntax
 type Volumes struct {
 	Driver string `yaml:"driver"`
 }

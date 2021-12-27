@@ -189,7 +189,6 @@ func getDockerPorts(service cfg.Service) []mesosproto.ContainerInfo_DockerInfo_P
 func getDiscoveryInfoPorts(service cfg.Service, cmd mesosutil.Command) []mesosproto.Port {
 	var disport []mesosproto.Port
 	for _, c := range service.Ports {
-		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
 		var tmpport mesosproto.Port
 		var port int
 		// "<hostport>:<containerport>"
@@ -207,7 +206,7 @@ func getDiscoveryInfoPorts(service cfg.Service, cmd mesosutil.Command) []mesospr
 		name := cmd.TaskName + ":" + p[count]
 
 		// get the random hostport
-		tmpport.Number, tmp.Protocol = getHostPortByContainerPort(port, cmd)
+		tmpport.Number, tmpport.Protocol = getHostPortByContainerPort(port, cmd)
 		tmpport.Name = func() *string { x := name; return &x }()
 
 		disport = append(disport, tmpport)
