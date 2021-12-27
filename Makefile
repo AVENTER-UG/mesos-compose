@@ -9,7 +9,7 @@ BUILDDATE=`date -u +%Y-%m-%dT%H:%M:%SZ`
 IMAGEFULLNAME=${REPO}/${IMAGENAME}
 IMAGEFULLNAMEPUB=avhost/${IMAGENAME}
 
-.PHONY: help build all
+.PHONY: help build all docs
 
 help:
 	    @echo "Makefile arguments:"
@@ -17,6 +17,7 @@ help:
 	    @echo "Makefile commands:"
 	    @echo "build"
 	    @echo "all"
+			@echo "docs"
 			@echo "publish"
 			@echo ${TAG}
 
@@ -30,5 +31,9 @@ publish:
 	@echo ">>>> Publish docker image"
 	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAMEPUB}:${BRANCH}
 	@docker push ${IMAGEFULLNAMEPUB}:${BRANCH}
+
+docs:
+	@echo ">>>> Build docs"
+		$(MAKE) -C $@
 
 all: build
