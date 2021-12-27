@@ -1,6 +1,9 @@
 package mesos
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/sirupsen/logrus"
 
 	mesosutil "github.com/AVENTER-UG/mesos-util"
@@ -12,7 +15,7 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 	select {
 	case cmd := <-framework.CommandChan:
 
-		takeOffer, offerIds := mesosutil.GetOffer(offers, cmd)
+		takeOffer, offerIds := getOffer(offers, cmd)
 		if takeOffer.GetHostname() == "" {
 			return nil
 		}
@@ -58,4 +61,47 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 		logrus.Info("Decline unneeded offer: ", offerIds)
 		return mesosutil.Call(mesosutil.DeclineOffer(offerIds))
 	}
+}
+
+// get the value of a label from the command
+func getLabelValue(label string, cmd mesosutil.Command) string {
+	for _, v := range cmd.Labels {
+		if label == v.Key {
+			return fmt.Sprint(v.GetValue())
+		}
+	}
+	return ""
+}
+
+func getOffer(offers *mesosproto.Event_Offers, cmd mesosutil.Command) (mesosproto.Offer, []mesosproto.OfferID) {
+	var offerIds []mesosproto.OfferID
+	var offerret mesosproto.Offer
+
+	for n, offer := range offers.Offers {
+		logrus.Debug("Got Offer From:", offer.GetHostname())
+		offerIds = append(offerIds, offer.ID)
+
+		if cmd.TaskName == "" {
+			continue
+		}
+
+		// if the ressources of this offer does not matched what the command need, the skip
+		if !mesosutil.IsRessourceMatched(offer.Resources, cmd) {
+			logrus.Debug("Could not found any matched ressources, get next offer")
+			mesosutil.Call(mesosutil.DeclineOffer(offerIds))
+			continue
+		}
+
+		// if contraint_hostname is set, only accept offer with the same hostname
+		valHostname := getLabelValue("biz.aventer.mesos_compose.contraint_hostname", cmd)
+		if valHostname != "" {
+			if strings.ToLower(valHostname) == offer.GetHostname() {
+				logrus.Debug("Set Server Constraint to:", offer.GetHostname())
+				offerret = offers.Offers[n]
+			}
+		} else {
+			offerret = offers.Offers[n]
+		}
+	}
+	return offerret, offerIds
 }

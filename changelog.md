@@ -7,6 +7,7 @@
   frameworkName as prefix.
 - The default prefix of hostname and tasks are the FrameworkName.
 - Optimize framework suppress
+- Add constraint "hostname eq" to accept only offers with the given hostname.
 
 ## v0.2.0
 
