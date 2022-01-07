@@ -9,7 +9,7 @@ BUILDDATE=`date -u +%Y-%m-%dT%H:%M:%SZ`
 IMAGEFULLNAME=${REPO}/${IMAGENAME}
 IMAGEFULLNAMEPUB=avhost/${IMAGENAME}
 
-.PHONY: help build all
+.PHONY: help build all docs
 
 help:
 	    @echo "Makefile arguments:"
@@ -17,6 +17,7 @@ help:
 	    @echo "Makefile commands:"
 	    @echo "build"
 	    @echo "all"
+			@echo "docs"
 			@echo "publish"
 			@echo ${TAG}
 
@@ -33,5 +34,9 @@ publish:
 
 update-precommit:
 	@virtualenv --no-site-packages ~/.virtualenv
+
+docs:
+	@echo ">>>> Build docs"
+	$(MAKE) -C $@
 
 all: build
