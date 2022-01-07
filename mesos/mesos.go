@@ -105,10 +105,7 @@ func Subscribe() error {
 			Reconcile()
 		case mesosproto.Event_UPDATE:
 			logrus.Debug("Update", HandleUpdate(&event))
-			err = api.SaveConfig()
-			if err != nil {
-				api.ErrorMessage(1, "Event_UPDATE", "Could not save config data")
-			}
+			api.SaveConfig()
 		case mesosproto.Event_HEARTBEAT:
 			Heartbeat()
 		case mesosproto.Event_OFFERS:

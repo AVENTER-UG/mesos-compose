@@ -31,4 +31,7 @@ publish:
 	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAMEPUB}:${BRANCH}
 	@docker push ${IMAGEFULLNAMEPUB}:${BRANCH}
 
+update-precommit:
+	@virtualenv --no-site-packages ~/.virtualenv
+
 all: build

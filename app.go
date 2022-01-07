@@ -76,6 +76,7 @@ func main() {
 	//	}
 
 	initCache()
+
 	mesosutil.SetConfig(&framework)
 	api.SetConfig(&config, &framework)
 	mesos.SetConfig(&config, &framework)
@@ -84,6 +85,9 @@ func main() {
 	key := api.GetRedisKey(framework.FrameworkName + ":framework")
 	if key != "" {
 		json.Unmarshal([]byte(key), &framework)
+
+		// Save current config
+		api.SaveConfig()
 	}
 
 	// The Hostname should ever be set after reading the state file.
