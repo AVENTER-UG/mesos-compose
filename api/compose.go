@@ -44,7 +44,7 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 	cmd.Hostname = getHostname(service)
 	cmd.Command = getCommand(service)
 	cmd.Labels = getLabels(service)
-	cmd.DockerPortMappings = getDockerPorts(service)
+	cmd.DockerPortMappings = getDockerPorts(service, cmd.Agent)
 	cmd.Environment.Variables = getEnvironment(service)
 	cmd.Volumes = getVolumes(service, data)
 
@@ -118,11 +118,39 @@ func getCommand(service cfg.Service) string {
 }
 
 // Get random hostportnumber
-func getRandomHostPort() int {
+func getRandomHostPort(agent string) int {
 	rand.Seed(time.Now().UnixNano())
 	// #nosec G404
 	v := rand.Intn(framework.PortRangeTo-framework.PortRangeFrom) + framework.PortRangeFrom
+	port := uint32(v)
+	if portInUse(port, agent) {
+		v = getRandomHostPort(agent)
+	}
 	return v
+}
+
+// Check if the port is already in use
+func portInUse(port uint32, agent string) bool {
+	// get all running services
+	logrus.Debug("Check if port is in use: ", port, agent)
+	keys := GetAllRedisKeys(framework.FrameworkName + ":*")
+	for keys.Next(config.RedisCTX) {
+		// get the details of the current running service
+		key := GetRedisKey(keys.Val())
+		var task mesosutil.Command
+		json.Unmarshal([]byte(key), &task)
+
+		// check if its the given agent
+		if task.Agent == agent {
+			// check if the given port is already in use
+			for _, hostport := range task.Discovery.Ports.Ports {
+				if hostport.Number == port {
+					return true
+				}
+			}
+		}
+	}
+	return false
 }
 
 // Get the labels of the compose file
@@ -149,9 +177,9 @@ func getLabelValueByKey(label string, service cfg.Service) string {
 }
 
 // Get the ports of the compose file
-func getDockerPorts(service cfg.Service) []mesosproto.ContainerInfo_DockerInfo_PortMapping {
+func getDockerPorts(service cfg.Service, agent string) []mesosproto.ContainerInfo_DockerInfo_PortMapping {
 	var ports []mesosproto.ContainerInfo_DockerInfo_PortMapping
-	hostport := uint32(getRandomHostPort())
+	hostport := uint32(getRandomHostPort(agent))
 	for i, c := range service.Ports {
 		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
 		var port int
