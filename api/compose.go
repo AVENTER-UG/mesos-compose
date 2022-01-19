@@ -143,9 +143,12 @@ func portInUse(port uint32, agent string) bool {
 		// check if its the given agent
 		if task.Agent == agent {
 			// check if the given port is already in use
-			for _, hostport := range task.Discovery.Ports.Ports {
-				if hostport.Number == port {
-					return true
+			ports := task.Discovery.GetPorts()
+			if ports == nil {
+				for _, hostport := range ports.Ports {
+					if hostport.Number == port {
+						return true
+					}
 				}
 			}
 		}
