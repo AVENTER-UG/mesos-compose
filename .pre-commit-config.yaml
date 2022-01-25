@@ -4,8 +4,6 @@ repos:
   hooks:
   - id: check-merge-conflict
     exclude: ^vendor/
-  - id: end-of-file-fixer
-    exclude: ^vendor/
   - id: trailing-whitespace
     exclude: ^vendor/
   - id: detect-private-key
