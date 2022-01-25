@@ -2,6 +2,7 @@ package mesos
 
 import (
 	"encoding/json"
+	"time"
 
 	api "github.com/AVENTER-UG/mesos-compose/api"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
@@ -28,6 +29,10 @@ func Heartbeat() {
 
 			mesosutil.Revive()
 			task.State = "__NEW"
+			// these will save the current time at the task. we need it to check
+			// if the state will change in the next 'n min. if not, we have to
+			// give these task a recall.
+			task.StateTime = time.Now()
 			data, _ := json.Marshal(task)
 			err := config.RedisClient.Set(config.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
 			if err != nil {
