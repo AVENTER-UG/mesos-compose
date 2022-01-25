@@ -101,5 +101,5 @@ curl -X PUT http://localhost:10000/v0/compose/<PROJECTNAME> --data-binary @docs/
 To scale the service, just execute the same call again. To update a already existing docker-compose project, call:
 
 ```bash
-curl -X PUT http://localhost:10000/v0/compose/<PROJECTNAME>/update --data-binary @docs/example/docker-compose.yml
+curl -X UPDATE http://localhost:10000/v0/compose/<PROJECTNAME> --data-binary @docs/example/docker-compose.yml
 ```
