@@ -144,32 +144,75 @@
 <li>Docker Compose Spec 3.9</li>
 </ul>
 <h2 id="example"><a class="header" href="#example">Example</a></h2>
-<p>The compose file:</p>
+<p>Compose file with all supportet parameters:</p>
 <pre><code class="language-bash">version: '3.9'
+
 services:
   app:
     image: alpine:latest
-    command: [&quot;sleep&quot;,&quot;10&quot;]
+    command: [&quot;sleep&quot;, &quot;1000&quot;]
     restart: always
     volumes:
-      - /tmp:/tmp
+      - &quot;12345test:/tmp&quot;
     environment:
       - MYSQL_HOST=test
     labels:
       biz.aventer.mesos_compose.container_type: &quot;DOCKER&quot;
+      biz.aventer.mesos_compose.contraint_hostname: &quot;worker-1&quot;
+      traefik.enable: &quot;true&quot;
+      traefik.http.routers.test.entrypoints: &quot;web&quot;
+      traefik.http.routers.test.service: &quot;mc_test_app_80&quot;
+      traefik.http.routers.test.rule: &quot;HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)&quot;
     network_mode: &quot;BRIDGE&quot;
+    ports:
+      - &quot;8080:80&quot;
+      - &quot;9090&quot;
+      - &quot;8081:81/tcp&quot;
+      - &quot;8082:82/udp&quot;
     network:
       - default
     deploy:
       resources:
         limits:
-          cpus: &quot;0.001&quot;
+          cpus: &quot;0.01&quot;
           memory: &quot;50&quot;
 
 networks:
   default:
     external: true
     name: weave
+
+volumes:
+  12345test:
+    driver: local
+
+</code></pre>
+<p>We can also use yaml anchors and more then one service in a compose file:</p>
+<pre><code class="language-bash">version: '3.9'
+
+common: &amp;common
+  image: alpine:latest
+  restart: always
+  labels:
+    biz.aventer.mesos_compose.container_type: &quot;DOCKER&quot;
+
+services:
+  app1:
+    &lt;&lt;: *common
+    command: [&quot;sleep&quot;, &quot;1000&quot;]
+
+  app2:
+    &lt;&lt;: *common
+    command: [&quot;sleep&quot;, &quot;2000&quot;]
+
+networks:
+  default:
+    external: true
+    name: weave
+
+volumes:
+  12345test:
+    driver: local
 
 </code></pre>
 <p>Push these compose file to the framework. Every compose file needs to have an
