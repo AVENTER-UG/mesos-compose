@@ -14,16 +14,17 @@ import (
 func HandleOffers(offers *mesosproto.Event_Offers) error {
 	select {
 	case cmd := <-framework.CommandChan:
+		// if no taskid or taskname is given, it's a wrong task.
+		if cmd.TaskID == "" || cmd.TaskName == "" {
+			return nil
+		}
 
 		takeOffer, offerIds := getOffer(offers, cmd)
 		if takeOffer.GetHostname() == "" {
+			framework.CommandChan <- cmd
 			return nil
 		}
 		logrus.Debug("Take Offer From:", takeOffer.GetHostname())
-
-		if cmd.TaskID == "" {
-			return nil
-		}
 
 		var taskInfo []mesosproto.TaskInfo
 		RefuseSeconds := 5.0
@@ -80,10 +81,6 @@ func getOffer(offers *mesosproto.Event_Offers, cmd mesosutil.Command) (mesosprot
 	for n, offer := range offers.Offers {
 		logrus.Debug("Got Offer From:", offer.GetHostname())
 		offerIds = append(offerIds, offer.ID)
-
-		if cmd.TaskName == "" {
-			continue
-		}
 
 		// if the ressources of this offer does not matched what the command need, the skip
 		if !mesosutil.IsRessourceMatched(offer.Resources, cmd) {
