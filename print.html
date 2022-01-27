@@ -222,7 +222,7 @@ own project name.</p>
 <p><img src="vx_images/image_2021-11-08-11-33-09.png" alt="image_2021-11-08-11-33-09" /></p>
 <p><img src="vx_images/image_2021-11-08-11-33-47.png" alt="image_2021-11-08-11-33-47" /></p>
 <p>To scale the service, just execute the same call again. To update a already existing docker-compose project, call:</p>
-<pre><code class="language-bash">curl -X PUT http://localhost:10000/v0/compose/&lt;PROJECTNAME&gt;/update --data-binary @docs/example/docker-compose.yml
+<pre><code class="language-bash">curl -X UPDATE http://localhost:10000/v0/compose/&lt;PROJECTNAME&gt; --data-binary @docs/example/docker-compose.yml
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="error-codes"><a class="header" href="#error-codes">Error Codes</a></h1>
 <p>| 0 | No Error |
