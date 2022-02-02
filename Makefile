@@ -27,6 +27,10 @@ build:
 	@echo ">>>> Build docker image and publish it to private repo"
 	@docker buildx build --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} --push .
 
+build-bin:
+	@echo ">>>> Build binary"
+	@CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags "-X main.BuildVersion=${BUILDDATE} -X main.GitVersion=${TAG} -extldflags \"-static\"" .
+
 publish:
 	@echo ">>>> Publish docker image"
 	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAMEPUB}:${BRANCH}
@@ -39,4 +43,11 @@ docs:
 	@echo ">>>> Build docs"
 	$(MAKE) -C $@
 
-all: build
+version:
+	@echo ">>>> Generate version file"
+	@echo "[{ \"version\":\"${TAG}\", \"builddate\":\"${BUILDDATE}\" }]" > .version.json
+	@cat .version.json
+	@echo "Saved under .version.json"
+
+
+all: build version
