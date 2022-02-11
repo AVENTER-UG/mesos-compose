@@ -25,6 +25,7 @@ type Config struct {
 	RedisClient    *goredis.Client
 	RedisCTX       context.Context
 	RedisPassword  string
+	RedisDB        int
 	SkipSSL        bool
 	SSLKey         string
 	SSLCrt         string

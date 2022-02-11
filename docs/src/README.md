@@ -91,7 +91,7 @@ Push these compose file to the framework. Every compose file needs to have an
 own project name.
 
 ```bash
-curl -X PUT http://localhost:10000/v0/compose/<PROJECTNAME> --data-binary @docs/example/docker-compose.yml
+curl -X PUT http://localhost:10000/api/compose/v0/<PROJECTNAME> --data-binary @docs/example/docker-compose.yml
 ```
 
 ![image_2021-11-08-11-33-09](vx_images/image_2021-11-08-11-33-09.png)
@@ -101,5 +101,5 @@ curl -X PUT http://localhost:10000/v0/compose/<PROJECTNAME> --data-binary @docs/
 To scale the service, just execute the same call again. To update a already existing docker-compose project, call:
 
 ```bash
-curl -X UPDATE http://localhost:10000/v0/compose/<PROJECTNAME> --data-binary @docs/example/docker-compose.yml
+curl -X UPDATE http://localhost:10000/api/compose/v0/<PROJECTNAME> --data-binary @docs/example/docker-compose.yml
 ```

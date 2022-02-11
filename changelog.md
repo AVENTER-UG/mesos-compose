@@ -9,6 +9,7 @@
 - Optimize framework suppress
 - Add constraint "hostname eq" to accept only offers with the given hostname.
 - Check if the random generated port is already in use at the given agent.
+- IMPORTANT!!! Change the API URL's.
 
 ## v0.2.0
 

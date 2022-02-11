@@ -38,6 +38,7 @@ func init() {
 	config.AppName = "Mesos Compose Framework"
 	config.RedisServer = util.Getenv("REDIS_SERVER", "127.0.0.1:6379")
 	config.RedisPassword = os.Getenv("REDIS_PASSWORD")
+	config.RedisDB, _ = strconv.Atoi(util.Getenv("REDIS_DB", "1"))
 	config.SSLKey = os.Getenv("SSL_KEY_BASE64")
 	config.SSLCrt = os.Getenv("SSL_CRT_BASE64")
 	config.PrefixTaskName = util.Getenv("PREFIX_TASKNAME", framework.FrameworkName)

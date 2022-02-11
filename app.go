@@ -27,7 +27,7 @@ var GitVersion string
 func initCache() {
 	var redisOptions goredis.Options
 	redisOptions.Addr = config.RedisServer
-	redisOptions.DB = 1
+	redisOptions.DB = config.RedisDB
 	if config.RedisPassword != "" {
 		redisOptions.Password = config.RedisPassword
 	}

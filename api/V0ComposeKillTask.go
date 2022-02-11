@@ -11,7 +11,7 @@ import (
 
 // V0ComposeKillTask will kill a task from a service from a specific project
 // example:
-// curl -X DELETE http://user:password@127.0.0.1:10000/v0/compose/{projectname}/{servicename}/{taskid}
+// curl -X DELETE http://user:password@127.0.0.1:10000/api/compose/v0/{projectname}/{servicename}/{taskid}
 func V0ComposeKillTask(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	auth := CheckAuth(r, w)
