@@ -216,12 +216,12 @@ volumes:
 </code></pre>
 <p>Push these compose file to the framework. Every compose file needs to have an
 own project name.</p>
-<pre><code class="language-bash">curl -X PUT http://localhost:10000/v0/compose/&lt;PROJECTNAME&gt; --data-binary @docs/example/docker-compose.yml
+<pre><code class="language-bash">curl -X PUT http://localhost:10000/api/compose/v0/&lt;PROJECTNAME&gt; --data-binary @docs/example/docker-compose.yml
 </code></pre>
 <p><img src="vx_images/image_2021-11-08-11-33-09.png" alt="image_2021-11-08-11-33-09" /></p>
 <p><img src="vx_images/image_2021-11-08-11-33-47.png" alt="image_2021-11-08-11-33-47" /></p>
 <p>To scale the service, just execute the same call again. To update a already existing docker-compose project, call:</p>
-<pre><code class="language-bash">curl -X UPDATE http://localhost:10000/v0/compose/&lt;PROJECTNAME&gt; --data-binary @docs/example/docker-compose.yml
+<pre><code class="language-bash">curl -X UPDATE http://localhost:10000/api/compose/v0/&lt;PROJECTNAME&gt; --data-binary @docs/example/docker-compose.yml
 </code></pre>
 
                     </main>
