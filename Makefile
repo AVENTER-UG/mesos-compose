@@ -2,7 +2,7 @@
 
 #vars
 IMAGENAME=mesos-compose
-REPO=${registry}
+REPO=localhost:5000
 TAG=`git describe`
 BRANCH=`git rev-parse --abbrev-ref HEAD`
 BUILDDATE=`date -u +%Y-%m-%dT%H:%M:%SZ`
