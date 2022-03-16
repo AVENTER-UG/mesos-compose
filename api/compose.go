@@ -20,7 +20,8 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 	var cmd mesosutil.Command
 
 	// if task is set then its not a new task and we have to save old needed parameter
-	newTaskID, _ := util.GenUUID()
+	uuid, _ := util.GenUUID()
+	newTaskID := vars["project"] + "_" + name + "." + uuid
 	if task.TaskID != "" {
 		newTaskID = task.TaskID
 		cmd.State = task.State

@@ -30,6 +30,7 @@ type Config struct {
 	SSLKey         string
 	SSLCrt         string
 	Suppress       bool
+	Agents         MesosAgent
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework

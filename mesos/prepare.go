@@ -64,6 +64,7 @@ func defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
 	return res
 }
 
+// PrepareTaskInfoExecuteContainer will create the TaskInfo Protobuf for Mesos
 func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Command) ([]mesosproto.TaskInfo, error) {
 	d, _ := json.Marshal(&cmd)
 	logrus.Debug("HandleOffers cmd: ", util.PrettyJSON(d))
@@ -114,11 +115,12 @@ func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Com
 	msg.Container.Type = contype
 	msg.Container.Volumes = cmd.Volumes
 	msg.Container.Docker = &mesosproto.ContainerInfo_DockerInfo{
-		Image:        cmd.ContainerImage,
-		Network:      networkMode,
-		PortMappings: cmd.DockerPortMappings,
-		Privileged:   &cmd.Privileged,
-		Parameters:   cmd.DockerParameter,
+		Image:          cmd.ContainerImage,
+		Network:        networkMode,
+		PortMappings:   cmd.DockerPortMappings,
+		Privileged:     &cmd.Privileged,
+		Parameters:     cmd.DockerParameter,
+		ForcePullImage: func() *bool { x := true; return &x }(),
 	}
 	msg.Container.NetworkInfos = cmd.NetworkInfo
 

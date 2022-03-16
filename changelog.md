@@ -9,7 +9,9 @@
 - Optimize framework suppress
 - Add constraint "hostname eq" to accept only offers with the given hostname.
 - Check if the random generated port is already in use at the given agent.
+- Change TaskID format to be more speakable.
 - IMPORTANT!!! Change the API URL's.
+- Add force pull image
 
 ## v0.2.0
 
