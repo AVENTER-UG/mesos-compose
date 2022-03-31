@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	util "github.com/AVENTER-UG/util"
@@ -38,19 +39,30 @@ func V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 
 	for keys.Next(config.RedisCTX) {
 		key := GetRedisKey(keys.Val())
-		var task mesosutil.Command
-		json.Unmarshal([]byte(key), &task)
+		var oldTask mesosutil.Command
+		json.Unmarshal([]byte(key), &oldTask)
+		newTask := oldTask
 
-		// start a copy of this task and kill the old one
-		// TODO: green blue
-		mesosutil.Kill(task.TaskID, task.Agent)
-		task.State = ""
-		task.TaskID, _ = util.GenUUID()
-		data, _ := json.Marshal(task)
-		err := config.RedisClient.Set(config.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
+		// generate new task as copy of old task
+		taskName := strings.Split(oldTask.TaskID, ".")
+		uuid, _ := util.GenUUID()
+		newTask.TaskID = taskName[0] + "." + uuid
+		newTask.State = ""
+		data, _ := json.Marshal(newTask)
+		err := config.RedisClient.Set(config.RedisCTX, newTask.TaskName+":"+newTask.TaskID, data, 0).Err()
 		if err != nil {
-			d = ErrorMessage(2, "V0ComposeRestartService", err.Error())
-			logrus.Error("V0ComposeRestartService Redis set Error: ", err)
+			d = ErrorMessage(2, "V0ComposeRestartService newTask", err.Error())
+			logrus.WithField("func", "V0ComposeRestartService").Error("Redis Error write newTask Data: ", err.Error())
+			w.Write(d)
+		}
+
+		// set the old task to be killed
+		oldTask.State = "__KILL"
+		data, _ = json.Marshal(oldTask)
+		err = config.RedisClient.Set(config.RedisCTX, oldTask.TaskName+":"+oldTask.TaskID, data, 0).Err()
+		if err != nil {
+			d = ErrorMessage(2, "V0ComposeRestartService oldTask", err.Error())
+			logrus.WithField("func", "V0ComposeRestartService").Error("Redis Error write oldTask Data: ", err.Error())
 			w.Write(d)
 		}
 	}

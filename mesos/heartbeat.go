@@ -48,6 +48,10 @@ func Heartbeat() {
 			suppress = false
 			config.Suppress = false
 		}
+
+		if task.State == "__KILL" {
+			mesosutil.Kill(task.TaskID, task.Agent)
+		}
 	}
 
 	if suppress && !config.Suppress {
