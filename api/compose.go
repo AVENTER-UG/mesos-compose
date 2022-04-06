@@ -318,6 +318,7 @@ func getExecutor(service cfg.Service) mesosproto.ExecutorInfo {
 	if strings.ToLower(command) != "" {
 		executorID, _ := util.GenUUID()
 		executorInfo = mesosproto.ExecutorInfo{
+			Type: mesosproto.ExecutorInfo_CUSTOM,
 			ExecutorID: &mesosproto.ExecutorID{
 				Value: executorID,
 			},

@@ -96,7 +96,7 @@ func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Com
 	msg.AgentID = agent
 	msg.Resources = defaultResources(cmd)
 
-	// ExecutorInfo or CommandInfo, bots is not supportet
+	// ExecutorInfo or CommandInfo/Container, both is not supportet
 	if cmd.Executor.Command != nil {
 		msg.Executor = &cmd.Executor
 	} else {
@@ -114,23 +114,23 @@ func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Com
 				Environment: &cmd.Environment,
 			}
 		}
-	}
 
-	msg.Container = &mesosproto.ContainerInfo{}
-	msg.Container.Type = contype
-	msg.Container.Volumes = cmd.Volumes
-	msg.Container.Docker = &mesosproto.ContainerInfo_DockerInfo{
-		Image:          cmd.ContainerImage,
-		Network:        networkMode,
-		PortMappings:   cmd.DockerPortMappings,
-		Privileged:     &cmd.Privileged,
-		Parameters:     cmd.DockerParameter,
-		ForcePullImage: func() *bool { x := true; return &x }(),
-	}
-	msg.Container.NetworkInfos = cmd.NetworkInfo
+		msg.Container = &mesosproto.ContainerInfo{}
+		msg.Container.Type = contype
+		msg.Container.Volumes = cmd.Volumes
+		msg.Container.Docker = &mesosproto.ContainerInfo_DockerInfo{
+			Image:          cmd.ContainerImage,
+			Network:        networkMode,
+			PortMappings:   cmd.DockerPortMappings,
+			Privileged:     &cmd.Privileged,
+			Parameters:     cmd.DockerParameter,
+			ForcePullImage: func() *bool { x := true; return &x }(),
+		}
+		msg.Container.NetworkInfos = cmd.NetworkInfo
 
-	if cmd.Hostname != "" {
-		msg.Container.Hostname = &cmd.Hostname
+		if cmd.Hostname != "" {
+			msg.Container.Hostname = &cmd.Hostname
+		}
 	}
 
 	if cmd.Discovery != (mesosproto.DiscoveryInfo{}) {
