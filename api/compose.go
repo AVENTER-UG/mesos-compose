@@ -321,10 +321,11 @@ func getExecutor(service cfg.Service) mesosproto.ExecutorInfo {
 			ExecutorID: &mesosproto.ExecutorID{
 				Value: executorID,
 			},
+
 			Command: &mesosproto.CommandInfo{
 				Value: func() *string { x := command; return &x }(),
 			},
-		} 
+		}
 	}
 	return executorInfo
 }

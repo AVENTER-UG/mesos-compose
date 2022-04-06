@@ -96,18 +96,23 @@ func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Com
 	msg.AgentID = agent
 	msg.Resources = defaultResources(cmd)
 
-	if cmd.Command == "" {
-		msg.Command = &mesosproto.CommandInfo{
-			Shell:       &cmd.Shell,
-			URIs:        cmd.Uris,
-			Environment: &cmd.Environment,
-		}
+	// ExecutorInfo or CommandInfo, bots is not supportet
+	if cmd.Executor.Command != nil {
+		msg.Executor = &cmd.Executor
 	} else {
-		msg.Command = &mesosproto.CommandInfo{
-			Shell:       &cmd.Shell,
-			Value:       &cmd.Command,
-			URIs:        cmd.Uris,
-			Environment: &cmd.Environment,
+		if cmd.Command == "" {
+			msg.Command = &mesosproto.CommandInfo{
+				Shell:       &cmd.Shell,
+				URIs:        cmd.Uris,
+				Environment: &cmd.Environment,
+			}
+		} else {
+			msg.Command = &mesosproto.CommandInfo{
+				Shell:       &cmd.Shell,
+				Value:       &cmd.Command,
+				URIs:        cmd.Uris,
+				Environment: &cmd.Environment,
+			}
 		}
 	}
 
@@ -136,10 +141,6 @@ func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Com
 		msg.Labels = &mesosproto.Labels{
 			Labels: cmd.Labels,
 		}
-	}
-
-	if cmd.Executor.Command != nil {
-		msg.Executor = &cmd.Executor
 	}
 
 	d, _ = json.Marshal(&msg)

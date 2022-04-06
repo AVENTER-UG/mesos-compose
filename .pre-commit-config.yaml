@@ -26,6 +26,6 @@ repos:
       exclude: ^vendor/
     - id: go-imports
       exclude: ^vendor/
-    - id: golangci-lint
-      args: [--verbose]
-      exclude: ^vendor/
+        #    - id: golangci-lint
+        #      args: [--verbose]
+        #      exclude: ^vendor/
