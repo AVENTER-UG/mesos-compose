@@ -138,6 +138,10 @@ func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Com
 		}
 	}
 
+	if cmd.Executor.Command != nil {
+		msg.Executor = &cmd.Executor
+	}
+
 	d, _ = json.Marshal(&msg)
 	logrus.Debug("HandleOffers msg: ", util.PrettyJSON(d))
 

@@ -45,6 +45,7 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 	cmd.Hostname = getHostname(service)
 	cmd.Command = getCommand(service)
 	cmd.Labels = getLabels(service)
+	cmd.Executor = getExecutor(service)
 	cmd.DockerPortMappings = getDockerPorts(service, cmd.Agent)
 	cmd.Environment.Variables = getEnvironment(service)
 	cmd.Volumes = getVolumes(service, data)
@@ -307,4 +308,23 @@ func getVolumes(service cfg.Service, data cfg.Compose) []mesosproto.Volume {
 		volume = append(volume, tmp)
 	}
 	return volume
+}
+
+// Get custome executer
+func getExecutor(service cfg.Service) mesosproto.ExecutorInfo {
+	var executorInfo mesosproto.ExecutorInfo
+	command := getLabelValueByKey("biz.aventer.mesos_compose.executor", service)
+
+	if strings.ToLower(command) != "" {
+		executorID, _ := util.GenUUID()
+		executorInfo = mesosproto.ExecutorInfo{
+			ExecutorID: &mesosproto.ExecutorID{
+				Value: executorID,
+			},
+			Command: &mesosproto.CommandInfo{
+				Value: func() *string { x := command; return &x }(),
+			},
+		} 
+	}
+	return executorInfo
 }

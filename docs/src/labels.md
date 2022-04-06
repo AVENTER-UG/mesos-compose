@@ -12,3 +12,9 @@ container.
 Values: <hostname>
 
 This label will control, on which node the container will be executed.
+
+## biz.aventer.mesos_compose.executor
+
+Values: <mesos-executor>
+
+With this label it is possible to use a custom executor.

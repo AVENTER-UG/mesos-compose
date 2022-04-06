@@ -2,6 +2,12 @@ github.com/AVENTER-UG/go-logrus-formatter v0.0.0-20181204170756-e4bb1d931585 h1:
 github.com/AVENTER-UG/go-logrus-formatter v0.0.0-20181204170756-e4bb1d931585/go.mod h1:EXN8FPKx567UIA2L4jewW7pg48hc3i4fPZ+uBmHXxZI=
 github.com/AVENTER-UG/mesos-util v0.0.19 h1:wVzI6r1ERwisEn/ZmgedYGuFWramk51GDCykNOrMz5E=
 github.com/AVENTER-UG/mesos-util v0.0.19/go.mod h1:70fymV+AZKb3VQtUtprpJVXtp+mEAsYk7/NEg3s5JQ8=
+github.com/AVENTER-UG/mesos-util v0.0.23 h1:JaGnIpZ1L8kEXFWQ4Rix3w/DKj3Om4BQjBqI54X5wPM=
+github.com/AVENTER-UG/mesos-util v0.0.23/go.mod h1:70fymV+AZKb3VQtUtprpJVXtp+mEAsYk7/NEg3s5JQ8=
+github.com/AVENTER-UG/mesos-util v0.0.24 h1:ybdHdL9azqhNtKUkTr94LX4GXMQs0EqX0rmiiK44QWE=
+github.com/AVENTER-UG/mesos-util v0.0.24/go.mod h1:70fymV+AZKb3VQtUtprpJVXtp+mEAsYk7/NEg3s5JQ8=
+github.com/AVENTER-UG/mesos-util v0.0.25 h1:I9otZO64itgUcQZMObQpUZ4VDt/T4w942PcIsI7d9n0=
+github.com/AVENTER-UG/mesos-util v0.0.25/go.mod h1:70fymV+AZKb3VQtUtprpJVXtp+mEAsYk7/NEg3s5JQ8=
 github.com/AVENTER-UG/util v0.2.0 h1:qWCE7GOZ77OAk72TtigqcEVus1Xyh9GxDp7n6NjFsAM=
 github.com/AVENTER-UG/util v0.2.0/go.mod h1:8mh50Bes+U3D6ZP3psP4K8LSPNwpeuM5vRNb/vU/sS0=
 github.com/Showmax/go-fqdn v1.0.0 h1:0rG5IbmVliNT5O19Mfuvna9LL7zlHyRfsSvBPZmF9tM=
