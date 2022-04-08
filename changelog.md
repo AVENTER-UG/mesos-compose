@@ -12,7 +12,7 @@
 - Change TaskID format to be more speakable.
 - IMPORTANT!!! Change the API URL's.
 - Add force pull image
-- Add executor label to change mesos executor.
+- Add executor label to define custom mesos executor.
 
 ## v0.2.0
 

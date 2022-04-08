@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"path"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
@@ -314,8 +315,9 @@ func getVolumes(service cfg.Service, data cfg.Compose) []mesosproto.Volume {
 func getExecutor(service cfg.Service) mesosproto.ExecutorInfo {
 	var executorInfo mesosproto.ExecutorInfo
 	command := getLabelValueByKey("biz.aventer.mesos_compose.executor", service)
+	uri := getLabelValueByKey("biz.aventer.mesos_compose.executor_uri", service)
 
-	if strings.ToLower(command) != "" {
+	if command != "" {
 		executorID, _ := util.GenUUID()
 		executorInfo = mesosproto.ExecutorInfo{
 			Type: mesosproto.ExecutorInfo_CUSTOM,
@@ -327,6 +329,20 @@ func getExecutor(service cfg.Service) mesosproto.ExecutorInfo {
 				Value: func() *string { x := command; return &x }(),
 			},
 		}
+
+		if uri != "" {
+			executorInfo.Command.URIs = []mesosproto.CommandInfo_URI{
+				{
+					Value:      uri,
+					Extract:    func() *bool { x := false; return &x }(),
+					Executable: func() *bool { x := true; return &x }(),
+					Cache:      func() *bool { x := false; return &x }(),
+					OutputFile: func() *string { x := path.Base(command); return &x }(),
+				},
+			}
+		}
+
 	}
 	return executorInfo
 }
+
