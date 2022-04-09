@@ -159,6 +159,8 @@ services:
     labels:
       biz.aventer.mesos_compose.container_type: &quot;DOCKER&quot;
       biz.aventer.mesos_compose.contraint_hostname: &quot;worker-1&quot;
+      biz.aventer.mesos_compose.executor: &quot;./my-custom-executor&quot;
+      biz.aventer.mesos_compose.executor_uri: &quot;http://localhost/my-custom-executor&quot;
       traefik.enable: &quot;true&quot;
       traefik.http.routers.test.entrypoints: &quot;web&quot;
       traefik.http.routers.test.service: &quot;mc_test_app_80&quot;
@@ -237,6 +239,12 @@ container.</p>
 <h2 id="bizaventermesos_composecontraint_hostname"><a class="header" href="#bizaventermesos_composecontraint_hostname">biz.aventer.mesos_compose.contraint_hostname</a></h2>
 <p>Values: <hostname></p>
 <p>This label will control, on which node the container will be executed.</p>
+<h2 id="bizaventermesos_composeexecutor"><a class="header" href="#bizaventermesos_composeexecutor">biz.aventer.mesos_compose.executor</a></h2>
+<p>Values: <mesos-executor></p>
+<p>With this label it is possible to use a custom executor.</p>
+<h2 id="bizaventermesos_composeexecutor_uri"><a class="header" href="#bizaventermesos_composeexecutor_uri">biz.aventer.mesos_compose.executor_uri</a></h2>
+<p>Values: <mesos-executor-uri></p>
+<p>The URL where to fetch the executor. As example: <code>http://localhost:8080/executor</code></p>
 
                     </main>
 
