@@ -1,4 +1,4 @@
-# M3s Labels
+# Custom labels
 
 ## biz.aventer.mesos_compose.container_type
 
