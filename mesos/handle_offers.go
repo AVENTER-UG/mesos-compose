@@ -1,6 +1,7 @@
 package mesos
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -8,6 +9,7 @@ import (
 
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
+	"github.com/AVENTER-UG/util"
 )
 
 // HandleOffers will handle the offers event of mesos
@@ -40,11 +42,31 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 				Filters: &mesosproto.Filters{
 					RefuseSeconds: &RefuseSeconds,
 				},
-				Operations: []mesosproto.Offer_Operation{{
-					Type: mesosproto.Offer_Operation_LAUNCH,
-					Launch: &mesosproto.Offer_Operation_Launch{
-						TaskInfos: taskInfo,
-					}}}}}
+			},
+		}
+
+		if getLabelValue("biz.aventer.mesos_compose.executor", cmd) != "" {
+			cmd.Executor.Resources = defaultResources(cmd)
+			accept.Accept.Operations = []mesosproto.Offer_Operation{{
+				Type: mesosproto.Offer_Operation_LAUNCH_GROUP,
+				LaunchGroup: &mesosproto.Offer_Operation_LaunchGroup{
+					Executor: cmd.Executor,
+					TaskGroup: mesosproto.TaskGroupInfo{
+						Tasks: taskInfo,
+					},
+				},
+			}}
+		} else {
+			accept.Accept.Operations = []mesosproto.Offer_Operation{{
+				Type: mesosproto.Offer_Operation_LAUNCH,
+				Launch: &mesosproto.Offer_Operation_Launch{
+					TaskInfos: taskInfo,
+				},
+			}}
+		}
+
+		d, _ := json.Marshal(&accept)
+		logrus.Debug("HandleOffers msg: ", util.PrettyJSON(d))
 
 		logrus.Info("Offer Accept: ", takeOffer.GetID(), " On Node: ", takeOffer.GetHostname())
 		err := mesosutil.Call(accept)

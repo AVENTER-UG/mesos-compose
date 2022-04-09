@@ -10,11 +10,13 @@ import (
 )
 
 func defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
+	PORT := "ports"
 	CPU := "cpus"
 	MEM := "mem"
+	DISK := "disk"
 	cpu := cmd.CPU
 	mem := cmd.Memory
-	PORT := "ports"
+	disk := cmd.Disk
 
 	res := []mesosproto.Resource{
 		{
@@ -27,6 +29,11 @@ func defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
 			Type:   mesosproto.SCALAR.Enum(),
 			Scalar: &mesosproto.Value_Scalar{Value: mem},
 		},
+		{
+			Name:   DISK,
+			Type:   mesosproto.SCALAR.Enum(),
+			Scalar: &mesosproto.Value_Scalar{Value: disk},
+		},
 	}
 
 	var portBegin, portEnd uint64
@@ -35,30 +42,19 @@ func defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
 		portBegin = uint64(cmd.DockerPortMappings[0].HostPort)
 		portEnd = portBegin + uint64(len(cmd.DockerPortMappings)) - 1
 
-		res = []mesosproto.Resource{
-			{
-				Name:   CPU,
-				Type:   mesosproto.SCALAR.Enum(),
-				Scalar: &mesosproto.Value_Scalar{Value: cpu},
-			},
-			{
-				Name:   MEM,
-				Type:   mesosproto.SCALAR.Enum(),
-				Scalar: &mesosproto.Value_Scalar{Value: mem},
-			},
-			{
-				Name: PORT,
-				Type: mesosproto.RANGES.Enum(),
-				Ranges: &mesosproto.Value_Ranges{
-					Range: []mesosproto.Value_Range{
-						{
-							Begin: portBegin,
-							End:   portEnd,
-						},
+		port := mesosproto.Resource{
+			Name: PORT,
+			Type: mesosproto.RANGES.Enum(),
+			Ranges: &mesosproto.Value_Ranges{
+				Range: []mesosproto.Value_Range{
+					{
+						Begin: portBegin,
+						End:   portEnd,
 					},
 				},
 			},
 		}
+		res = append(res, port)
 	}
 
 	return res
@@ -66,10 +62,10 @@ func defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
 
 // PrepareTaskInfoExecuteContainer will create the TaskInfo Protobuf for Mesos
 func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Command) ([]mesosproto.TaskInfo, error) {
+	contype := mesosproto.ContainerInfo_DOCKER.Enum()
+
 	d, _ := json.Marshal(&cmd)
 	logrus.Debug("HandleOffers cmd: ", util.PrettyJSON(d))
-
-	contype := mesosproto.ContainerInfo_DOCKER.Enum()
 
 	// Set Container Network Mode
 	networkMode := mesosproto.ContainerInfo_DockerInfo_BRIDGE.Enum()
@@ -96,25 +92,23 @@ func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Com
 	msg.AgentID = agent
 	msg.Resources = defaultResources(cmd)
 
-	// ExecutorInfo or CommandInfo/Container, both is not supportet
-	if cmd.Executor.Command != nil {
-		msg.Executor = &cmd.Executor
-	} else {
-		if cmd.Command == "" {
-			msg.Command = &mesosproto.CommandInfo{
-				Shell:       &cmd.Shell,
-				URIs:        cmd.Uris,
-				Environment: &cmd.Environment,
-			}
-		} else {
-			msg.Command = &mesosproto.CommandInfo{
-				Shell:       &cmd.Shell,
-				Value:       &cmd.Command,
-				URIs:        cmd.Uris,
-				Environment: &cmd.Environment,
-			}
+	if cmd.Command == "" {
+		msg.Command = &mesosproto.CommandInfo{
+			Shell:       &cmd.Shell,
+			URIs:        cmd.Uris,
+			Environment: &cmd.Environment,
 		}
+	} else {
+		msg.Command = &mesosproto.CommandInfo{
+			Shell:       &cmd.Shell,
+			Value:       &cmd.Command,
+			URIs:        cmd.Uris,
+			Environment: &cmd.Environment,
+		}
+	}
 
+	// ExecutorInfo or CommandInfo/Container, both is not supportet
+	if getLabelValue("biz.aventer.mesos_compose.executor", cmd) == "" {
 		msg.Container = &mesosproto.ContainerInfo{}
 		msg.Container.Type = contype
 		msg.Container.Volumes = cmd.Volumes
@@ -142,9 +136,6 @@ func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Com
 			Labels: cmd.Labels,
 		}
 	}
-
-	d, _ = json.Marshal(&msg)
-	logrus.Debug("HandleOffers msg: ", util.PrettyJSON(d))
 
 	return []mesosproto.TaskInfo{msg}, nil
 }

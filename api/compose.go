@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"path"
 	"strconv"
 	"strings"
 	"time"
-	"path"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
@@ -32,6 +32,7 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 	cmd.TaskName = config.PrefixTaskName + ":" + vars["project"] + ":" + name
 	cmd.CPU = getCPU(service)
 	cmd.Memory = getMemory(service)
+	cmd.Disk = getDisk(service)
 	cmd.ContainerType = getLabelValueByKey("biz.aventer.mesos_compose.container_type", service)
 	cmd.ContainerImage = service.Image
 	cmd.NetworkMode = service.NetworkMode
@@ -91,6 +92,12 @@ func getMemory(service cfg.Service) float64 {
 		return mem
 	}
 	return config.Memory
+}
+
+// Get the Disk value from the compose file, or the default one if it's unset
+func getDisk(service cfg.Service) float64 {
+	// Currently, onyl default value is supported
+	return config.Disk
 }
 
 // Get the Hostname value from the compose file, or generate one if it's unset
@@ -320,11 +327,12 @@ func getExecutor(service cfg.Service) mesosproto.ExecutorInfo {
 	if command != "" {
 		executorID, _ := util.GenUUID()
 		executorInfo = mesosproto.ExecutorInfo{
+			Name: func() *string { x := path.Base(command); return &x }(),
 			Type: mesosproto.ExecutorInfo_CUSTOM,
 			ExecutorID: &mesosproto.ExecutorID{
 				Value: executorID,
 			},
-
+			FrameworkID: framework.FrameworkInfo.ID,
 			Command: &mesosproto.CommandInfo{
 				Value: func() *string { x := command; return &x }(),
 			},
@@ -345,4 +353,3 @@ func getExecutor(service cfg.Service) mesosproto.ExecutorInfo {
 	}
 	return executorInfo
 }
-

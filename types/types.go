@@ -21,6 +21,7 @@ type Config struct {
 	PrefixTaskName string
 	CPU            float64
 	Memory         float64
+	Disk           float64
 	RedisServer    string
 	RedisClient    *goredis.Client
 	RedisCTX       context.Context
