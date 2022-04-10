@@ -6,7 +6,6 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"net/http"
-	"strconv"
 	"strings"
 
 	api "github.com/AVENTER-UG/mesos-compose/api"
@@ -71,18 +70,15 @@ func Subscribe() error {
 	reader := bufio.NewReader(res.Body)
 
 	line, _ := reader.ReadString('\n')
-	bytesCount, _ := strconv.Atoi(strings.Trim(line, "\n"))
+  line = strings.TrimSuffix(line, "\n")
 
 	for {
 		// Read line from Mesos
 		line, _ = reader.ReadString('\n')
-		line = strings.Trim(line, "\n")
+    line = strings.TrimSuffix(line, "\n")
 		// Read important data
-		data := line[:bytesCount]
-		// Rest data will be bytes of next message
-		bytesCount, _ = strconv.Atoi((line[bytesCount:]))
 		var event mesosproto.Event // Event as ProtoBuf
-		err := jsonpb.UnmarshalString(data, &event)
+		err := jsonpb.UnmarshalString(line, &event)
 		if err != nil {
 			logrus.Error(err)
 		}
