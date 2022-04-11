@@ -336,6 +336,9 @@ func getExecutor(service cfg.Service) mesosproto.ExecutorInfo {
 			Command: &mesosproto.CommandInfo{
 				Value: func() *string { x := command; return &x }(),
 			},
+			Container: &mesosproto.ContainerInfo{
+				Type: mesosproto.ContainerInfo_MESOS.Enum(),
+			},
 		}
 
 		if uri != "" {
