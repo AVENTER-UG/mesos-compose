@@ -70,12 +70,12 @@ func Subscribe() error {
 	reader := bufio.NewReader(res.Body)
 
 	line, _ := reader.ReadString('\n')
-  line = strings.TrimSuffix(line, "\n")
+	line = strings.TrimSuffix(line, "\n")
 
 	for {
 		// Read line from Mesos
 		line, _ = reader.ReadString('\n')
-    line = strings.TrimSuffix(line, "\n")
+		line = strings.TrimSuffix(line, "\n")
 		// Read important data
 		var event mesosproto.Event // Event as ProtoBuf
 		err := jsonpb.UnmarshalString(line, &event)
@@ -99,6 +99,7 @@ func Subscribe() error {
 				logrus.Error("Framework save config and state into redis Error: ", err)
 			}
 			Reconcile()
+			api.SaveConfig()
 		case mesosproto.Event_UPDATE:
 			logrus.Debug("Update", HandleUpdate(&event))
 			api.SaveConfig()
