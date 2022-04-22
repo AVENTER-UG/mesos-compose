@@ -1,6 +1,6 @@
 # Changelog
 
-## Master
+## v0.3.0
 
 - Add Redis Authentication Support
 - Change DB items framework and framework_config to be saved with the

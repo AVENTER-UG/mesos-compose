@@ -46,7 +46,6 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 		}
 
 		if getLabelValue("biz.aventer.mesos_compose.executor", cmd) != "" {
-			cmd.Executor.Resources = defaultResources(cmd)
 			accept.Accept.Operations = []mesosproto.Offer_Operation{{
 				Type: mesosproto.Offer_Operation_LAUNCH_GROUP,
 				LaunchGroup: &mesosproto.Offer_Operation_LaunchGroup{
