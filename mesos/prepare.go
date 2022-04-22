@@ -18,6 +18,13 @@ func defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
 	mem := cmd.Memory
 	disk := cmd.Disk
 
+	// FIX: https://github.com/AVENTER-UG/mesos-compose/issues/8
+	// If the task already exists from a prev mesos-compose version, disk
+	// would be unset.
+	if disk <= config.Disk {
+		disk = config.Disk
+	}
+
 	res := []mesosproto.Resource{
 		{
 			Name:   CPU,
