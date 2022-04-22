@@ -28,14 +28,22 @@ func SetConfig(cfg *cfg.Config, frm *mesosutil.FrameworkConfig) {
 // Commands is the main function of this package
 func Commands() *mux.Router {
 	rtr := mux.NewRouter()
-	rtr.HandleFunc("/v0/task/show", V0ShowAllTasks).Methods("GET")
-	rtr.HandleFunc("/v0/compose/{project}", V0ComposePush).Methods("PUT")
-	rtr.HandleFunc("/v0/compose/{project}/update", V0ComposeUpdate).Methods("PUT")
-	rtr.HandleFunc("/v0/compose/{project}/{servicename}", V0ComposeKillService).Methods("DELETE")
-	rtr.HandleFunc("/v0/compose/{project}/{servicename}/restart", V0ComposeRestartService).Methods("PUT")
-	rtr.HandleFunc("/v0/compose/{project}/{servicename}/{taskid}", V0ComposeKillTask).Methods("DELETE")
+	rtr.HandleFunc("/api/compose/versions", Versions).Methods("GET")
+	rtr.HandleFunc("/api/compose/v0/tasks", V0ShowAllTasks).Methods("GET")
+	rtr.HandleFunc("/api/compose/v0/{project}", V0ComposePush).Methods("PUT")
+	rtr.HandleFunc("/api/compose/v0/{project}", V0ComposeUpdate).Methods("UPDATE")
+	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}", V0ComposeKillService).Methods("DELETE")
+	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}/restart", V0ComposeRestartService).Methods("PUT")
+	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}/{taskid}", V0ComposeKillTask).Methods("DELETE")
 
 	return rtr
+}
+
+// Versions give out a list of Versions
+func Versions(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Api-Service", "-")
+	w.Write([]byte("/api/compose/v0"))
 }
 
 // CheckAuth will check if the token is valid
@@ -69,6 +77,5 @@ func ErrorMessage(number int, function string, msg string) []byte {
 	err.Message = msg
 
 	data, _ := json.Marshal(err)
-	return []byte(data)
-
+	return data
 }

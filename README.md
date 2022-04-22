@@ -1,4 +1,4 @@
-# mesos-compose 
+# mesos-compose
 
 [![Chat](https://img.shields.io/static/v1?label=Chat&message=Support&color=brightgreen)](https://matrix.to/#/#mesosk3s:matrix.aventer.biz?via=matrix.aventer.biz)
 [![Docs](https://img.shields.io/static/v1?label=Docs&message=Support&color=brightgreen)](https://aventer-ug.github.io/mesos-m3s/index.html)
@@ -45,7 +45,8 @@ networks:
 
 ```
 
-Push these compose file to the framework. Every docker-compose need to have a own project name.
+Push these compose file to the framework. Every compose file needs to have an
+own project name.
 
 ```bash
 curl -X PUT http://localhost:10000/v0/compose/<PROJECTNAME> --data-binary @docs/example/docker-compose.yml
@@ -55,9 +56,9 @@ curl -X PUT http://localhost:10000/v0/compose/<PROJECTNAME> --data-binary @docs/
 
 ![image_2021-11-08-11-33-47](vx_images/image_2021-11-08-11-33-47.png)
 
-To scale the service, just execute the same call again. To update a already existing docker-compose project, call:
+To scale the service, just execute the same call again. To update a already
+existing docker-compose project, call:
 
 ```bash
 curl -X PUT http://localhost:10000/v0/compose/<PROJECTNAME>/update --data-binary @docs/example/docker-compose.yml
 ```
-

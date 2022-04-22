@@ -8,7 +8,7 @@ import (
 
 // V0ShowAllTasks will print out all tasks
 // example:
-// curl -X GET http://user:password@127.0.0.1:10000/v0/task/show
+// curl -X GET http://user:password@127.0.0.1:10000/api/compose/v0/tasks
 func V0ShowAllTasks(w http.ResponseWriter, r *http.Request) {
 	auth := CheckAuth(r, w)
 

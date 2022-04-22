@@ -14,7 +14,7 @@ import (
 
 // V0ComposeUpdate will update the docker-compose.yml
 // example:
-// curl -X GET http://user:password@127.0.0.1:10000/v0/compose --data-binary @docker-compose.yml
+// curl -X GET http://user:password@127.0.0.1:10000/api/compose/v0 --data-binary @docker-compose.yml
 func V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	auth := CheckAuth(r, w)
@@ -34,7 +34,7 @@ func V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 	err := yaml.NewDecoder(r.Body).Decode(&data)
 
 	if err != nil {
-		d := ErrorMessage(2, "V0ComposeUpdate", err.Error())
+		d = ErrorMessage(2, "V0ComposeUpdate", err.Error())
 		w.Write(d)
 		logrus.Error("Error: ", err)
 	}

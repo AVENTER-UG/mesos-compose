@@ -2,12 +2,14 @@ package mesos
 
 import (
 	"encoding/json"
+	"time"
 
 	api "github.com/AVENTER-UG/mesos-compose/api"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	"github.com/sirupsen/logrus"
 )
 
+// Heartbeat - The Apache Mesos heatbeat function
 func Heartbeat() {
 	keys := api.GetAllRedisKeys("*")
 	suppress := true
@@ -18,14 +20,21 @@ func Heartbeat() {
 		var task mesosutil.Command
 		json.Unmarshal([]byte(key), &task)
 
-		if task.TaskID == "" {
+		if task.TaskID == "" || task.TaskName == "" {
 			continue
 		}
 
 		if task.State == "" {
+			mesosutil.Revive()
+			task.State = "__NEW"
+			// these will save the current time at the task. we need it to check
+			// if the state will change in the next 'n min. if not, we have to
+			// give these task a recall.
+			task.StateTime = time.Now()
+
+			// add task to communication channel
 			framework.CommandChan <- task
 
-			task.State = "__NEW"
 			data, _ := json.Marshal(task)
 			err := config.RedisClient.Set(config.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
 			if err != nil {
@@ -36,12 +45,17 @@ func Heartbeat() {
 		}
 
 		if task.State == "__NEW" {
-			mesosutil.Revive()
 			suppress = false
+			config.Suppress = false
+		}
+
+		if task.State == "__KILL" {
+			mesosutil.Kill(task.TaskID, task.Agent)
 		}
 	}
 
-	if suppress {
+	if suppress && !config.Suppress {
 		mesosutil.SuppressFramework()
+		config.Suppress = true
 	}
 }

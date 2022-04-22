@@ -3,7 +3,7 @@ authors = ["Andreas Peters"]
 language = "en"
 multilingual = false
 src = "src"
-title = "Mesos Compose - The Docker-Compose Orchestrator for Mesos
+title = "Mesos Compose - The Docker-Compose Orchestrator for Mesos"
 
 [build]
 create-missing = true
