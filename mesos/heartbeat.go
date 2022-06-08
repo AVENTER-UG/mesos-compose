@@ -24,7 +24,7 @@ func Heartbeat() {
 			continue
 		}
 
-		if task.State == "" {
+		if task.State == "" && api.CountRedisKey(task.TaskName+":*") <= task.Instances {
 			mesosutil.Revive()
 			task.State = "__NEW"
 			// these will save the current time at the task. we need it to check

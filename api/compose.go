@@ -51,6 +51,7 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 	cmd.DockerPortMappings = getDockerPorts(service, cmd.Agent)
 	cmd.Environment.Variables = getEnvironment(service)
 	cmd.Volumes = getVolumes(service, data)
+	cmd.Instances = getReplicas(service)
 
 	cmd.Discovery = mesosproto.DiscoveryInfo{
 		Visibility: 2,
@@ -66,13 +67,13 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 		cmd.Shell = false
 	}
 
-	// store mesos task in db
+	// store/updte the mesos task in db
 	d, _ := json.Marshal(&cmd)
-	logrus.Debug("Scheduled Mesos Task: ", util.PrettyJSON(d))
+	logrus.Debug("Save Mesos Task in DB: ", util.PrettyJSON(d))
 	err := config.RedisClient.Set(config.RedisCTX, cmd.TaskName+":"+newTaskID, d, 0).Err()
 
 	if err != nil {
-		logrus.Error("Cloud not store Mesos Task in Redis: ", err)
+		logrus.Error("Could not store Mesos Task in Redis: ", err)
 	}
 }
 
@@ -96,8 +97,17 @@ func getMemory(service cfg.Service) float64 {
 
 // Get the Disk value from the compose file, or the default one if it's unset
 func getDisk(service cfg.Service) float64 {
-	// Currently, onyl default value is supported
+	// Currently, only default value is supported
 	return config.Disk
+}
+
+// Get the count of Replicas of the tasks
+func getReplicas(service cfg.Service) int {
+	if service.Deploy.Replicas != "" {
+		replicas, _ := strconv.Atoi(service.Deploy.Replicas)
+		return replicas
+	}
+	return 1
 }
 
 // Get the Hostname value from the compose file, or generate one if it's unset

@@ -68,6 +68,7 @@ type Service struct {
 
 // Deploy - The mesos resources to deploy a task
 type Deploy struct {
+	Replicas  string `yaml:"replicas"`
 	Resources struct {
 		Limits struct {
 			CPUs   string `yaml:"cpus"`
