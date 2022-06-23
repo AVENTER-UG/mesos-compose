@@ -23,6 +23,8 @@ services:
       - "12345test:/tmp"
     environment:
       - MYSQL_HOST=test
+    hostname: test
+    container_name: test
     labels:
       biz.aventer.mesos_compose.container_type: "DOCKER"
       biz.aventer.mesos_compose.contraint_hostname: "worker-1"
@@ -41,6 +43,7 @@ services:
     network:
       - default
     deploy:
+      replicas: 1
       resources:
         limits:
           cpus: "0.01"

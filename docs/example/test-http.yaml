@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  test1:
+    image: docker.io/avhost/docker-lighttpd
+    restart: always
+    network_mode: "host"
+    labels:
+      traefik.enable: "true"
+      biz.aventer.mesos_compose.container_type: "DOCKER"
+      traefik.http.routers.test1.entrypoints: "web"
+      traefik.http.routers.test1.rule: "Host(`www.example.com`)"
+      traefik.http.routers.test1.service: "mc:homepages:test1:8888"
+      traefik.http.services.test1.loadBalancer.healthCheck.path: "/index.html"
+      traefik.http.services.test1.loadBalancer.healthCheck.interval: "10s"
+      traefik.http.services.test1.loadBalancer.healthCheck.timeout: "3s"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: "50"

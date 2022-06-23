@@ -6,8 +6,6 @@ repos:
     exclude: ^vendor/
   - id: end-of-file-fixer
     exclude: ^vendor/
-  - id: trailing-whitespace
-    exclude: ^vendor/
   - id: detect-private-key
 
 - repo: https://github.com/ambv/black
@@ -26,6 +24,10 @@ repos:
       exclude: ^vendor/
     - id: go-imports
       exclude: ^vendor/
-        #    - id: golangci-lint
-        #      args: [--verbose]
-        #      exclude: ^vendor/
+
+- repo: local
+  hooks:
+    - id: sbom
+      name: syft
+      entry: .git/hooks/sbom.sh
+      language: system

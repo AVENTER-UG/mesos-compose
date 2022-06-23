@@ -2,6 +2,10 @@
 
 ## master
 
+- ADD-11: Docker Compose Replicas
+
+## v0.3.1
+
 - FIX-8: Set disk resource to the default value if its unset.
 - FIX-7: Set mesos resources at executor info.
 
