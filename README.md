@@ -18,24 +18,40 @@ The compose file:
 
 ```bash
 version: '3.9'
+
 services:
   app:
     image: alpine:latest
-    command: ["sleep","10"]
+    command: ["sleep", "1000"]
     restart: always
     volumes:
-      - /tmp:/tmp
+      - "12345test:/tmp"
     environment:
       - MYSQL_HOST=test
+    hostname: test
+    container_name: test
     labels:
       biz.aventer.mesos_compose.container_type: "DOCKER"
+      biz.aventer.mesos_compose.contraint_hostname: "worker-1"
+      biz.aventer.mesos_compose.executor: "./my-custom-executor"
+      biz.aventer.mesos_compose.executor_uri: "http://localhost/my-custom-executor"
+      traefik.enable: "true"
+      traefik.http.routers.test.entrypoints: "web"
+      traefik.http.routers.test.service: "mc_test_app_80"
+      traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
     network_mode: "BRIDGE"
+    ports:
+      - "8080:80"
+      - "9090"
+      - "8081:81/tcp"
+      - "8082:82/udp"
     network:
       - default
     deploy:
+      replicas: 1
       resources:
         limits:
-          cpus: "0.001"
+          cpus: "0.01"
           memory: "50"
 
 networks:
@@ -43,7 +59,12 @@ networks:
     external: true
     name: weave
 
+volumes:
+  12345test:
+    driver: local
+
 ```
+
 
 Push these compose file to the framework. Every compose file needs to have an
 own project name.
