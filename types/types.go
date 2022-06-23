@@ -50,24 +50,26 @@ type Compose struct {
 
 // Service - The docker-compose service parameters
 type Service struct {
-	Network     []string               `yaml:"network"`
-	Build       string                 `yaml:"build"`
-	Restart     string                 `yaml:"restart"`
-	Volumes     []string               `yaml:"volumes"`
-	Environment []string               `yaml:"environment"`
-	DependsOn   []string               `yaml:"depends_on"`
-	Ports       []string               `yaml:"ports"`
-	Image       string                 `yaml:"image"`
-	Labels      map[string]interface{} `yaml:"labels"`
-	NetworkMode string                 `yaml:"network_mode"`
-	Privileged  bool                   `yaml:"privileged"`
-	Command     []string               `yaml:"command"`
-	Deploy      Deploy                 `yaml:"deploy"`
-	Hostname    string                 `yaml:"hostname"`
+	Network       []string               `yaml:"network" yaml:"networks"`
+	Build         string                 `yaml:"build"`
+	Restart       string                 `yaml:"restart"`
+	Volumes       []string               `yaml:"volumes"`
+	Environment   []string               `yaml:"environment"`
+	DependsOn     []string               `yaml:"depends_on"`
+	Ports         []string               `yaml:"ports"`
+	Image         string                 `yaml:"image"`
+	Labels        map[string]interface{} `yaml:"labels"`
+	NetworkMode   string                 `yaml:"network_mode"`
+	Privileged    bool                   `yaml:"privileged"`
+	Command       []string               `yaml:"command"`
+	Deploy        Deploy                 `yaml:"deploy"`
+	Hostname      string                 `yaml:"hostname"`
+	ContainerName string                 `yaml:"container_name"`
 }
 
 // Deploy - The mesos resources to deploy a task
 type Deploy struct {
+	Replicas  string `yaml:"replicas"`
 	Resources struct {
 		Limits struct {
 			CPUs   string `yaml:"cpus"`

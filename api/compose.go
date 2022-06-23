@@ -33,10 +33,10 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 	cmd.CPU = getCPU(service)
 	cmd.Memory = getMemory(service)
 	cmd.Disk = getDisk(service)
-	cmd.ContainerType = getLabelValueByKey("biz.aventer.mesos_compose.container_type", service)
+	cmd.ContainerType = strings.ToLower(getLabelValueByKey("biz.aventer.mesos_compose.container_type", service))
 	cmd.ContainerImage = service.Image
 	cmd.NetworkMode = service.NetworkMode
-	if len(data.Networks) > 0 {
+	if len(data.Networks) > 0 && len(service.Network) > 0 {
 		cmd.NetworkInfo = []mesosproto.NetworkInfo{{
 			Name: func() *string { x := data.Networks[service.Network[0]].Name; return &x }(),
 		}}
@@ -50,7 +50,8 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 	cmd.Executor = getExecutor(service)
 	cmd.DockerPortMappings = getDockerPorts(service, cmd.Agent)
 	cmd.Environment.Variables = getEnvironment(service)
-	cmd.Volumes = getVolumes(service, data)
+	cmd.Volumes = getVolumes(service, data, cmd.ContainerType)
+	cmd.Instances = getReplicas(service)
 
 	cmd.Discovery = mesosproto.DiscoveryInfo{
 		Visibility: 2,
@@ -66,13 +67,13 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 		cmd.Shell = false
 	}
 
-	// store mesos task in db
+	// store/updte the mesos task in db
 	d, _ := json.Marshal(&cmd)
-	logrus.Debug("Scheduled Mesos Task: ", util.PrettyJSON(d))
+	logrus.Debug("Save Mesos Task in DB: ", util.PrettyJSON(d))
 	err := config.RedisClient.Set(config.RedisCTX, cmd.TaskName+":"+newTaskID, d, 0).Err()
 
 	if err != nil {
-		logrus.Error("Cloud not store Mesos Task in Redis: ", err)
+		logrus.Error("Could not store Mesos Task in Redis: ", err)
 	}
 }
 
@@ -96,18 +97,29 @@ func getMemory(service cfg.Service) float64 {
 
 // Get the Disk value from the compose file, or the default one if it's unset
 func getDisk(service cfg.Service) float64 {
-	// Currently, onyl default value is supported
+	// Currently, only default value is supported
 	return config.Disk
+}
+
+// Get the count of Replicas of the tasks
+func getReplicas(service cfg.Service) int {
+	if service.Deploy.Replicas != "" {
+		replicas, _ := strconv.Atoi(service.Deploy.Replicas)
+		return replicas
+	}
+	return 1
 }
 
 // Get the Hostname value from the compose file, or generate one if it's unset
 func getHostname(service cfg.Service) string {
-	if service.Hostname != "" {
-		return service.Hostname
-	}
-
 	if strings.ToLower(service.NetworkMode) == "host" {
 		return ""
+	}
+
+	if service.Hostname != "" {
+		return service.Hostname
+	} else if service.ContainerName != "" {
+		return service.ContainerName
 	}
 
 	uuid, err := util.GenUUID()
@@ -132,6 +144,11 @@ func getRandomHostPort(agent string) int {
 	rand.Seed(time.Now().UnixNano())
 	// #nosec G404
 	v := rand.Intn(framework.PortRangeTo-framework.PortRangeFrom) + framework.PortRangeFrom
+	if v > framework.PortRangeTo {
+		v = getRandomHostPort(agent)
+	} else if v < framework.PortRangeFrom {
+		v = getRandomHostPort(agent)
+	}
 	port := uint32(v)
 	if portInUse(port, agent) {
 		v = getRandomHostPort(agent)
@@ -284,7 +301,7 @@ func getEnvironment(service cfg.Service) []mesosproto.Environment_Variable {
 }
 
 // Get the environment of the compose file
-func getVolumes(service cfg.Service, data cfg.Compose) []mesosproto.Volume {
+func getVolumes(service cfg.Service, data cfg.Compose, containerType string) []mesosproto.Volume {
 	var volume []mesosproto.Volume
 	for _, c := range service.Volumes {
 		var tmp mesosproto.Volume
@@ -299,12 +316,22 @@ func getVolumes(service cfg.Service, data cfg.Compose) []mesosproto.Volume {
 				tmp.Mode = mesosproto.RO.Enum()
 			}
 		}
-		if strings.ToLower(getLabelValueByKey("biz.aventer.mesos_compose.container_type", service)) == "docker" {
-			driver := "local"
-			if data.Volumes[p[0]].Driver != "" {
-				driver = data.Volumes[p[0]].Driver
-			}
 
+		driver := "local"
+		if data.Volumes[p[0]].Driver != "" {
+			driver = data.Volumes[p[0]].Driver
+		}
+
+		switch containerType {
+		case "docker":
+			tmp.Source = &mesosproto.Volume_Source{
+				Type: mesosproto.Volume_Source_DOCKER_VOLUME,
+				DockerVolume: &mesosproto.Volume_Source_DockerVolume{
+					Name:   p[0],
+					Driver: func() *string { x := driver; return &x }(),
+				},
+			}
+		default:
 			tmp.Source = &mesosproto.Volume_Source{
 				Type: mesosproto.Volume_Source_DOCKER_VOLUME,
 				DockerVolume: &mesosproto.Volume_Source_DockerVolume{

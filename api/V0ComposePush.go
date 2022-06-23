@@ -41,7 +41,12 @@ func V0ComposePush(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for service := range data.Services {
-		mapComposeServiceToMesosTask(data.Services[service], data, vars, service, mesosutil.Command{})
+		// only schedule if the max instances is not reached
+		TaskName := config.PrefixTaskName + ":" + vars["project"] + ":" + service
+		Instances := getReplicas(data.Services[service])
+		if CountRedisKey(TaskName+":*") < Instances {
+			mapComposeServiceToMesosTask(data.Services[service], data, vars, service, mesosutil.Command{})
+		}
 	}
 
 	out, _ := json.Marshal(&data)

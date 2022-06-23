@@ -20,6 +20,7 @@ services:
     network:
       - default
     deploy:
+      replicas: 1
       resources:
         limits:
           cpus: "0.01"
@@ -32,4 +33,4 @@ networks:
 
 volumes:
   12345test:
-    driver: local 
+    driver: local
