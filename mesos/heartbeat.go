@@ -11,7 +11,13 @@ import (
 
 // Heartbeat - The Apache Mesos heatbeat function
 func Heartbeat() {
-	keys := api.GetAllRedisKeys("*")
+	// Check Connection state of Redis
+	err := api.PingRedis()
+	if err != nil {
+		api.ConnectRedis()
+	}
+
+	keys := api.GetAllRedisKeys(framework.FrameworkName + ":*")
 	suppress := true
 	for keys.Next(config.RedisCTX) {
 		// get the values of the current key

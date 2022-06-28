@@ -1,5 +1,10 @@
 # Changelog
 
+## master
+
+- ADD: Redis Connection retry and health check.
+- FIX: CountRedisKeys only the own (frameworkName) one.
+
 ## v0.3.1
 
 - ADD-11: Docker Compose Replicas
