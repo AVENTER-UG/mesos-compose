@@ -70,7 +70,7 @@ func Subscribe() error {
 	reader := bufio.NewReader(res.Body)
 
 	line, _ := reader.ReadString('\n')
-	line = strings.TrimSuffix(line, "\n")
+	_ = strings.TrimSuffix(line, "\n")
 
 	for {
 		// Read line from Mesos

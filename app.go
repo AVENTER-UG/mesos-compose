@@ -7,6 +7,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/AVENTER-UG/mesos-compose/api"
 	"github.com/AVENTER-UG/mesos-compose/mesos"
@@ -67,8 +68,6 @@ func main() {
 	//		{Type: mesosproto.FrameworkInfo_Capability_RESERVATION_REFINEMENT},
 	//	}
 
-	//initCache()
-
 	mesosutil.SetConfig(&framework)
 	api.SetConfig(&config, &framework)
 	mesos.SetConfig(&config, &framework)
@@ -88,8 +87,12 @@ func main() {
 	framework.FrameworkInfo.Hostname = &framework.FrameworkHostname
 
 	server := &http.Server{
-		Addr:    listen,
-		Handler: api.Commands(),
+		Addr:              listen,
+		Handler:           api.Commands(),
+		ReadTimeout:       1 * time.Second,
+		WriteTimeout:      1 * time.Second,
+		IdleTimeout:       30 * time.Second,
+		ReadHeaderTimeout: 2 * time.Second,
 		TLSConfig: &tls.Config{
 			ClientAuth: tls.RequestClientCert,
 			MinVersion: tls.VersionTLS12,

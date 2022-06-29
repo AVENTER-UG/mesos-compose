@@ -32,16 +32,11 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 	cmd.TaskName = config.PrefixTaskName + ":" + vars["project"] + ":" + name
 	cmd.CPU = getCPU(service)
 	cmd.Memory = getMemory(service)
-	cmd.Disk = getDisk(service)
+	cmd.Disk = getDisk()
 	cmd.ContainerType = strings.ToLower(getLabelValueByKey("biz.aventer.mesos_compose.container_type", service))
 	cmd.ContainerImage = service.Image
 	cmd.NetworkMode = service.NetworkMode
-	if len(data.Networks) > 0 && len(service.Network) > 0 {
-		cmd.NetworkInfo = []mesosproto.NetworkInfo{{
-			Name: func() *string { x := data.Networks[service.Network[0]].Name; return &x }(),
-		}}
-	}
-
+	cmd.NetworkInfo = getNetworkInfo(service, data)
 	cmd.TaskID = newTaskID
 	cmd.Privileged = service.Privileged
 	cmd.Hostname = getHostname(service)
@@ -96,7 +91,7 @@ func getMemory(service cfg.Service) float64 {
 }
 
 // Get the Disk value from the compose file, or the default one if it's unset
-func getDisk(service cfg.Service) float64 {
+func getDisk() float64 {
 	// Currently, only default value is supported
 	return config.Disk
 }
@@ -379,7 +374,24 @@ func getExecutor(service cfg.Service) mesosproto.ExecutorInfo {
 				},
 			}
 		}
-
 	}
 	return executorInfo
+}
+
+// get the NetworkInfo Name
+func getNetworkInfo(service cfg.Service, data cfg.Compose) []mesosproto.NetworkInfo {
+	if len(data.Networks) > 0 {
+		var network string
+
+		if len(service.Network) > 0 {
+			network = service.Network[0]
+		} else if len(service.Networks) > 0 {
+			network = service.Networks[0]
+		}
+		return []mesosproto.NetworkInfo{{
+			Name: func() *string { x := data.Networks[network].Name; return &x }(),
+		}}
+	}
+
+	return []mesosproto.NetworkInfo{}
 }
