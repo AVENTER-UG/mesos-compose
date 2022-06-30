@@ -36,7 +36,7 @@ func (e *API) V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 
 	keys := e.GetAllRedisKeys(e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":*")
 
-	for keys.Next(e.Config.RedisCTX) {
+	for keys.Next(e.Redis.RedisCTX) {
 		key := e.GetRedisKey(keys.Val())
 
 		var task mesosutil.Command

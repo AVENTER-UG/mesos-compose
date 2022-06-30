@@ -110,7 +110,7 @@ func (e *Scheduler) EventLoop() {
 
 			// store framework configuration
 			d, _ := json.Marshal(&e.Framework)
-			err = e.Config.RedisClient.Set(e.Config.RedisCTX, e.Framework.FrameworkName+":framework", d, 0).Err()
+			err = e.API.Redis.RedisClient.Set(e.API.Redis.RedisCTX, e.Framework.FrameworkName+":framework", d, 0).Err()
 			if err != nil {
 				logrus.Error("Framework save config and state into redis Error: ", err)
 			}
@@ -137,7 +137,7 @@ func (e *Scheduler) Reconcile() {
 	logrus.Info("Reconcile Tasks")
 	var oldTasks []mesosproto.Call_Reconcile_Task
 	keys := e.API.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
-	for keys.Next(e.Config.RedisCTX) {
+	for keys.Next(e.API.Redis.RedisCTX) {
 		key := e.API.GetRedisKey(keys.Val())
 
 		var task mesosutil.Command

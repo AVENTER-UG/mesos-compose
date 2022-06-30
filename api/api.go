@@ -21,6 +21,7 @@ type API struct {
 	Framework *mesosutil.FrameworkConfig
 	Service   cfg.Service
 	Compose   cfg.Compose
+	Redis     Redis
 }
 
 // New will create a new API object
