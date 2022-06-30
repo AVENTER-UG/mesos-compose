@@ -1,6 +1,6 @@
 # Changelog
 
-## master
+## v0.4.0
 
 - ADD: Redis Connection retry and health check.
 - FIX: CountRedisKeys only the own (frameworkName) one.
