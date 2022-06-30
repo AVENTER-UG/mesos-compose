@@ -9,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
 	"github.com/AVENTER-UG/util"
@@ -17,8 +16,10 @@ import (
 )
 
 // Map the compose parameters into a mesos task
-func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars map[string]string, name string, task mesosutil.Command) {
+func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, task mesosutil.Command) {
 	var cmd mesosutil.Command
+
+	e.Service = e.Compose.Services[name]
 
 	// if task is set then its not a new task and we have to save old needed parameter
 	uuid, _ := util.GenUUID()
@@ -29,43 +30,31 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 		cmd.Agent = task.Agent
 	}
 
-	cmd.TaskName = config.PrefixTaskName + ":" + vars["project"] + ":" + name
-	cmd.CPU = getCPU(service)
-	cmd.Memory = getMemory(service)
-	cmd.Disk = getDisk()
-	cmd.ContainerType = strings.ToLower(getLabelValueByKey("biz.aventer.mesos_compose.container_type", service))
-	cmd.ContainerImage = service.Image
-	cmd.NetworkMode = service.NetworkMode
-	cmd.NetworkInfo = getNetworkInfo(service, data)
+	cmd.TaskName = e.Config.PrefixTaskName + ":" + vars["project"] + ":" + name
+	cmd.CPU = e.getCPU()
+	cmd.Memory = e.getMemory()
+	cmd.Disk = e.getDisk()
+	cmd.ContainerType = strings.ToLower(e.getLabelValueByKey("biz.aventer.mesos_compose.container_type"))
+	cmd.ContainerImage = e.Service.Image
+	cmd.NetworkMode = e.Service.NetworkMode
+	cmd.NetworkInfo = e.getNetworkInfo()
 	cmd.TaskID = newTaskID
-	cmd.Privileged = service.Privileged
-	cmd.Hostname = getHostname(service)
-	cmd.Command = getCommand(service)
-	cmd.Labels = getLabels(service)
-	cmd.Executor = getExecutor(service)
-	cmd.DockerPortMappings = getDockerPorts(service, cmd.Agent)
-	cmd.Environment.Variables = getEnvironment(service)
-	cmd.Volumes = getVolumes(service, data, cmd.ContainerType)
-	cmd.Instances = getReplicas(service)
+	cmd.Privileged = e.Service.Privileged
+	cmd.Hostname = e.getHostname()
+	cmd.Command = e.getCommand()
+	cmd.Labels = e.getLabels()
+	cmd.Executor = e.getExecutor()
+	cmd.DockerPortMappings = e.getDockerPorts(cmd.Agent)
+	cmd.Environment.Variables = e.getEnvironment()
+	cmd.Volumes = e.getVolumes(cmd.ContainerType)
+	cmd.Instances = e.getReplicas()
+	cmd.Discovery = e.getDiscoveryInfo(cmd)
+	cmd.Shell = e.getShell(cmd)
 
-	cmd.Discovery = mesosproto.DiscoveryInfo{
-		Visibility: 2,
-		Name:       &cmd.TaskName,
-		Ports: &mesosproto.Ports{
-			Ports: getDiscoveryInfoPorts(service, cmd),
-		},
-	}
-
-	if cmd.Command != "" {
-		cmd.Shell = true
-	} else {
-		cmd.Shell = false
-	}
-
-	// store/updte the mesos task in db
+	// store/update the mesos task in db
 	d, _ := json.Marshal(&cmd)
 	logrus.Debug("Save Mesos Task in DB: ", util.PrettyJSON(d))
-	err := config.RedisClient.Set(config.RedisCTX, cmd.TaskName+":"+newTaskID, d, 0).Err()
+	err := e.Config.RedisClient.Set(e.Config.RedisCTX, cmd.TaskName+":"+newTaskID, d, 0).Err()
 
 	if err != nil {
 		logrus.Error("Could not store Mesos Task in Redis: ", err)
@@ -73,48 +62,48 @@ func mapComposeServiceToMesosTask(service cfg.Service, data cfg.Compose, vars ma
 }
 
 // Get the CPU value from the compose file, or the default one if it's unset
-func getCPU(service cfg.Service) float64 {
-	if service.Deploy.Resources.Limits.CPUs != "" {
-		cpu, _ := strconv.ParseFloat(service.Deploy.Resources.Limits.CPUs, 64)
+func (e *API) getCPU() float64 {
+	if e.Service.Deploy.Resources.Limits.CPUs != "" {
+		cpu, _ := strconv.ParseFloat(e.Service.Deploy.Resources.Limits.CPUs, 64)
 		return cpu
 	}
-	return config.CPU
+	return e.Config.CPU
 }
 
 // Get the Memory value from the compose file, or the default one if it's unset
-func getMemory(service cfg.Service) float64 {
-	if service.Deploy.Resources.Limits.Memory != "" {
-		mem, _ := strconv.ParseFloat(service.Deploy.Resources.Limits.Memory, 64)
+func (e *API) getMemory() float64 {
+	if e.Service.Deploy.Resources.Limits.Memory != "" {
+		mem, _ := strconv.ParseFloat(e.Service.Deploy.Resources.Limits.Memory, 64)
 		return mem
 	}
-	return config.Memory
+	return e.Config.Memory
 }
 
 // Get the Disk value from the compose file, or the default one if it's unset
-func getDisk() float64 {
+func (e *API) getDisk() float64 {
 	// Currently, only default value is supported
-	return config.Disk
+	return e.Config.Disk
 }
 
 // Get the count of Replicas of the tasks
-func getReplicas(service cfg.Service) int {
-	if service.Deploy.Replicas != "" {
-		replicas, _ := strconv.Atoi(service.Deploy.Replicas)
+func (e *API) getReplicas() int {
+	if e.Service.Deploy.Replicas != "" {
+		replicas, _ := strconv.Atoi(e.Service.Deploy.Replicas)
 		return replicas
 	}
 	return 1
 }
 
 // Get the Hostname value from the compose file, or generate one if it's unset
-func getHostname(service cfg.Service) string {
-	if strings.ToLower(service.NetworkMode) == "host" {
+func (e *API) getHostname() string {
+	if strings.ToLower(e.Service.NetworkMode) == "host" {
 		return ""
 	}
 
-	if service.Hostname != "" {
-		return service.Hostname
-	} else if service.ContainerName != "" {
-		return service.ContainerName
+	if e.Service.Hostname != "" {
+		return e.Service.Hostname
+	} else if e.Service.ContainerName != "" {
+		return e.Service.ContainerName
 	}
 
 	uuid, err := util.GenUUID()
@@ -126,39 +115,39 @@ func getHostname(service cfg.Service) string {
 }
 
 // Get the Command value from the compose file, or generate one if it's unset
-func getCommand(service cfg.Service) string {
-	if len(service.Command) != 0 {
-		comm := strings.Join(service.Command, " ")
+func (e *API) getCommand() string {
+	if len(e.Service.Command) != 0 {
+		comm := strings.Join(e.Service.Command, " ")
 		return comm
 	}
 	return ""
 }
 
 // Get random hostportnumber
-func getRandomHostPort(agent string) int {
+func (e *API) getRandomHostPort(agent string) int {
 	rand.Seed(time.Now().UnixNano())
 	// #nosec G404
-	v := rand.Intn(framework.PortRangeTo-framework.PortRangeFrom) + framework.PortRangeFrom
-	if v > framework.PortRangeTo {
-		v = getRandomHostPort(agent)
-	} else if v < framework.PortRangeFrom {
-		v = getRandomHostPort(agent)
+	v := rand.Intn(e.Framework.PortRangeTo-e.Framework.PortRangeFrom) + e.Framework.PortRangeFrom
+	if v > e.Framework.PortRangeTo {
+		v = e.getRandomHostPort(agent)
+	} else if v < e.Framework.PortRangeFrom {
+		v = e.getRandomHostPort(agent)
 	}
 	port := uint32(v)
-	if portInUse(port, agent) {
-		v = getRandomHostPort(agent)
+	if e.portInUse(port, agent) {
+		v = e.getRandomHostPort(agent)
 	}
 	return v
 }
 
 // Check if the port is already in use
-func portInUse(port uint32, agent string) bool {
+func (e *API) portInUse(port uint32, agent string) bool {
 	// get all running services
 	logrus.Debug("Check if port is in use: ", port, agent)
-	keys := GetAllRedisKeys(framework.FrameworkName + ":*")
-	for keys.Next(config.RedisCTX) {
+	keys := e.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
+	for keys.Next(e.Config.RedisCTX) {
 		// get the details of the current running service
-		key := GetRedisKey(keys.Val())
+		key := e.GetRedisKey(keys.Val())
 		var task mesosutil.Command
 		json.Unmarshal([]byte(key), &task)
 
@@ -179,10 +168,10 @@ func portInUse(port uint32, agent string) bool {
 }
 
 // Get the labels of the compose file
-func getLabels(service cfg.Service) []mesosproto.Label {
+func (e *API) getLabels() []mesosproto.Label {
 	var label []mesosproto.Label
 
-	for k, v := range service.Labels {
+	for k, v := range e.Service.Labels {
 		var tmp mesosproto.Label
 		tmp.Key = k
 		tmp.Value = func() *string { x := fmt.Sprint(v); return &x }()
@@ -192,8 +181,8 @@ func getLabels(service cfg.Service) []mesosproto.Label {
 }
 
 // Return the value of the given key
-func getLabelValueByKey(label string, service cfg.Service) string {
-	for k, v := range service.Labels {
+func (e *API) getLabelValueByKey(label string) string {
+	for k, v := range e.Service.Labels {
 		if label == k {
 			return fmt.Sprint(v)
 		}
@@ -202,10 +191,10 @@ func getLabelValueByKey(label string, service cfg.Service) string {
 }
 
 // Get the ports of the compose file
-func getDockerPorts(service cfg.Service, agent string) []mesosproto.ContainerInfo_DockerInfo_PortMapping {
+func (e *API) getDockerPorts(agent string) []mesosproto.ContainerInfo_DockerInfo_PortMapping {
 	var ports []mesosproto.ContainerInfo_DockerInfo_PortMapping
-	hostport := uint32(getRandomHostPort(agent))
-	for i, c := range service.Ports {
+	hostport := uint32(e.getRandomHostPort(agent))
+	for i, c := range e.Service.Ports {
 		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
 		var port int
 		// "<hostport>:<containerport>"
@@ -239,9 +228,9 @@ func getDockerPorts(service cfg.Service, agent string) []mesosproto.ContainerInf
 }
 
 // Get the discoveryinfo ports of the compose file
-func getDiscoveryInfoPorts(service cfg.Service, cmd mesosutil.Command) []mesosproto.Port {
+func (e *API) getDiscoveryInfoPorts(cmd mesosutil.Command) []mesosproto.Port {
 	var disport []mesosproto.Port
-	for _, c := range service.Ports {
+	for _, c := range e.Service.Ports {
 		var tmpport mesosproto.Port
 		var port int
 		// "<hostport>:<containerport>"
@@ -259,7 +248,7 @@ func getDiscoveryInfoPorts(service cfg.Service, cmd mesosutil.Command) []mesospr
 		name := cmd.TaskName + ":" + p[count]
 
 		// get the random hostport
-		tmpport.Number, tmpport.Protocol = getHostPortByContainerPort(port, cmd)
+		tmpport.Number, tmpport.Protocol = e.getHostPortByContainerPort(port, cmd)
 		tmpport.Name = func() *string { x := name; return &x }()
 
 		disport = append(disport, tmpport)
@@ -268,8 +257,18 @@ func getDiscoveryInfoPorts(service cfg.Service, cmd mesosutil.Command) []mesospr
 	return disport
 }
 
+func (e *API) getDiscoveryInfo(cmd mesosutil.Command) mesosproto.DiscoveryInfo {
+	return mesosproto.DiscoveryInfo{
+		Visibility: 2,
+		Name:       &cmd.TaskName,
+		Ports: &mesosproto.Ports{
+			Ports: e.getDiscoveryInfoPorts(cmd),
+		},
+	}
+}
+
 // get the random hostport and protcol of the container port
-func getHostPortByContainerPort(port int, cmd mesosutil.Command) (uint32, *string) {
+func (e *API) getHostPortByContainerPort(port int, cmd mesosutil.Command) (uint32, *string) {
 	for _, v := range cmd.DockerPortMappings {
 		ps := v.ContainerPort
 		if uint32(port) == ps {
@@ -280,9 +279,9 @@ func getHostPortByContainerPort(port int, cmd mesosutil.Command) (uint32, *strin
 }
 
 // Get the environment of the compose file
-func getEnvironment(service cfg.Service) []mesosproto.Environment_Variable {
+func (e *API) getEnvironment() []mesosproto.Environment_Variable {
 	var env []mesosproto.Environment_Variable
-	for _, c := range service.Environment {
+	for _, c := range e.Service.Environment {
 		var tmp mesosproto.Environment_Variable
 		p := strings.Split(c, "=")
 		if len(p) != 2 {
@@ -296,9 +295,9 @@ func getEnvironment(service cfg.Service) []mesosproto.Environment_Variable {
 }
 
 // Get the environment of the compose file
-func getVolumes(service cfg.Service, data cfg.Compose, containerType string) []mesosproto.Volume {
+func (e *API) getVolumes(containerType string) []mesosproto.Volume {
 	var volume []mesosproto.Volume
-	for _, c := range service.Volumes {
+	for _, c := range e.Service.Volumes {
 		var tmp mesosproto.Volume
 		p := strings.Split(c, ":")
 		if len(p) < 2 {
@@ -313,8 +312,8 @@ func getVolumes(service cfg.Service, data cfg.Compose, containerType string) []m
 		}
 
 		driver := "local"
-		if data.Volumes[p[0]].Driver != "" {
-			driver = data.Volumes[p[0]].Driver
+		if e.Compose.Volumes[p[0]].Driver != "" {
+			driver = e.Compose.Volumes[p[0]].Driver
 		}
 
 		switch containerType {
@@ -341,10 +340,10 @@ func getVolumes(service cfg.Service, data cfg.Compose, containerType string) []m
 }
 
 // Get custome executer
-func getExecutor(service cfg.Service) mesosproto.ExecutorInfo {
+func (e *API) getExecutor() mesosproto.ExecutorInfo {
 	var executorInfo mesosproto.ExecutorInfo
-	command := getLabelValueByKey("biz.aventer.mesos_compose.executor", service)
-	uri := getLabelValueByKey("biz.aventer.mesos_compose.executor_uri", service)
+	command := e.getLabelValueByKey("biz.aventer.mesos_compose.executor")
+	uri := e.getLabelValueByKey("biz.aventer.mesos_compose.executor_uri")
 
 	if command != "" {
 		executorID, _ := util.GenUUID()
@@ -354,7 +353,7 @@ func getExecutor(service cfg.Service) mesosproto.ExecutorInfo {
 			ExecutorID: &mesosproto.ExecutorID{
 				Value: executorID,
 			},
-			FrameworkID: framework.FrameworkInfo.ID,
+			FrameworkID: e.Framework.FrameworkInfo.ID,
 			Command: &mesosproto.CommandInfo{
 				Value: func() *string { x := command; return &x }(),
 			},
@@ -379,19 +378,24 @@ func getExecutor(service cfg.Service) mesosproto.ExecutorInfo {
 }
 
 // get the NetworkInfo Name
-func getNetworkInfo(service cfg.Service, data cfg.Compose) []mesosproto.NetworkInfo {
-	if len(data.Networks) > 0 {
+func (e *API) getNetworkInfo() []mesosproto.NetworkInfo {
+	if len(e.Compose.Networks) > 0 {
 		var network string
 
-		if len(service.Network) > 0 {
-			network = service.Network[0]
-		} else if len(service.Networks) > 0 {
-			network = service.Networks[0]
+		if len(e.Service.Network) > 0 {
+			network = e.Service.Network[0]
+		} else if len(e.Service.Networks) > 0 {
+			network = e.Service.Networks[0]
 		}
 		return []mesosproto.NetworkInfo{{
-			Name: func() *string { x := data.Networks[network].Name; return &x }(),
+			Name: func() *string { x := e.Compose.Networks[network].Name; return &x }(),
 		}}
 	}
 
 	return []mesosproto.NetworkInfo{}
+}
+
+// check if the task command inside of the container have to be executed as shell
+func (e *API) getShell(cmd mesosutil.Command) bool {
+	return cmd.Command != ""
 }

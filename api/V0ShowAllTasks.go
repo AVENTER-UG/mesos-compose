@@ -9,8 +9,8 @@ import (
 // V0ShowAllTasks will print out all tasks
 // example:
 // curl -X GET http://user:password@127.0.0.1:10000/api/compose/v0/tasks
-func V0ShowAllTasks(w http.ResponseWriter, r *http.Request) {
-	auth := CheckAuth(r, w)
+func (e *API) V0ShowAllTasks(w http.ResponseWriter, r *http.Request) {
+	auth := e.CheckAuth(r, w)
 
 	if !auth {
 		return
@@ -18,9 +18,9 @@ func V0ShowAllTasks(w http.ResponseWriter, r *http.Request) {
 
 	logrus.Debug("HTTP GET V0ShowAllTasks")
 
-	keys := GetAllRedisKeys("*")
+	keys := e.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 
-	for keys.Next(config.RedisCTX) {
+	for keys.Next(e.Config.RedisCTX) {
 		logrus.Info("keys: ", keys.Val())
 	}
 }

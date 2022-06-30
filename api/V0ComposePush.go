@@ -15,12 +15,12 @@ import (
 // V0ComposePush will read and interpret the docker-compose.yml
 // example:
 // curl -X GET http://user:password@127.0.0.1:10000/api/compose/v0 --data-binary @docker-compose.yml
-func V0ComposePush(w http.ResponseWriter, r *http.Request) {
+func (e *API) V0ComposePush(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	auth := CheckAuth(r, w)
+	auth := e.CheckAuth(r, w)
 
 	logrus.Debug("HTTP PUT V0ComposePush")
-	d := ErrorMessage(2, "V0ComposePush", "nok")
+	d := e.ErrorMessage(2, "V0ComposePush", "nok")
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
 
@@ -34,7 +34,7 @@ func V0ComposePush(w http.ResponseWriter, r *http.Request) {
 	err := yaml.NewDecoder(r.Body).Decode(&data)
 
 	if err != nil {
-		d = ErrorMessage(2, "V0ComposePush", err.Error())
+		d = e.ErrorMessage(2, "V0ComposePush", err.Error())
 		logrus.Error("Error: ", err)
 		w.Write(d)
 		return
@@ -42,14 +42,15 @@ func V0ComposePush(w http.ResponseWriter, r *http.Request) {
 
 	for service := range data.Services {
 		// only schedule if the max instances is not reached
-		TaskName := config.PrefixTaskName + ":" + vars["project"] + ":" + service
-		Instances := getReplicas(data.Services[service])
-		if CountRedisKey(TaskName+":*") < Instances {
-			mapComposeServiceToMesosTask(data.Services[service], data, vars, service, mesosutil.Command{})
+		TaskName := e.Config.PrefixTaskName + ":" + vars["project"] + ":" + service
+		Instances := e.getReplicas()
+		if e.CountRedisKey(TaskName+":*") < Instances {
+			e.Compose = data
+			e.mapComposeServiceToMesosTask(vars, service, mesosutil.Command{})
 		}
 	}
 
 	out, _ := json.Marshal(&data)
-	d = ErrorMessage(0, "V0ComposePush", util.PrettyJSON(out))
+	d = e.ErrorMessage(0, "V0ComposePush", util.PrettyJSON(out))
 	w.Write(d)
 }

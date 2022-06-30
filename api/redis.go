@@ -11,8 +11,8 @@ import (
 )
 
 // GetAllRedisKeys get out all redis keys to a patter
-func GetAllRedisKeys(pattern string) *goredis.ScanIterator {
-	val := config.RedisClient.Scan(config.RedisCTX, 0, pattern, 0).Iterator()
+func (e *API) GetAllRedisKeys(pattern string) *goredis.ScanIterator {
+	val := e.Config.RedisClient.Scan(e.Config.RedisCTX, 0, pattern, 0).Iterator()
 	if err := val.Err(); err != nil {
 		logrus.Error("getAllRedisKeys: ", err)
 	}
@@ -21,8 +21,8 @@ func GetAllRedisKeys(pattern string) *goredis.ScanIterator {
 }
 
 // GetRedisKey get out the data of a key
-func GetRedisKey(key string) string {
-	val, err := config.RedisClient.Get(config.RedisCTX, key).Result()
+func (e *API) GetRedisKey(key string) string {
+	val, err := e.Config.RedisClient.Get(e.Config.RedisCTX, key).Result()
 	if err != nil {
 		logrus.Error("getRedisKey: ", err)
 	}
@@ -31,23 +31,23 @@ func GetRedisKey(key string) string {
 }
 
 // DelRedisKey will delete a redis key
-func DelRedisKey(key string) int64 {
-	val, err := config.RedisClient.Del(config.RedisCTX, key).Result()
+func (e *API) DelRedisKey(key string) int64 {
+	val, err := e.Config.RedisClient.Del(e.Config.RedisCTX, key).Result()
 	if err != nil {
 		logrus.Error("delRedisKey: ", err)
-		PingRedis()
+		e.PingRedis()
 	}
 
 	return val
 }
 
 // GetTaskFromEvent get out the key by a mesos event
-func GetTaskFromEvent(update *mesosproto.Event_Update) mesosutil.Command {
+func (e *API) GetTaskFromEvent(update *mesosproto.Event_Update) mesosutil.Command {
 	// search matched taskid in redis and update the status
-	keys := GetAllRedisKeys("*")
-	for keys.Next(config.RedisCTX) {
+	keys := e.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
+	for keys.Next(e.Config.RedisCTX) {
 		// get the values of the current key
-		key := GetRedisKey(keys.Val())
+		key := e.GetRedisKey(keys.Val())
 
 		// update the status of the matches task
 		var task mesosutil.Command
@@ -61,10 +61,10 @@ func GetTaskFromEvent(update *mesosproto.Event_Update) mesosutil.Command {
 }
 
 // CountRedisKey will get back the count of the redis key
-func CountRedisKey(pattern string) int {
-	keys := GetAllRedisKeys(pattern)
+func (e *API) CountRedisKey(pattern string) int {
+	keys := e.GetAllRedisKeys(pattern)
 	count := 0
-	for keys.Next(config.RedisCTX) {
+	for keys.Next(e.Config.RedisCTX) {
 		count++
 	}
 	logrus.Debug("CountRedisKey: ", pattern, count)
@@ -72,17 +72,17 @@ func CountRedisKey(pattern string) int {
 }
 
 // SaveConfig store the current framework config
-func SaveConfig() {
-	data, _ := json.Marshal(config)
-	err := config.RedisClient.Set(config.RedisCTX, framework.FrameworkName+":framework_config", data, 0).Err()
+func (e *API) SaveConfig() {
+	data, _ := json.Marshal(e.Config)
+	err := e.Config.RedisClient.Set(e.Config.RedisCTX, e.Framework.FrameworkName+":framework_config", data, 0).Err()
 	if err != nil {
 		logrus.Error("Framework save config state into redis error:", err)
 	}
 }
 
 // PingRedis to check the health of redis
-func PingRedis() error {
-	pong, err := config.RedisClient.Ping(config.RedisCTX).Result()
+func (e *API) PingRedis() error {
+	pong, err := e.Config.RedisClient.Ping(e.Config.RedisCTX).Result()
 	logrus.Debug("Redis Health: ", pong, err)
 	if err != nil {
 		return err
@@ -91,19 +91,20 @@ func PingRedis() error {
 }
 
 // ConnectRedis will connect the redis DB and save the client pointer
-func ConnectRedis() {
+func (e *API) ConnectRedis() {
 	var redisOptions goredis.Options
-	redisOptions.Addr = config.RedisServer
-	redisOptions.DB = config.RedisDB
-	if config.RedisPassword != "" {
-		redisOptions.Password = config.RedisPassword
+	redisOptions.Addr = e.Config.RedisServer
+	redisOptions.DB = e.Config.RedisDB
+	if e.Config.RedisPassword != "" {
+		redisOptions.Password = e.Config.RedisPassword
 	}
 
-	config.RedisClient = goredis.NewClient(&redisOptions)
-	config.RedisCTX = context.Background()
+	e.Config.RedisClient = goredis.NewClient(&redisOptions)
+	e.Config.RedisCTX = context.Background()
 
-	err := PingRedis()
+	err := e.PingRedis()
 	if err != nil {
-		ConnectRedis()
+		e.Config.RedisClient.Close()
+		e.ConnectRedis()
 	}
 }
