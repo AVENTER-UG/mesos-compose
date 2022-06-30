@@ -12,16 +12,16 @@ import (
 // V0ComposeKillService will kill a task from a service from a specific project
 // example:
 // curl -X DELETE http://user:password@127.0.0.1:10000/api/compose/v0/{projectname}/{servicename}/{taskid}
-func V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
+func (e *API) V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	auth := CheckAuth(r, w)
+	auth := e.CheckAuth(r, w)
 
 	if vars == nil || !auth {
 		return
 	}
 
 	logrus.Debug("HTTP DELETE V0ComposeKillService")
-	d := ErrorMessage(2, "V0ComposeKillService", "nok")
+	d := e.ErrorMessage(2, "V0ComposeKillService", "nok")
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
 
@@ -34,16 +34,16 @@ func V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 	servicename := vars["servicename"]
 	taskID := vars["taskid"]
 
-	keys := GetAllRedisKeys(config.PrefixTaskName + ":" + project + ":" + servicename + ":*")
+	keys := e.GetAllRedisKeys(e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":*")
 
-	for keys.Next(config.RedisCTX) {
-		key := GetRedisKey(keys.Val())
+	for keys.Next(e.Config.RedisCTX) {
+		key := e.GetRedisKey(keys.Val())
 
 		var task mesosutil.Command
 		json.Unmarshal([]byte(key), &task)
 		mesosutil.Kill(task.TaskID, task.Agent)
-		logrus.Debug("V0ComposeKillService: " + config.PrefixTaskName + ":" + project + ":" + servicename + ":" + taskID)
+		logrus.Debug("V0ComposeKillService: " + e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":" + taskID)
 	}
-	d = ErrorMessage(0, "V0ComposeKillService", "ok")
+	d = e.ErrorMessage(0, "V0ComposeKillService", "ok")
 	w.Write(d)
 }

@@ -69,18 +69,17 @@ func main() {
 	//	}
 
 	mesosutil.SetConfig(&framework)
-	api.SetConfig(&config, &framework)
-	mesos.SetConfig(&config, &framework)
 
-	api.ConnectRedis()
+	a := api.New(&config, &framework)
+	a.ConnectRedis()
 
 	// load framework state from database if they exist
-	key := api.GetRedisKey(framework.FrameworkName + ":framework")
+	key := a.GetRedisKey(framework.FrameworkName + ":framework")
 	if key != "" {
 		json.Unmarshal([]byte(key), &framework)
 
 		// Save current config
-		api.SaveConfig()
+		a.SaveConfig()
 	}
 
 	// The Hostname should ever be set after reading the state file.
@@ -88,7 +87,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:              listen,
-		Handler:           api.Commands(),
+		Handler:           a.Commands(),
 		ReadTimeout:       1 * time.Second,
 		WriteTimeout:      1 * time.Second,
 		IdleTimeout:       30 * time.Second,
@@ -117,5 +116,8 @@ func main() {
 			server.ListenAndServe()
 		}
 	}()
-	logrus.Fatal(mesos.Subscribe())
+	e := mesos.Subscribe(&config, &framework)
+	e.API = a
+	e.EventLoop()
+	config.RedisClient.Close()
 }

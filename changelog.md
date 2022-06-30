@@ -4,6 +4,7 @@
 
 - ADD: Redis Connection retry and health check.
 - FIX: CountRedisKeys only the own (frameworkName) one.
+- CHANGE: Refactoring to be more flexible.
 
 ## v0.3.1
 

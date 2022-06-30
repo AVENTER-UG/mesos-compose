@@ -15,41 +15,49 @@ import (
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 )
 
-// Service include all the current vars and global config
-var config *cfg.Config
-var framework *mesosutil.FrameworkConfig
+// API Service include all the current vars and global config
+type API struct {
+	Config    *cfg.Config
+	Framework *mesosutil.FrameworkConfig
+	Service   cfg.Service
+	Compose   cfg.Compose
+}
 
-// SetConfig set the global config
-func SetConfig(cfg *cfg.Config, frm *mesosutil.FrameworkConfig) {
-	config = cfg
-	framework = frm
+// New will create a new API object
+func New(cfg *cfg.Config, frm *mesosutil.FrameworkConfig) *API {
+	e := &API{
+		Config:    cfg,
+		Framework: frm,
+	}
+
+	return e
 }
 
 // Commands is the main function of this package
-func Commands() *mux.Router {
+func (e *API) Commands() *mux.Router {
 	rtr := mux.NewRouter()
-	rtr.HandleFunc("/api/compose/versions", Versions).Methods("GET")
-	rtr.HandleFunc("/api/compose/v0/tasks", V0ShowAllTasks).Methods("GET")
-	rtr.HandleFunc("/api/compose/v0/{project}", V0ComposePush).Methods("PUT")
-	rtr.HandleFunc("/api/compose/v0/{project}", V0ComposeUpdate).Methods("UPDATE")
-	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}", V0ComposeKillService).Methods("DELETE")
-	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}/restart", V0ComposeRestartService).Methods("PUT")
-	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}/{taskid}", V0ComposeKillTask).Methods("DELETE")
+	rtr.HandleFunc("/api/compose/versions", e.Versions).Methods("GET")
+	rtr.HandleFunc("/api/compose/v0/tasks", e.V0ShowAllTasks).Methods("GET")
+	rtr.HandleFunc("/api/compose/v0/{project}", e.V0ComposePush).Methods("PUT")
+	rtr.HandleFunc("/api/compose/v0/{project}", e.V0ComposeUpdate).Methods("UPDATE")
+	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}", e.V0ComposeKillService).Methods("DELETE")
+	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}/restart", e.V0ComposeRestartService).Methods("PUT")
+	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}/{taskid}", e.V0ComposeKillTask).Methods("DELETE")
 
 	return rtr
 }
 
 // Versions give out a list of Versions
-func Versions(w http.ResponseWriter, r *http.Request) {
+func (e *API) Versions(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Set("Api-Service", "-")
 	w.Write([]byte("/api/compose/v0"))
 }
 
 // CheckAuth will check if the token is valid
-func CheckAuth(r *http.Request, w http.ResponseWriter) bool {
+func (e *API) CheckAuth(r *http.Request, w http.ResponseWriter) bool {
 	// if no credentials are configured, then we dont have to check
-	if config.Credentials.Username == "" || config.Credentials.Password == "" {
+	if e.Config.Credentials.Username == "" || e.Config.Credentials.Password == "" {
 		return true
 	}
 
@@ -60,7 +68,7 @@ func CheckAuth(r *http.Request, w http.ResponseWriter) bool {
 		return false
 	}
 
-	if username == config.Credentials.Username && password == config.Credentials.Password {
+	if username == e.Config.Credentials.Username && password == e.Config.Credentials.Password {
 		w.WriteHeader(http.StatusOK)
 		return true
 	}
@@ -70,7 +78,7 @@ func CheckAuth(r *http.Request, w http.ResponseWriter) bool {
 }
 
 // ErrorMessage will create a message json
-func ErrorMessage(number int, function string, msg string) []byte {
+func (e *API) ErrorMessage(number int, function string, msg string) []byte {
 	var err cfg.ErrorMsg
 	err.Function = function
 	err.Number = number

@@ -13,9 +13,9 @@ import (
 )
 
 // HandleOffers will handle the offers event of mesos
-func HandleOffers(offers *mesosproto.Event_Offers) error {
+func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 	select {
-	case cmd := <-framework.CommandChan:
+	case cmd := <-e.Framework.CommandChan:
 		// if no taskid or taskname is given, it's a wrong task.
 		if cmd.TaskID == "" || cmd.TaskName == "" {
 			return nil
@@ -23,7 +23,7 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 
 		takeOffer, offerIds := getOffer(offers, cmd)
 		if takeOffer.GetHostname() == "" {
-			framework.CommandChan <- cmd
+			e.Framework.CommandChan <- cmd
 			return nil
 		}
 		logrus.Debug("Take Offer From:", takeOffer.GetHostname())
@@ -31,7 +31,7 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 		var taskInfo []mesosproto.TaskInfo
 		RefuseSeconds := 5.0
 
-		taskInfo, _ = PrepareTaskInfoExecuteContainer(takeOffer.AgentID, cmd)
+		taskInfo, _ = e.PrepareTaskInfoExecuteContainer(takeOffer.AgentID, cmd)
 
 		accept := &mesosproto.Call{
 			Type: mesosproto.Call_ACCEPT,
@@ -47,7 +47,7 @@ func HandleOffers(offers *mesosproto.Event_Offers) error {
 
 		if getLabelValue("biz.aventer.mesos_compose.executor", cmd) != "" {
 			// FIX: https://github.com/AVENTER-UG/mesos-compose/issues/7
-			cmd.Executor.Resources = defaultResources(cmd)
+			cmd.Executor.Resources = e.defaultResources(cmd)
 
 			accept.Accept.Operations = []mesosproto.Offer_Operation{{
 				Type: mesosproto.Offer_Operation_LAUNCH_GROUP,
