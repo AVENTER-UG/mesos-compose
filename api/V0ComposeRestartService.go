@@ -14,16 +14,16 @@ import (
 // V0ComposeRestartService will restart a service from a specific project
 // example:
 // curl -X PUT http://user:password@127.0.0.1:10000/api/compose/v0/{projectname}/{servicename}/restart
-func V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
+func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	auth := CheckAuth(r, w)
+	auth := e.CheckAuth(r, w)
 
 	if vars == nil || !auth {
 		return
 	}
 
 	logrus.Debug("HTTP PUT V0ComposeRestartService")
-	d := ErrorMessage(2, "V0ComposePush", "nok")
+	d := e.ErrorMessage(2, "V0ComposePush", "nok")
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
 
@@ -35,10 +35,10 @@ func V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 	project := vars["project"]
 	servicename := vars["servicename"]
 
-	keys := GetAllRedisKeys(config.PrefixTaskName + ":" + project + ":" + servicename + ":*")
+	keys := e.GetAllRedisKeys(e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":*")
 
-	for keys.Next(config.RedisCTX) {
-		key := GetRedisKey(keys.Val())
+	for keys.Next(e.Config.RedisCTX) {
+		key := e.GetRedisKey(keys.Val())
 		var oldTask mesosutil.Command
 		json.Unmarshal([]byte(key), &oldTask)
 		newTask := oldTask
@@ -49,9 +49,9 @@ func V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 		newTask.TaskID = taskName[0] + "." + uuid
 		newTask.State = ""
 		data, _ := json.Marshal(newTask)
-		err := config.RedisClient.Set(config.RedisCTX, newTask.TaskName+":"+newTask.TaskID, data, 0).Err()
+		err := e.Config.RedisClient.Set(e.Config.RedisCTX, newTask.TaskName+":"+newTask.TaskID, data, 0).Err()
 		if err != nil {
-			d = ErrorMessage(2, "V0ComposeRestartService newTask", err.Error())
+			d = e.ErrorMessage(2, "V0ComposeRestartService newTask", err.Error())
 			logrus.WithField("func", "V0ComposeRestartService").Error("Redis Error write newTask Data: ", err.Error())
 			w.Write(d)
 		}
@@ -59,14 +59,14 @@ func V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 		// set the old task to be killed
 		oldTask.State = "__KILL"
 		data, _ = json.Marshal(oldTask)
-		err = config.RedisClient.Set(config.RedisCTX, oldTask.TaskName+":"+oldTask.TaskID, data, 0).Err()
+		err = e.Config.RedisClient.Set(e.Config.RedisCTX, oldTask.TaskName+":"+oldTask.TaskID, data, 0).Err()
 		if err != nil {
-			d = ErrorMessage(2, "V0ComposeRestartService oldTask", err.Error())
+			d = e.ErrorMessage(2, "V0ComposeRestartService oldTask", err.Error())
 			logrus.WithField("func", "V0ComposeRestartService").Error("Redis Error write oldTask Data: ", err.Error())
 			w.Write(d)
 		}
 	}
 
-	d = ErrorMessage(0, "V0ComposeRestartService", "ok")
+	d = e.ErrorMessage(0, "V0ComposeRestartService", "ok")
 	w.Write(d)
 }

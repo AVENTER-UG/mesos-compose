@@ -4,24 +4,23 @@ import (
 	"encoding/json"
 	"time"
 
-	api "github.com/AVENTER-UG/mesos-compose/api"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	"github.com/sirupsen/logrus"
 )
 
 // Heartbeat - The Apache Mesos heatbeat function
-func Heartbeat() {
+func (e *Scheduler) Heartbeat() {
 	// Check Connection state of Redis
-	err := api.PingRedis()
+	err := e.API.PingRedis()
 	if err != nil {
-		api.ConnectRedis()
+		e.API.ConnectRedis()
 	}
 
-	keys := api.GetAllRedisKeys(framework.FrameworkName + ":*")
+	keys := e.API.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 	suppress := true
-	for keys.Next(config.RedisCTX) {
+	for keys.Next(e.Config.RedisCTX) {
 		// get the values of the current key
-		key := api.GetRedisKey(keys.Val())
+		key := e.API.GetRedisKey(keys.Val())
 
 		var task mesosutil.Command
 		json.Unmarshal([]byte(key), &task)
@@ -30,7 +29,7 @@ func Heartbeat() {
 			continue
 		}
 
-		if task.State == "" && api.CountRedisKey(task.TaskName+":*") <= task.Instances {
+		if task.State == "" && e.API.CountRedisKey(task.TaskName+":*") <= task.Instances {
 			mesosutil.Revive()
 			task.State = "__NEW"
 			// these will save the current time at the task. we need it to check
@@ -39,10 +38,10 @@ func Heartbeat() {
 			task.StateTime = time.Now()
 
 			// add task to communication channel
-			framework.CommandChan <- task
+			e.Framework.CommandChan <- task
 
 			data, _ := json.Marshal(task)
-			err := config.RedisClient.Set(config.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
+			err := e.Config.RedisClient.Set(e.Config.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
 			if err != nil {
 				logrus.Error("HandleUpdate Redis set Error: ", err)
 			}
@@ -52,7 +51,7 @@ func Heartbeat() {
 
 		if task.State == "__NEW" {
 			suppress = false
-			config.Suppress = false
+			e.Config.Suppress = false
 		}
 
 		if task.State == "__KILL" {
@@ -60,8 +59,8 @@ func Heartbeat() {
 		}
 	}
 
-	if suppress && !config.Suppress {
+	if suppress && !e.Config.Suppress {
 		mesosutil.SuppressFramework()
-		config.Suppress = true
+		e.Config.Suppress = true
 	}
 }

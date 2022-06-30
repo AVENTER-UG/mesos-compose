@@ -7,6 +7,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/AVENTER-UG/mesos-compose/api"
 	"github.com/AVENTER-UG/mesos-compose/mesos"
@@ -67,29 +68,30 @@ func main() {
 	//		{Type: mesosproto.FrameworkInfo_Capability_RESERVATION_REFINEMENT},
 	//	}
 
-	//initCache()
-
 	mesosutil.SetConfig(&framework)
-	api.SetConfig(&config, &framework)
-	mesos.SetConfig(&config, &framework)
 
-	api.ConnectRedis()
+	a := api.New(&config, &framework)
+	a.ConnectRedis()
 
 	// load framework state from database if they exist
-	key := api.GetRedisKey(framework.FrameworkName + ":framework")
+	key := a.GetRedisKey(framework.FrameworkName + ":framework")
 	if key != "" {
 		json.Unmarshal([]byte(key), &framework)
 
 		// Save current config
-		api.SaveConfig()
+		a.SaveConfig()
 	}
 
 	// The Hostname should ever be set after reading the state file.
 	framework.FrameworkInfo.Hostname = &framework.FrameworkHostname
 
 	server := &http.Server{
-		Addr:    listen,
-		Handler: api.Commands(),
+		Addr:              listen,
+		Handler:           a.Commands(),
+		ReadTimeout:       1 * time.Second,
+		WriteTimeout:      1 * time.Second,
+		IdleTimeout:       30 * time.Second,
+		ReadHeaderTimeout: 2 * time.Second,
 		TLSConfig: &tls.Config{
 			ClientAuth: tls.RequestClientCert,
 			MinVersion: tls.VersionTLS12,
@@ -114,5 +116,8 @@ func main() {
 			server.ListenAndServe()
 		}
 	}()
-	logrus.Fatal(mesos.Subscribe())
+	e := mesos.Subscribe(&config, &framework)
+	e.API = a
+	e.EventLoop()
+	config.RedisClient.Close()
 }

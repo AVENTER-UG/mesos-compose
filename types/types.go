@@ -50,7 +50,8 @@ type Compose struct {
 
 // Service - The docker-compose service parameters
 type Service struct {
-	Network       []string               `yaml:"network" yaml:"networks"`
+	Network       []string               `yaml:"network"`
+	Networks      []string               `yaml:"networks"`
 	Build         string                 `yaml:"build"`
 	Restart       string                 `yaml:"restart"`
 	Volumes       []string               `yaml:"volumes"`

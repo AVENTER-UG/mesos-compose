@@ -15,12 +15,12 @@ import (
 // V0ComposeUpdate will update the docker-compose.yml
 // example:
 // curl -X GET http://user:password@127.0.0.1:10000/api/compose/v0 --data-binary @docker-compose.yml
-func V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
+func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	auth := CheckAuth(r, w)
+	auth := e.CheckAuth(r, w)
 
 	logrus.Debug("HTTP PUT V0ComposeUpdate")
-	d := ErrorMessage(2, "V0ComposeUpdate", "nok")
+	d := e.ErrorMessage(2, "V0ComposeUpdate", "nok")
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
 
@@ -34,26 +34,26 @@ func V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 	err := yaml.NewDecoder(r.Body).Decode(&data)
 
 	if err != nil {
-		d = ErrorMessage(2, "V0ComposeUpdate", err.Error())
+		d = e.ErrorMessage(2, "V0ComposeUpdate", err.Error())
 		w.Write(d)
 		logrus.Error("Error: ", err)
 	}
 
 	for service := range data.Services {
-		taskName := config.PrefixTaskName + ":" + vars["project"] + ":" + service
+		taskName := e.Config.PrefixTaskName + ":" + vars["project"] + ":" + service
 		// get all keys that start with the taskname
-		keys := GetAllRedisKeys(taskName + ":*")
+		keys := e.GetAllRedisKeys(taskName + ":*")
 
-		for keys.Next(config.RedisCTX) {
+		for keys.Next(e.Config.RedisCTX) {
 			// get the values of the current key
-			key := GetRedisKey(keys.Val())
+			key := e.GetRedisKey(keys.Val())
 			var task mesosutil.Command
 			json.Unmarshal([]byte(key), &task)
-			mapComposeServiceToMesosTask(data.Services[service], data, vars, service, task)
+			e.mapComposeServiceToMesosTask(vars, service, task)
 		}
 	}
 
 	out, _ := json.Marshal(&data)
-	d = ErrorMessage(0, "V0ComposeUpdate", util.PrettyJSON(out))
+	d = e.ErrorMessage(0, "V0ComposeUpdate", util.PrettyJSON(out))
 	w.Write(d)
 }

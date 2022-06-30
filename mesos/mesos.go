@@ -17,9 +17,14 @@ import (
 	"github.com/gogo/protobuf/jsonpb"
 )
 
-// Service include all the current vars and global config
-var config *cfg.Config
-var framework *mesosutil.FrameworkConfig
+// Scheduler include all the current vars and global config
+type Scheduler struct {
+	Config    *cfg.Config
+	Framework *mesosutil.FrameworkConfig
+	Client    *http.Client
+	Req       *http.Request
+	API       *api.API
+}
 
 // Marshaler to serialize Protobuf Message to JSON
 var marshaller = jsonpb.Marshaler{
@@ -28,19 +33,18 @@ var marshaller = jsonpb.Marshaler{
 	OrigName:    true,
 }
 
-// SetConfig set the global config
-func SetConfig(cfg *cfg.Config, frm *mesosutil.FrameworkConfig) {
-	config = cfg
-	framework = frm
-}
-
 // Subscribe to the mesos backend
-func Subscribe() error {
+func Subscribe(cfg *cfg.Config, frm *mesosutil.FrameworkConfig) *Scheduler {
+	e := &Scheduler{
+		Config:    cfg,
+		Framework: frm,
+	}
+
 	subscribeCall := &mesosproto.Call{
-		FrameworkID: framework.FrameworkInfo.ID,
+		FrameworkID: e.Framework.FrameworkInfo.ID,
 		Type:        mesosproto.Call_SUBSCRIBE,
 		Subscribe: &mesosproto.Call_Subscribe{
-			FrameworkInfo: &framework.FrameworkInfo,
+			FrameworkInfo: &e.Framework.FrameworkInfo,
 		},
 	}
 	logrus.Debug(subscribeCall)
@@ -49,18 +53,27 @@ func Subscribe() error {
 	client := &http.Client{}
 	client.Transport = &http.Transport{
 		// #nosec G402
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: config.SkipSSL},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: e.Config.SkipSSL},
 	}
 
 	protocol := "https"
-	if !framework.MesosSSL {
+	if !e.Framework.MesosSSL {
 		protocol = "http"
 	}
-	req, _ := http.NewRequest("POST", protocol+"://"+framework.MesosMasterServer+"/api/v1/scheduler", bytes.NewBuffer([]byte(body)))
+	req, _ := http.NewRequest("POST", protocol+"://"+e.Framework.MesosMasterServer+"/api/v1/scheduler", bytes.NewBuffer([]byte(body)))
 	req.Close = true
-	req.SetBasicAuth(framework.Username, framework.Password)
+	req.SetBasicAuth(e.Framework.Username, e.Framework.Password)
 	req.Header.Set("Content-Type", "application/json")
-	res, err := client.Do(req)
+
+	e.Req = req
+	e.Client = client
+
+	return e
+}
+
+// EventLoop is the main loop for the mesos events.
+func (e *Scheduler) EventLoop() {
+	res, err := e.Client.Do(e.Req)
 
 	if err != nil {
 		logrus.Fatal(err)
@@ -70,7 +83,9 @@ func Subscribe() error {
 	reader := bufio.NewReader(res.Body)
 
 	line, _ := reader.ReadString('\n')
-	line = strings.TrimSuffix(line, "\n")
+	_ = strings.TrimSuffix(line, "\n")
+
+	logrus.Debug(line)
 
 	for {
 		// Read line from Mesos
@@ -80,56 +95,55 @@ func Subscribe() error {
 		var event mesosproto.Event // Event as ProtoBuf
 		err := jsonpb.UnmarshalString(line, &event)
 		if err != nil {
-			logrus.Error(err)
+			logrus.Error("Mesos Unmarshal Data Error: ", err)
 		}
-		logrus.Debug("Subscribe Got: ", event.GetType())
+
+		logrus.Debug(event.GetType())
 
 		switch event.Type {
 		case mesosproto.Event_SUBSCRIBED:
 			logrus.Debug(event)
 			logrus.Info("Subscribed")
 			logrus.Info("FrameworkId: ", event.Subscribed.GetFrameworkID())
-			framework.FrameworkInfo.ID = event.Subscribed.GetFrameworkID()
-			framework.MesosStreamID = res.Header.Get("Mesos-Stream-Id")
+			e.Framework.FrameworkInfo.ID = event.Subscribed.GetFrameworkID()
+			e.Framework.MesosStreamID = res.Header.Get("Mesos-Stream-Id")
 
 			// store framework configuration
-			d, _ := json.Marshal(&framework)
-			err = config.RedisClient.Set(config.RedisCTX, framework.FrameworkName+":framework", d, 0).Err()
+			d, _ := json.Marshal(&e.Framework)
+			err = e.Config.RedisClient.Set(e.Config.RedisCTX, e.Framework.FrameworkName+":framework", d, 0).Err()
 			if err != nil {
 				logrus.Error("Framework save config and state into redis Error: ", err)
 			}
-			Reconcile()
-			api.SaveConfig()
+			e.Reconcile()
+			e.API.SaveConfig()
 		case mesosproto.Event_UPDATE:
-			logrus.Debug("Update", HandleUpdate(&event))
-			api.SaveConfig()
+			logrus.Debug("Update", e.HandleUpdate(&event))
+			e.API.SaveConfig()
 		case mesosproto.Event_HEARTBEAT:
-			Heartbeat()
+			e.Heartbeat()
 		case mesosproto.Event_OFFERS:
 			// Search Failed containers and restart them
 			logrus.Debug("Offer Got")
-			err = HandleOffers(event.Offers)
+			err = e.HandleOffers(event.Offers)
 			if err != nil {
 				logrus.Error("Switch Event HandleOffers: ", err)
 			}
-		default:
-			logrus.Debug("DEFAULT EVENT: ", event.Offers)
 		}
 	}
 }
 
 // Reconcile will reconcile the task states after the framework was restarted
-func Reconcile() {
+func (e *Scheduler) Reconcile() {
 	logrus.Info("Reconcile Tasks")
 	var oldTasks []mesosproto.Call_Reconcile_Task
-	keys := api.GetAllRedisKeys("*")
-	for keys.Next(config.RedisCTX) {
-		key := api.GetRedisKey(keys.Val())
+	keys := e.API.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
+	for keys.Next(e.Config.RedisCTX) {
+		key := e.API.GetRedisKey(keys.Val())
 
 		var task mesosutil.Command
 		json.Unmarshal([]byte(key), &task)
 
-		if task.TaskID == "" {
+		if task.TaskID == "" || task.Agent == "" {
 			continue
 		}
 
@@ -149,7 +163,7 @@ func Reconcile() {
 	})
 
 	if err != nil {
-		api.ErrorMessage(3, "Reconcile_Error", err.Error())
+		e.API.ErrorMessage(3, "Reconcile_Error", err.Error())
 		logrus.Debug("Reconcile Error: ", err)
 	}
 }

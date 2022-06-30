@@ -9,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
+func (e *Scheduler) defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
 	PORT := "ports"
 	CPU := "cpus"
 	MEM := "mem"
@@ -21,8 +21,8 @@ func defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
 	// FIX: https://github.com/AVENTER-UG/mesos-compose/issues/8
 	// If the task already exists from a prev mesos-compose version, disk
 	// would be unset.
-	if disk <= config.Disk {
-		disk = config.Disk
+	if disk <= e.Config.Disk {
+		disk = e.Config.Disk
 	}
 
 	res := []mesosproto.Resource{
@@ -68,7 +68,7 @@ func defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
 }
 
 // PrepareTaskInfoExecuteContainer will create the TaskInfo Protobuf for Mesos
-func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Command) ([]mesosproto.TaskInfo, error) {
+func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Command) ([]mesosproto.TaskInfo, error) {
 	contype := mesosproto.ContainerInfo_DOCKER.Enum()
 
 	d, _ := json.Marshal(&cmd)
@@ -97,7 +97,7 @@ func PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Com
 		Value: cmd.TaskID,
 	}
 	msg.AgentID = agent
-	msg.Resources = defaultResources(cmd)
+	msg.Resources = e.defaultResources(cmd)
 
 	if cmd.Command == "" {
 		msg.Command = &mesosproto.CommandInfo{
