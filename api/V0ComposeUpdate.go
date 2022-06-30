@@ -44,7 +44,7 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 		// get all keys that start with the taskname
 		keys := e.GetAllRedisKeys(taskName + ":*")
 
-		for keys.Next(e.Config.RedisCTX) {
+		for keys.Next(e.Redis.RedisCTX) {
 			// get the values of the current key
 			key := e.GetRedisKey(keys.Val())
 			var task mesosutil.Command

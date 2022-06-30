@@ -18,7 +18,7 @@ func (e *Scheduler) Heartbeat() {
 
 	keys := e.API.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 	suppress := true
-	for keys.Next(e.Config.RedisCTX) {
+	for keys.Next(e.API.Redis.RedisCTX) {
 		// get the values of the current key
 		key := e.API.GetRedisKey(keys.Val())
 
@@ -41,7 +41,7 @@ func (e *Scheduler) Heartbeat() {
 			e.Framework.CommandChan <- task
 
 			data, _ := json.Marshal(task)
-			err := e.Config.RedisClient.Set(e.Config.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
+			err := e.API.Redis.RedisClient.Set(e.API.Redis.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
 			if err != nil {
 				logrus.Error("HandleUpdate Redis set Error: ", err)
 			}

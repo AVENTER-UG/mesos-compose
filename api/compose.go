@@ -54,7 +54,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	// store/update the mesos task in db
 	d, _ := json.Marshal(&cmd)
 	logrus.Debug("Save Mesos Task in DB: ", util.PrettyJSON(d))
-	err := e.Config.RedisClient.Set(e.Config.RedisCTX, cmd.TaskName+":"+newTaskID, d, 0).Err()
+	err := e.Redis.RedisClient.Set(e.Redis.RedisCTX, cmd.TaskName+":"+newTaskID, d, 0).Err()
 
 	if err != nil {
 		logrus.Error("Could not store Mesos Task in Redis: ", err)
@@ -145,7 +145,7 @@ func (e *API) portInUse(port uint32, agent string) bool {
 	// get all running services
 	logrus.Debug("Check if port is in use: ", port, agent)
 	keys := e.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
-	for keys.Next(e.Config.RedisCTX) {
+	for keys.Next(e.Redis.RedisCTX) {
 		// get the details of the current running service
 		key := e.GetRedisKey(keys.Val())
 		var task mesosutil.Command

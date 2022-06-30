@@ -53,7 +53,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 
 	// save the new state
 	data, _ := json.Marshal(task)
-	err := e.Config.RedisClient.Set(e.Config.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
+	err := e.API.Redis.RedisClient.Set(e.API.Redis.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
 	if err != nil {
 		logrus.Error("HandleUpdate Redis set Error: ", err)
 	}
