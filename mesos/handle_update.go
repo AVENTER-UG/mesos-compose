@@ -10,8 +10,6 @@ import (
 
 // HandleUpdate will handle the offers event of mesos
 func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
-	logrus.Debug("HandleUpdate")
-
 	update := event.Update
 
 	msg := &mesosproto.Call{
@@ -55,7 +53,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 	data, _ := json.Marshal(task)
 	err := e.API.Redis.RedisClient.Set(e.API.Redis.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
 	if err != nil {
-		logrus.Error("HandleUpdate Redis set Error: ", err)
+		logrus.WithField("func", "HandleUpdate").Error("Redis set Error: ", err.Error())
 	}
 	return mesosutil.Call(msg)
 }

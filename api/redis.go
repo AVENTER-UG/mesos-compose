@@ -89,7 +89,9 @@ func (e *API) SaveConfig() {
 // PingRedis to check the health of redis
 func (e *API) PingRedis() error {
 	pong, err := e.Redis.RedisClient.Ping(e.Redis.RedisCTX).Result()
-	logrus.Debug("Redis Health: ", pong, err)
+	if err != nil {
+		logrus.WithField("func", "PingRedis").Error("Did not pon Redis: ", pong, err.Error())
+	}
 	if err != nil {
 		return err
 	}

@@ -113,9 +113,9 @@
    }
   },
   {
-   "id": "8e0d6147868aa154",
+   "id": "96f72083bc3aecf0",
    "name": "github.com/AVENTER-UG/mesos-util",
-   "version": "v0.0.26",
+   "version": "v0.0.27",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -126,14 +126,14 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:AVENTER-UG:mesos-util:v0.0.26:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER-UG:mesos_util:v0.0.26:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER_UG:mesos-util:v0.0.26:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER_UG:mesos_util:v0.0.26:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER:mesos-util:v0.0.26:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER:mesos_util:v0.0.26:*:*:*:*:*:*:*"
+    "cpe:2.3:a:AVENTER-UG:mesos-util:v0.0.27:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER-UG:mesos_util:v0.0.27:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER_UG:mesos-util:v0.0.27:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER_UG:mesos_util:v0.0.27:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER:mesos-util:v0.0.27:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER:mesos_util:v0.0.27:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/github.com/AVENTER-UG/mesos-util@v0.0.26"
+   "purl": "pkg:golang/github.com/AVENTER-UG/mesos-util@v0.0.27"
   },
   {
    "id": "f9e0690db6bf998",

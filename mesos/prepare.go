@@ -69,24 +69,30 @@ func (e *Scheduler) defaultResources(cmd mesosutil.Command) []mesosproto.Resourc
 
 // PrepareTaskInfoExecuteContainer will create the TaskInfo Protobuf for Mesos
 func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Command) ([]mesosproto.TaskInfo, error) {
-	contype := mesosproto.ContainerInfo_DOCKER.Enum()
-
 	d, _ := json.Marshal(&cmd)
 	logrus.Debug("HandleOffers cmd: ", util.PrettyJSON(d))
 
+	// Set Container Type
+	var contype *mesosproto.ContainerInfo_Type
+	switch cmd.ContainerType {
+	case "mesos":
+		contype = mesosproto.ContainerInfo_MESOS.Enum()
+	case "docker":
+		contype = mesosproto.ContainerInfo_DOCKER.Enum()
+	default:
+		contype = nil
+	}
+
 	// Set Container Network Mode
 	networkMode := mesosproto.ContainerInfo_DockerInfo_BRIDGE.Enum()
-
-	if cmd.NetworkMode == "host" {
+	switch cmd.NetworkMode {
+	case "host":
 		networkMode = mesosproto.ContainerInfo_DockerInfo_HOST.Enum()
-	}
-	if cmd.NetworkMode == "none" {
+	case "none":
 		networkMode = mesosproto.ContainerInfo_DockerInfo_NONE.Enum()
-	}
-	if cmd.NetworkMode == "user" {
+	case "user":
 		networkMode = mesosproto.ContainerInfo_DockerInfo_USER.Enum()
-	}
-	if cmd.NetworkMode == "bridge" {
+	case "bridge":
 		networkMode = mesosproto.ContainerInfo_DockerInfo_BRIDGE.Enum()
 	}
 
@@ -99,23 +105,25 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 	msg.AgentID = agent
 	msg.Resources = e.defaultResources(cmd)
 
-	if cmd.Command == "" {
-		msg.Command = &mesosproto.CommandInfo{
-			Shell:       &cmd.Shell,
-			URIs:        cmd.Uris,
-			Environment: &cmd.Environment,
-		}
-	} else {
-		msg.Command = &mesosproto.CommandInfo{
-			Shell:       &cmd.Shell,
-			Value:       &cmd.Command,
-			URIs:        cmd.Uris,
-			Environment: &cmd.Environment,
+	if getLabelValue("biz.aventer.mesos_compose.executor", cmd) == "" {
+		if cmd.Command == "" {
+			msg.Command = &mesosproto.CommandInfo{
+				Shell:       &cmd.Shell,
+				URIs:        cmd.Uris,
+				Environment: &cmd.Environment,
+			}
+		} else {
+			msg.Command = &mesosproto.CommandInfo{
+				Shell:       &cmd.Shell,
+				Value:       &cmd.Command,
+				URIs:        cmd.Uris,
+				Environment: &cmd.Environment,
+			}
 		}
 	}
 
 	// ExecutorInfo or CommandInfo/Container, both is not supportet
-	if getLabelValue("biz.aventer.mesos_compose.executor", cmd) == "" {
+	if contype != nil && getLabelValue("biz.aventer.mesos_compose.executor", cmd) == "" {
 		msg.Container = &mesosproto.ContainerInfo{}
 		msg.Container.Type = contype
 		msg.Container.Volumes = cmd.Volumes
@@ -132,6 +140,8 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 		if cmd.Hostname != "" {
 			msg.Container.Hostname = &cmd.Hostname
 		}
+
+		msg.Container.LinuxInfo = &cmd.LinuxInfo
 	}
 
 	if cmd.Discovery != (mesosproto.DiscoveryInfo{}) {
@@ -142,6 +152,12 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 		msg.Labels = &mesosproto.Labels{
 			Labels: cmd.Labels,
 		}
+	}
+
+	if getLabelValue("biz.aventer.mesos_compose.executor", cmd) != "" {
+		// FIX: https://github.com/AVENTER-UG/mesos-compose/issues/7
+		cmd.Executor.Resources = e.defaultResources(cmd)
+		msg.Executor = &cmd.Executor
 	}
 
 	return []mesosproto.TaskInfo{msg}, nil

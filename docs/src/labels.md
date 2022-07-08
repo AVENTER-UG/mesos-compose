@@ -2,10 +2,10 @@
 
 ## biz.aventer.mesos_compose.container_type
 
-Values: docker, mesos (todo)
+Values: docker, mesos, none
 
 This label will control, which container engine mesos will choose to execute the
-container.
+container. The value "none" will tell mesos to run the command with the command-executer.
 
 ## biz.aventer.mesos_compose.contraint_hostname
 

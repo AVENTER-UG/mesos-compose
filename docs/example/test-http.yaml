@@ -6,7 +6,6 @@ services:
     network_mode: "host"
     labels:
       traefik.enable: "true"
-      biz.aventer.mesos_compose.container_type: "DOCKER"
       traefik.http.routers.test1.entrypoints: "web"
       traefik.http.routers.test1.rule: "Host(`www.example.com`)"
       traefik.http.routers.test1.service: "mc:homepages:test1:8888"
