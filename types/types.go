@@ -62,10 +62,11 @@ type Service struct {
 	Labels        map[string]interface{} `yaml:"labels"`
 	NetworkMode   string                 `yaml:"network_mode"`
 	Privileged    bool                   `yaml:"privileged"`
-	Command       []string               `yaml:"command"`
+	Command       string                 `yaml:"command"`
 	Deploy        Deploy                 `yaml:"deploy"`
 	Hostname      string                 `yaml:"hostname"`
 	ContainerName string                 `yaml:"container_name"`
+	CapAdd        []string               `yaml:"cap_add"`
 }
 
 // Deploy - The mesos resources to deploy a task

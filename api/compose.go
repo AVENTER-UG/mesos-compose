@@ -34,7 +34,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.CPU = e.getCPU()
 	cmd.Memory = e.getMemory()
 	cmd.Disk = e.getDisk()
-	cmd.ContainerType = strings.ToLower(e.getLabelValueByKey("biz.aventer.mesos_compose.container_type"))
+	cmd.ContainerType = e.getContainerType()
 	cmd.ContainerImage = e.Service.Image
 	cmd.NetworkMode = e.Service.NetworkMode
 	cmd.NetworkInfo = e.getNetworkInfo()
@@ -50,6 +50,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Instances = e.getReplicas()
 	cmd.Discovery = e.getDiscoveryInfo(cmd)
 	cmd.Shell = e.getShell(cmd)
+	cmd.LinuxInfo = e.getLinuxInfo()
 
 	// store/update the mesos task in db
 	d, _ := json.Marshal(&cmd)
@@ -117,8 +118,7 @@ func (e *API) getHostname() string {
 // Get the Command value from the compose file, or generate one if it's unset
 func (e *API) getCommand() string {
 	if len(e.Service.Command) != 0 {
-		comm := strings.Join(e.Service.Command, " ")
-		return comm
+		return e.Service.Command
 	}
 	return ""
 }
@@ -344,21 +344,23 @@ func (e *API) getExecutor() mesosproto.ExecutorInfo {
 	var executorInfo mesosproto.ExecutorInfo
 	command := e.getLabelValueByKey("biz.aventer.mesos_compose.executor")
 	uri := e.getLabelValueByKey("biz.aventer.mesos_compose.executor_uri")
+	command = "exec '" + command + "' " + e.getCommand()
 
 	if command != "" {
 		executorID, _ := util.GenUUID()
+		environment := e.getEnvironment()
 		executorInfo = mesosproto.ExecutorInfo{
 			Name: func() *string { x := path.Base(command); return &x }(),
-			Type: mesosproto.ExecutorInfo_CUSTOM,
+			Type: *mesosproto.ExecutorInfo_CUSTOM.Enum(),
 			ExecutorID: &mesosproto.ExecutorID{
 				Value: executorID,
 			},
 			FrameworkID: e.Framework.FrameworkInfo.ID,
 			Command: &mesosproto.CommandInfo{
 				Value: func() *string { x := command; return &x }(),
-			},
-			Container: &mesosproto.ContainerInfo{
-				Type: mesosproto.ContainerInfo_MESOS.Enum(),
+				Environment: &mesosproto.Environment{
+					Variables: environment,
+				},
 			},
 		}
 
@@ -398,4 +400,30 @@ func (e *API) getNetworkInfo() []mesosproto.NetworkInfo {
 // check if the task command inside of the container have to be executed as shell
 func (e *API) getShell(cmd mesosutil.Command) bool {
 	return cmd.Command != ""
+}
+
+// get linux info like capabilities
+func (e *API) getLinuxInfo() mesosproto.LinuxInfo {
+	linuxInfo := mesosproto.LinuxInfo{}
+
+	if len(e.Service.CapAdd) > 0 {
+		caps, err := json.Marshal(e.Service.CapAdd)
+		if err != nil {
+			logrus.WithField("func", "getLinuxInfo").Error("Could not marshal cap_add: ", err.Error())
+		}
+		tmp := "{ \"Capabilities\":" + string(caps) + "}"
+
+		var capability mesosproto.CapabilityInfo
+
+		json.Unmarshal([]byte(tmp), &capability)
+		linuxInfo.EffectiveCapabilities = &capability
+	}
+	return linuxInfo
+}
+
+// get the container type
+func (e *API) getContainerType() string {
+	conType := strings.ToLower(e.getLabelValueByKey("biz.aventer.mesos_compose.container_type"))
+
+	return conType
 }

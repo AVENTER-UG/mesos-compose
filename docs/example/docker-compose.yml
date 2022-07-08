@@ -2,7 +2,7 @@ version: '3.9'
 services:
   app:
     image: alpine:latest
-    command: ["sleep", "1000"]
+    command: "sleep 1000"
     restart: always
     volumes:
       - "12345test:/tmp"
@@ -19,6 +19,9 @@ services:
       - "8080:80"
     network:
       - default
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
     deploy:
       replicas: 1
       resources:

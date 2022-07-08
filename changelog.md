@@ -1,5 +1,12 @@
 # Changelog
 
+## master
+
+- CHANGE: Command attribute from array to string. 
+- ADD: Support of docker-compose capability parameter "cap_add".
+- ADD: Support of mesos command executor. Set the label:
+  `biz.aventer.mesos_compose.container_type: "NONE"`
+  
 ## v0.4.0
 
 - ADD: Redis Connection retry and health check.

@@ -45,27 +45,12 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			},
 		}
 
-		if getLabelValue("biz.aventer.mesos_compose.executor", cmd) != "" {
-			// FIX: https://github.com/AVENTER-UG/mesos-compose/issues/7
-			cmd.Executor.Resources = e.defaultResources(cmd)
-
-			accept.Accept.Operations = []mesosproto.Offer_Operation{{
-				Type: mesosproto.Offer_Operation_LAUNCH_GROUP,
-				LaunchGroup: &mesosproto.Offer_Operation_LaunchGroup{
-					Executor: cmd.Executor,
-					TaskGroup: mesosproto.TaskGroupInfo{
-						Tasks: taskInfo,
-					},
-				},
-			}}
-		} else {
-			accept.Accept.Operations = []mesosproto.Offer_Operation{{
-				Type: mesosproto.Offer_Operation_LAUNCH,
-				Launch: &mesosproto.Offer_Operation_Launch{
-					TaskInfos: taskInfo,
-				},
-			}}
-		}
+		accept.Accept.Operations = []mesosproto.Offer_Operation{{
+			Type: mesosproto.Offer_Operation_LAUNCH,
+			Launch: &mesosproto.Offer_Operation_Launch{
+				TaskInfos: taskInfo,
+			},
+		}}
 
 		d, _ := json.Marshal(&accept)
 		logrus.Debug("HandleOffers msg: ", util.PrettyJSON(d))

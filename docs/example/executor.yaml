@@ -1,0 +1,8 @@
+version: '3.9'
+services:
+  test1:
+    command: "sleep 1"
+    environment:
+      - FIRECRACKER_WORKDIR=/usr/libexec/mesos 
+    labels:
+      biz.aventer.mesos_compose.executor: "/usr/libexec/mesos/mesos-firecracker-executor"

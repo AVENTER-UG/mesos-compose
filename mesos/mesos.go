@@ -87,6 +87,8 @@ func (e *Scheduler) EventLoop() {
 
 	logrus.Debug(line)
 
+	go e.HeartbeatLoop()
+
 	for {
 		// Read line from Mesos
 		line, _ = reader.ReadString('\n')
@@ -117,10 +119,8 @@ func (e *Scheduler) EventLoop() {
 			e.Reconcile()
 			e.API.SaveConfig()
 		case mesosproto.Event_UPDATE:
-			logrus.Debug("Update", e.HandleUpdate(&event))
+			e.HandleUpdate(&event)
 			e.API.SaveConfig()
-		case mesosproto.Event_HEARTBEAT:
-			e.Heartbeat()
 		case mesosproto.Event_OFFERS:
 			// Search Failed containers and restart them
 			logrus.Debug("Offer Got")
