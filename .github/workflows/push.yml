@@ -35,7 +35,7 @@ jobs:
           name: mesos-compose
           path: .
       - name: Create release archive
-        run: tar -czvf release.tar.gz vmm-agent README.md LICENSE
+        run: tar -czvf release.tar.gz mesos-compose README.md LICENSE
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
