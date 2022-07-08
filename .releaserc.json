@@ -1,0 +1,23 @@
+{
+    "branches": [
+        "main"
+    ],
+    "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        [
+            "@semantic-release/github",
+            {
+                "successComment": false,
+                "releasedLabels": false,
+                "assets": [
+                    {
+                        "path": "release.tar.gz",
+                        "name":  "mesos_compose-${nextRelease.gitTag}-linux-amd64.tar.gz",
+                        "label": "mesos_compose-${nextRelease.gitTag}-linux-amd64.tar.gz"
+                    }
+                ]
+            }
+        ]
+    ]
+}
