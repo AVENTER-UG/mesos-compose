@@ -2,7 +2,7 @@
 
 #vars
 IMAGENAME=mesos-compose
-REPO=localhost:5000
+REPO=avhost
 TAG=`git describe`
 BRANCH=`git rev-parse --abbrev-ref HEAD`
 BUILDDATE=`date -u +%Y-%m-%dT%H:%M:%SZ`
@@ -25,7 +25,7 @@ help:
 
 build:
 	@echo ">>>> Build docker image and publish it to private repo"
-	@docker buildx build --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} --push .
+	@docker buildx build --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} .
 
 build-bin:
 	@echo ">>>> Build binary"
