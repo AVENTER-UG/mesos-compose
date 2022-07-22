@@ -25,7 +25,7 @@ func init() {
 	framework.FrameworkInfoFilePath = util.Getenv("FRAMEWORK_STATEFILE_PATH", "/tmp")
 	framework.Username = os.Getenv("MESOS_USERNAME")
 	framework.Password = os.Getenv("MESOS_PASSWORD")
-	framework.MesosMasterServer = os.Getenv("MESOS_MASTER")
+	framework.MesosMasterServer = util.Getenv("MESOS_MASTER", "localhost:5050")
 	framework.MesosCNI = util.Getenv("MESOS_CNI", "weave")
 	framework.PortRangeFrom, _ = strconv.Atoi(util.Getenv("PORTRANGE_FROM", "32000"))
 	framework.PortRangeTo, _ = strconv.Atoi(util.Getenv("PORTRANGE_TO", "38000"))
