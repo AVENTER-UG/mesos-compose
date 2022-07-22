@@ -50,4 +50,4 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}        
       - name: Push Image
-        run: make build build-docker publish
+        run: make build publish
