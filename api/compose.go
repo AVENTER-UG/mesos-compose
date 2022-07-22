@@ -344,9 +344,9 @@ func (e *API) getExecutor() mesosproto.ExecutorInfo {
 	var executorInfo mesosproto.ExecutorInfo
 	command := e.getLabelValueByKey("biz.aventer.mesos_compose.executor")
 	uri := e.getLabelValueByKey("biz.aventer.mesos_compose.executor_uri")
-	command = "exec '" + command + "' " + e.getCommand()
 
 	if command != "" {
+		command = "exec '" + command + "' " + e.getCommand()
 		executorID, _ := util.GenUUID()
 		environment := e.getEnvironment()
 		executorInfo = mesosproto.ExecutorInfo{
@@ -424,6 +424,11 @@ func (e *API) getLinuxInfo() mesosproto.LinuxInfo {
 // get the container type
 func (e *API) getContainerType() string {
 	conType := strings.ToLower(e.getLabelValueByKey("biz.aventer.mesos_compose.container_type"))
+
+	// if contype and custom executor is unset, then set the contype to DOCKER
+	if conType == "" && e.getLabelValueByKey("biz.aventer.mesos_compose.executor") == "" {
+		conType = "docker"
+	}
 
 	return conType
 }
