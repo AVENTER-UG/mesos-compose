@@ -4,5 +4,6 @@ services:
     command: "sleep 1"
     environment:
       - FIRECRACKER_WORKDIR=/usr/libexec/mesos 
+      - FIRECRACKER_AGENT_PORT=8080
     labels:
       biz.aventer.mesos_compose.executor: "/usr/libexec/mesos/mesos-firecracker-executor"
