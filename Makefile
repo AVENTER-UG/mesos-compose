@@ -3,7 +3,7 @@
 #vars
 IMAGENAME=mesos-compose
 REPO=avhost
-TAG=`git describe`
+TAG=`git describe --tags --abbrev=0`
 BRANCH=`git rev-parse --abbrev-ref HEAD`
 BUILDDATE=`date -u +%Y-%m-%dT%H:%M:%SZ`
 IMAGEFULLNAME=${REPO}/${IMAGENAME}
@@ -34,7 +34,9 @@ build-bin:
 publish:
 	@echo ">>>> Publish docker image"
 	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAMEPUB}:${BRANCH}
+	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAMEPUB}:${TAG}
 	@docker push ${IMAGEFULLNAMEPUB}:${BRANCH}
+	@docker push ${IMAGEFULLNAMEPUB}:${TAG}
 
 update-precommit:
 	@virtualenv --no-site-packages ~/.virtualenv
