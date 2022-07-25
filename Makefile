@@ -53,6 +53,9 @@ sboom:
 	syft dir:. > sbom.txt
 	syft dir:. -o json > sbom.json
 
+seccheck:
+	gosec --exclude G104 --exclude-dir ./vendor ./... 
+
 version:
 	@echo ">>>> Generate version file"
 	@echo "[{ \"version\":\"${TAG}\", \"builddate\":\"${BUILDDATE}\" }]" > .version.json
