@@ -41,9 +41,17 @@ publish:
 update-precommit:
 	@virtualenv --no-site-packages ~/.virtualenv
 
+update-gomod:
+	go get -u
+	go mod tidy
+
 docs:
 	@echo ">>>> Build docs"
 	$(MAKE) -C $@
+
+sboom:
+	syft dir:. > sbom.txt
+	syft dir:. -o json > sbom.json
 
 version:
 	@echo ">>>> Generate version file"

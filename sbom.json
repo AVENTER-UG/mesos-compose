@@ -1,29 +1,6 @@
 {
  "artifacts": [
   {
-   "id": "cc2b0b06723c563d",
-   "name": "github.com/AVENTER-UG/go-logrus-formatter",
-   "version": "v0.0.0-20181204170756-e4bb1d931585",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "go.mod"
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:AVENTER-UG:go-logrus-formatter:v0.0.0-20181204170756-e4bb1d931585:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER-UG:go_logrus_formatter:v0.0.0-20181204170756-e4bb1d931585:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER_UG:go-logrus-formatter:v0.0.0-20181204170756-e4bb1d931585:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER_UG:go_logrus_formatter:v0.0.0-20181204170756-e4bb1d931585:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER:go-logrus-formatter:v0.0.0-20181204170756-e4bb1d931585:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER:go_logrus_formatter:v0.0.0-20181204170756-e4bb1d931585:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/AVENTER-UG/go-logrus-formatter@v0.0.0-20181204170756-e4bb1d931585"
-  },
-  {
    "id": "1f4093d399c59be3",
    "name": "github.com/AVENTER-UG/go-logrus-formatter",
    "version": "v0.0.0-20181204170756-e4bb1d931585",
@@ -52,6 +29,29 @@
     "h1Digest": "h1:sVEvCjo1XwxvV3R0gkOdXEIQBRkeKmHZGAB44vbVyY4=",
     "mainModule": "github.com/AVENTER-UG/mesos-compose"
    }
+  },
+  {
+   "id": "ab48bb5ea75e841",
+   "name": "github.com/AVENTER-UG/go-logrus-formatter",
+   "version": "v0.5.2",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "go.mod"
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:AVENTER-UG:go-logrus-formatter:v0.5.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER-UG:go_logrus_formatter:v0.5.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER_UG:go-logrus-formatter:v0.5.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER_UG:go_logrus_formatter:v0.5.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER:go-logrus-formatter:v0.5.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER:go_logrus_formatter:v0.5.2:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/github.com/AVENTER-UG/go-logrus-formatter@v0.5.2"
   },
   {
    "id": "1de4e29890a25f0b",
@@ -113,9 +113,9 @@
    }
   },
   {
-   "id": "96f72083bc3aecf0",
+   "id": "e90c1daaf59ba029",
    "name": "github.com/AVENTER-UG/mesos-util",
-   "version": "v0.0.27",
+   "version": "v0.0.28",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -126,34 +126,14 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:AVENTER-UG:mesos-util:v0.0.27:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER-UG:mesos_util:v0.0.27:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER_UG:mesos-util:v0.0.27:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER_UG:mesos_util:v0.0.27:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER:mesos-util:v0.0.27:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER:mesos_util:v0.0.27:*:*:*:*:*:*:*"
+    "cpe:2.3:a:AVENTER-UG:mesos-util:v0.0.28:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER-UG:mesos_util:v0.0.28:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER_UG:mesos-util:v0.0.28:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER_UG:mesos_util:v0.0.28:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER:mesos-util:v0.0.28:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER:mesos_util:v0.0.28:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/github.com/AVENTER-UG/mesos-util@v0.0.27"
-  },
-  {
-   "id": "f9e0690db6bf998",
-   "name": "github.com/AVENTER-UG/util",
-   "version": "v0.2.0",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "go.mod"
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:AVENTER-UG:util:v0.2.0:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER_UG:util:v0.2.0:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER:util:v0.2.0:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/AVENTER-UG/util@v0.2.0"
+   "purl": "pkg:golang/github.com/AVENTER-UG/mesos-util@v0.0.28"
   },
   {
    "id": "dd43a93f34daf31",
@@ -181,6 +161,26 @@
     "h1Digest": "h1:qWCE7GOZ77OAk72TtigqcEVus1Xyh9GxDp7n6NjFsAM=",
     "mainModule": "github.com/AVENTER-UG/mesos-compose"
    }
+  },
+  {
+   "id": "c839380d502a5d80",
+   "name": "github.com/AVENTER-UG/util",
+   "version": "v0.3.0",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "go.mod"
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:AVENTER-UG:util:v0.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER_UG:util:v0.3.0:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER:util:v0.3.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/github.com/AVENTER-UG/util@v0.3.0"
   },
   {
    "id": "782dc6e9f5fa0fe",
@@ -316,26 +316,6 @@
    }
   },
   {
-   "id": "e71351eab9e2ce5",
-   "name": "github.com/go-redis/redis/v8",
-   "version": "v8.11.4",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "go.mod"
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:go-redis:redis\\/v8:v8.11.4:*:*:*:*:*:*:*",
-    "cpe:2.3:a:go_redis:redis\\/v8:v8.11.4:*:*:*:*:*:*:*",
-    "cpe:2.3:a:go:redis\\/v8:v8.11.4:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/go-redis/redis/v8@v8.11.4"
-  },
-  {
    "id": "1e62fcd8b283b7c6",
    "name": "github.com/go-redis/redis/v8",
    "version": "v8.11.4",
@@ -361,6 +341,26 @@
     "h1Digest": "h1:kHoYkfZP6+pe04aFTnhDH6GDROa5yJdHJVNxV3F46Tg=",
     "mainModule": "github.com/AVENTER-UG/mesos-compose"
    }
+  },
+  {
+   "id": "2c135609a5a78bd1",
+   "name": "github.com/go-redis/redis/v8",
+   "version": "v8.11.5",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "go.mod"
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:go-redis:redis\\/v8:v8.11.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:go_redis:redis\\/v8:v8.11.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:go:redis\\/v8:v8.11.5:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/github.com/go-redis/redis/v8@v8.11.5"
   },
   {
    "id": "56ffe07dbae8143a",
@@ -449,25 +449,6 @@
    }
   },
   {
-   "id": "1bc50c10f51b9a92",
-   "name": "github.com/mattn/go-colorable",
-   "version": "v0.1.11",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "go.mod"
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:mattn:go-colorable:v0.1.11:*:*:*:*:*:*:*",
-    "cpe:2.3:a:mattn:go_colorable:v0.1.11:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/mattn/go-colorable@v0.1.11"
-  },
-  {
    "id": "ce3f14e370aafa90",
    "name": "github.com/mattn/go-colorable",
    "version": "v0.1.11",
@@ -492,6 +473,25 @@
     "h1Digest": "h1:nQ+aFkoE2TMGc0b68U2OKSexC+eq46+XwZzWXHRmPYs=",
     "mainModule": "github.com/AVENTER-UG/mesos-compose"
    }
+  },
+  {
+   "id": "d7de58c7a0d78c69",
+   "name": "github.com/mattn/go-colorable",
+   "version": "v0.1.12",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "go.mod"
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:mattn:go-colorable:v0.1.12:*:*:*:*:*:*:*",
+    "cpe:2.3:a:mattn:go_colorable:v0.1.12:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/github.com/mattn/go-colorable@v0.1.12"
   },
   {
    "id": "ef0335a86671ee50",
@@ -625,24 +625,6 @@
    }
   },
   {
-   "id": "eb4bc4cdbdc7fd60",
-   "name": "github.com/sirupsen/logrus",
-   "version": "v1.8.1",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "go.mod"
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:sirupsen:logrus:v1.8.1:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/sirupsen/logrus@v1.8.1"
-  },
-  {
    "id": "ce3502eac404bffc",
    "name": "github.com/sirupsen/logrus",
    "version": "v1.8.1",
@@ -668,9 +650,9 @@
    }
   },
   {
-   "id": "ffb43ce86e4c5674",
-   "name": "golang.org/x/crypto",
-   "version": "v0.0.0-20200622213623-75b288015ac9",
+   "id": "9a0c7256bfe255d2",
+   "name": "github.com/sirupsen/logrus",
+   "version": "v1.9.0",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -681,9 +663,32 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:golang:x\\/crypto:v0.0.0-20200622213623-75b288015ac9:*:*:*:*:*:*:*"
+    "cpe:2.3:a:sirupsen:logrus:v1.9.0:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/golang.org/x/crypto@v0.0.0-20200622213623-75b288015ac9"
+   "purl": "pkg:golang/github.com/sirupsen/logrus@v1.9.0"
+  },
+  {
+   "id": "bc43ae63e12aca44",
+   "name": "github.com/x-cray/logrus-prefixed-formatter",
+   "version": "v0.5.2",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "go.mod"
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:x-cray:logrus-prefixed-formatter:v0.5.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:x-cray:logrus_prefixed_formatter:v0.5.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:x_cray:logrus-prefixed-formatter:v0.5.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:x_cray:logrus_prefixed_formatter:v0.5.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:x:logrus-prefixed-formatter:v0.5.2:*:*:*:*:*:*:*",
+    "cpe:2.3:a:x:logrus_prefixed_formatter:v0.5.2:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/github.com/x-cray/logrus-prefixed-formatter@v0.5.2"
   },
   {
    "id": "42aefdf2959af5c8",
@@ -711,9 +716,9 @@
    }
   },
   {
-   "id": "438ee57c9feab54b",
-   "name": "golang.org/x/sys",
-   "version": "v0.0.0-20210927094055-39ccf1dd6fa6",
+   "id": "1fb31a4dedff1f80",
+   "name": "golang.org/x/crypto",
+   "version": "v0.0.0-20220722155217-630584e8d5aa",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -724,9 +729,9 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:golang:x\\/sys:v0.0.0-20210927094055-39ccf1dd6fa6:*:*:*:*:*:*:*"
+    "cpe:2.3:a:golang:x\\/crypto:v0.0.0-20220722155217-630584e8d5aa:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/golang.org/x/sys@v0.0.0-20210927094055-39ccf1dd6fa6"
+   "purl": "pkg:golang/golang.org/x/crypto@v0.0.0-20220722155217-630584e8d5aa"
   },
   {
    "id": "92f510d9d01a3d5c",
@@ -754,9 +759,9 @@
    }
   },
   {
-   "id": "a03bf8695fc794e9",
-   "name": "gopkg.in/yaml.v3",
-   "version": "v3.0.0-20210107192922-496545a6307b",
+   "id": "80260c7a41642897",
+   "name": "golang.org/x/sys",
+   "version": "v0.0.0-20220722155257-8c9f86f7a55f",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -766,8 +771,28 @@
    ],
    "licenses": [],
    "language": "go",
-   "cpes": [],
-   "purl": "pkg:golang/gopkg.in/yaml.v3@v3.0.0-20210107192922-496545a6307b"
+   "cpes": [
+    "cpe:2.3:a:golang:x\\/sys:v0.0.0-20220722155257-8c9f86f7a55f:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/golang.org/x/sys@v0.0.0-20220722155257-8c9f86f7a55f"
+  },
+  {
+   "id": "d4a10d3b70fced84",
+   "name": "golang.org/x/term",
+   "version": "v0.0.0-20220722155259-a9ba230a4035",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "go.mod"
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:golang:x\\/term:v0.0.0-20220722155259-a9ba230a4035:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/golang.org/x/term@v0.0.0-20220722155259-a9ba230a4035"
   },
   {
    "id": "7cc248bc24158afd",
@@ -791,6 +816,22 @@
     "h1Digest": "h1:h8qDotaEPuJATrMmW04NCwg7v22aHH28wwpauUhK9Oo=",
     "mainModule": "github.com/AVENTER-UG/mesos-compose"
    }
+  },
+  {
+   "id": "7d36a1c0c358a2f8",
+   "name": "gopkg.in/yaml.v3",
+   "version": "v3.0.1",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "go.mod"
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [],
+   "purl": "pkg:golang/gopkg.in/yaml.v3@v3.0.1"
   }
  ],
  "artifactRelationships": [],

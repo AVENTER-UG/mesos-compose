@@ -33,10 +33,3 @@ repos:
   hooks:
     - id: go-sec-mod
       args: ["-exclude", "G104"]
-
-- repo: local
-  hooks:
-    - id: sbom
-      name: syft
-      entry: .git/hooks/sbom.sh
-      language: system
