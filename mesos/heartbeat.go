@@ -1,7 +1,6 @@
 package mesos
 
 import (
-	"encoding/json"
 	"time"
 
 	mesosutil "github.com/AVENTER-UG/mesos-util"
@@ -22,8 +21,7 @@ func (e *Scheduler) Heartbeat() {
 		// get the values of the current key
 		key := e.API.GetRedisKey(keys.Val())
 
-		var task mesosutil.Command
-		json.Unmarshal([]byte(key), &task)
+		task := mesosutil.DecodeTask(key)
 
 		if task.TaskID == "" || task.TaskName == "" {
 			continue
@@ -40,11 +38,7 @@ func (e *Scheduler) Heartbeat() {
 			// add task to communication channel
 			e.Framework.CommandChan <- task
 
-			data, _ := json.Marshal(task)
-			err := e.API.Redis.RedisClient.Set(e.API.Redis.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
-			if err != nil {
-				logrus.Error("HandleUpdate Redis set Error: ", err)
-			}
+			e.API.SaveTaskRedis(task)
 
 			logrus.Info("Scheduled Mesos Task: ", task.TaskName)
 		}

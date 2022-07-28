@@ -1,7 +1,7 @@
 github.com/AVENTER-UG/go-logrus-formatter v0.5.2 h1:nj5coJ9iN/wMNikB8fBx9ihzC0d1fP4suU9BYRTC8K4=
 github.com/AVENTER-UG/go-logrus-formatter v0.5.2/go.mod h1:EXN8FPKx567UIA2L4jewW7pg48hc3i4fPZ+uBmHXxZI=
-github.com/AVENTER-UG/mesos-util v0.0.28 h1:SAsBE3LJ667oeJt7nzd4DjV6aCurbiH8Baqrqje9al0=
-github.com/AVENTER-UG/mesos-util v0.0.28/go.mod h1:70fymV+AZKb3VQtUtprpJVXtp+mEAsYk7/NEg3s5JQ8=
+github.com/AVENTER-UG/mesos-util v0.0.30 h1:ub/wmfHd3OOvmDaFRcw8TxnENOmA4CYV+PdKHTG+qUo=
+github.com/AVENTER-UG/mesos-util v0.0.30/go.mod h1:70fymV+AZKb3VQtUtprpJVXtp+mEAsYk7/NEg3s5JQ8=
 github.com/AVENTER-UG/util v0.3.0 h1:wtUC7e6LMx37BRGBKKBZ4BUM8q4lkLjgBinS09luv6A=
 github.com/AVENTER-UG/util v0.3.0/go.mod h1:8mh50Bes+U3D6ZP3psP4K8LSPNwpeuM5vRNb/vU/sS0=
 github.com/Showmax/go-fqdn v1.0.0 h1:0rG5IbmVliNT5O19Mfuvna9LL7zlHyRfsSvBPZmF9tM=

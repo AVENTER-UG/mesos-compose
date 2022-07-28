@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"net/http"
 	"strings"
 
@@ -37,10 +36,16 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 
 	keys := e.GetAllRedisKeys(e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":*")
 
+	if keys == nil {
+		logrus.WithField("func", "V0ComposeRestartService").Error("Could not find Project or Servicename")
+
+		d = e.ErrorMessage(0, "V0ComposeRestartService", "Could not find Project or Servicename")
+		w.Write(d)
+	}
+
 	for keys.Next(e.Redis.RedisCTX) {
 		key := e.GetRedisKey(keys.Val())
-		var oldTask mesosutil.Command
-		json.Unmarshal([]byte(key), &oldTask)
+		oldTask := mesosutil.DecodeTask(key)
 		newTask := oldTask
 
 		// generate new task as copy of old task
@@ -48,23 +53,11 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 		uuid, _ := util.GenUUID()
 		newTask.TaskID = taskName[0] + "." + uuid
 		newTask.State = ""
-		data, _ := json.Marshal(newTask)
-		err := e.Redis.RedisClient.Set(e.Redis.RedisCTX, newTask.TaskName+":"+newTask.TaskID, data, 0).Err()
-		if err != nil {
-			d = e.ErrorMessage(2, "V0ComposeRestartService newTask", err.Error())
-			logrus.WithField("func", "V0ComposeRestartService").Error("Redis Error write newTask Data: ", err.Error())
-			w.Write(d)
-		}
+		e.SaveTaskRedis(newTask)
 
 		// set the old task to be killed
 		oldTask.State = "__KILL"
-		data, _ = json.Marshal(oldTask)
-		err = e.Redis.RedisClient.Set(e.Redis.RedisCTX, oldTask.TaskName+":"+oldTask.TaskID, data, 0).Err()
-		if err != nil {
-			d = e.ErrorMessage(2, "V0ComposeRestartService oldTask", err.Error())
-			logrus.WithField("func", "V0ComposeRestartService").Error("Redis Error write oldTask Data: ", err.Error())
-			w.Write(d)
-		}
+		e.SaveTaskRedis(oldTask)
 	}
 
 	d = e.ErrorMessage(0, "V0ComposeRestartService", "ok")

@@ -47,8 +47,7 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 		for keys.Next(e.Redis.RedisCTX) {
 			// get the values of the current key
 			key := e.GetRedisKey(keys.Val())
-			var task mesosutil.Command
-			json.Unmarshal([]byte(key), &task)
+			task := mesosutil.DecodeTask(key)
 			e.mapComposeServiceToMesosTask(vars, service, task)
 		}
 	}

@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"net/http"
 
 	mesosutil "github.com/AVENTER-UG/mesos-util"
@@ -39,8 +38,7 @@ func (e *API) V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 	for keys.Next(e.Redis.RedisCTX) {
 		key := e.GetRedisKey(keys.Val())
 
-		var task mesosutil.Command
-		json.Unmarshal([]byte(key), &task)
+		task := mesosutil.DecodeTask(key)
 		mesosutil.Kill(task.TaskID, task.Agent)
 		logrus.Debug("V0ComposeKillService: " + e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":" + taskID)
 	}

@@ -36,6 +36,14 @@ func (e *API) GetRedisKey(key string) string {
 	return val
 }
 
+// SetRedisKey store data in redis
+func (e *API) SetRedisKey(data []byte, key string) {
+	err := e.Redis.RedisClient.Set(e.Redis.RedisCTX, key, data, 0).Err()
+	if err != nil {
+		logrus.WithField("func", "SetRedisKey").Error("Could not save data in Redis: ", err.Error())
+	}
+}
+
 // DelRedisKey will delete a redis key
 func (e *API) DelRedisKey(key string) int64 {
 	val, err := e.Redis.RedisClient.Del(e.Redis.RedisCTX, key).Result()
@@ -52,12 +60,15 @@ func (e *API) GetTaskFromEvent(update *mesosproto.Event_Update) mesosutil.Comman
 	// search matched taskid in redis and update the status
 	keys := e.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 	for keys.Next(e.Redis.RedisCTX) {
+		// ignore redis keys if they are not mesos tasks
+		if keys.Val() == e.Framework.FrameworkName+":framework" || keys.Val() == e.Framework.FrameworkName+":framework_config" {
+			continue
+		}
 		// get the values of the current key
 		key := e.GetRedisKey(keys.Val())
 
-		// update the status of the matches task
-		var task mesosutil.Command
-		json.Unmarshal([]byte(key), &task)
+		task := mesosutil.DecodeTask(key)
+
 		if task.TaskID == update.Status.TaskID.Value {
 			return task
 		}
@@ -115,4 +126,16 @@ func (e *API) ConnectRedis() {
 		e.Redis.RedisClient.Close()
 		e.ConnectRedis()
 	}
+}
+
+// SaveTaskRedis store mesos task in DB
+func (e *API) SaveTaskRedis(cmd mesosutil.Command) {
+	d, _ := json.Marshal(&cmd)
+	e.SetRedisKey(d, cmd.TaskName+":"+cmd.TaskID)
+}
+
+// SaveFrameworkRedis store mesos framework in DB
+func (e *API) SaveFrameworkRedis() {
+	d, _ := json.Marshal(&e.Framework)
+	e.SetRedisKey(d, e.Framework.FrameworkName+":framework")
 }

@@ -53,13 +53,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.LinuxInfo = e.getLinuxInfo()
 
 	// store/update the mesos task in db
-	d, _ := json.Marshal(&cmd)
-	logrus.Debug("Save Mesos Task in DB: ", util.PrettyJSON(d))
-	err := e.Redis.RedisClient.Set(e.Redis.RedisCTX, cmd.TaskName+":"+newTaskID, d, 0).Err()
-
-	if err != nil {
-		logrus.Error("Could not store Mesos Task in Redis: ", err)
-	}
+	e.SaveTaskRedis(cmd)
 }
 
 // Get the CPU value from the compose file, or the default one if it's unset

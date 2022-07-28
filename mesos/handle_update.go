@@ -1,8 +1,6 @@
 package mesos
 
 import (
-	"encoding/json"
-
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
 	"github.com/sirupsen/logrus"
@@ -23,13 +21,14 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 
 	// get the task of the current event, change the state
 	task := e.API.GetTaskFromEvent(update)
-	task.State = update.Status.State.String()
 
 	if task.TaskID == "" {
 		return nil
 	}
 
-	logrus.Debug(task.State)
+	task.State = update.Status.State.String()
+
+	logrus.WithField("func", "HandleUpdate").Debug("Task State: ", task.State)
 
 	switch *update.Status.State {
 	case mesosproto.TASK_FAILED:
@@ -46,14 +45,13 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 		// restart task
 		task.State = ""
 	case mesosproto.TASK_RUNNING:
+		task.MesosAgent = mesosutil.GetAgentInfo(task.Agent)
+		task.NetworkInfo = mesosutil.GetNetworkInfo(task.TaskID)
 		task.Agent = update.Status.GetAgentID().Value
 	}
 
 	// save the new state
-	data, _ := json.Marshal(task)
-	err := e.API.Redis.RedisClient.Set(e.API.Redis.RedisCTX, task.TaskName+":"+task.TaskID, data, 0).Err()
-	if err != nil {
-		logrus.WithField("func", "HandleUpdate").Error("Redis set Error: ", err.Error())
-	}
+	e.API.SaveTaskRedis(task)
+
 	return mesosutil.Call(msg)
 }

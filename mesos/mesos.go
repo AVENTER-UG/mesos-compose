@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"crypto/tls"
-	"encoding/json"
 	"net/http"
 	"strings"
 
@@ -85,8 +84,6 @@ func (e *Scheduler) EventLoop() {
 	line, _ := reader.ReadString('\n')
 	_ = strings.TrimSuffix(line, "\n")
 
-	logrus.Debug(line)
-
 	go e.HeartbeatLoop()
 
 	for {
@@ -100,8 +97,6 @@ func (e *Scheduler) EventLoop() {
 			logrus.Error("Mesos Unmarshal Data Error: ", err)
 		}
 
-		logrus.Debug(event.GetType())
-
 		switch event.Type {
 		case mesosproto.Event_SUBSCRIBED:
 			logrus.Debug(event)
@@ -110,20 +105,14 @@ func (e *Scheduler) EventLoop() {
 			e.Framework.FrameworkInfo.ID = event.Subscribed.GetFrameworkID()
 			e.Framework.MesosStreamID = res.Header.Get("Mesos-Stream-Id")
 
-			// store framework configuration
-			d, _ := json.Marshal(&e.Framework)
-			err = e.API.Redis.RedisClient.Set(e.API.Redis.RedisCTX, e.Framework.FrameworkName+":framework", d, 0).Err()
-			if err != nil {
-				logrus.Error("Framework save config and state into redis Error: ", err)
-			}
 			e.Reconcile()
+			e.API.SaveFrameworkRedis()
 			e.API.SaveConfig()
 		case mesosproto.Event_UPDATE:
 			e.HandleUpdate(&event)
 			e.API.SaveConfig()
 		case mesosproto.Event_OFFERS:
 			// Search Failed containers and restart them
-			logrus.Debug("Offer Got")
 			err = e.HandleOffers(event.Offers)
 			if err != nil {
 				logrus.Error("Switch Event HandleOffers: ", err)
@@ -140,8 +129,7 @@ func (e *Scheduler) Reconcile() {
 	for keys.Next(e.API.Redis.RedisCTX) {
 		key := e.API.GetRedisKey(keys.Val())
 
-		var task mesosutil.Command
-		json.Unmarshal([]byte(key), &task)
+		task := mesosutil.DecodeTask(key)
 
 		if task.TaskID == "" || task.Agent == "" {
 			continue
