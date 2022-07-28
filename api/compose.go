@@ -376,12 +376,12 @@ func (e *API) getExecutor() mesosproto.ExecutorInfo {
 
 // get the Network Mode
 func (e *API) getNetworkMode() string {
-	if len(e.Service.Network) > 0 || len(e.Service.Networks) > 0 {
+	if (len(e.Service.Network) > 0 || len(e.Service.Networks) > 0) && e.Service.NetworkMode == "" {
 		// If Network was set, change the network mode to user
 		return "user"
 	}
 
-	return ""
+	return e.Service.NetworkMode
 }
 
 // get the NetworkInfo Name
