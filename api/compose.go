@@ -36,8 +36,8 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Disk = e.getDisk()
 	cmd.ContainerType = e.getContainerType()
 	cmd.ContainerImage = e.Service.Image
-	cmd.NetworkMode = e.Service.NetworkMode
 	cmd.NetworkInfo = e.getNetworkInfo()
+	cmd.NetworkMode = e.getNetworkMode()
 	cmd.TaskID = newTaskID
 	cmd.Privileged = e.Service.Privileged
 	cmd.Hostname = e.getHostname()
@@ -51,6 +51,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Discovery = e.getDiscoveryInfo(cmd)
 	cmd.Shell = e.getShell(cmd)
 	cmd.LinuxInfo = e.getLinuxInfo()
+	cmd.DockerParameter = e.getDockerParameter(cmd)
 
 	// store/update the mesos task in db
 	e.SaveTaskRedis(cmd)
@@ -373,6 +374,16 @@ func (e *API) getExecutor() mesosproto.ExecutorInfo {
 	return executorInfo
 }
 
+// get the Network Mode
+func (e *API) getNetworkMode() string {
+	if len(e.Service.Network) > 0 || len(e.Service.Networks) > 0 {
+		// If Network was set, change the network mode to user
+		return "user"
+	}
+
+	return ""
+}
+
 // get the NetworkInfo Name
 func (e *API) getNetworkInfo() []mesosproto.NetworkInfo {
 	if len(e.Compose.Networks) > 0 {
@@ -383,6 +394,10 @@ func (e *API) getNetworkInfo() []mesosproto.NetworkInfo {
 		} else if len(e.Service.Networks) > 0 {
 			network = e.Service.Networks[0]
 		}
+
+		// If Network Info was set, change the network mode to user
+		e.Service.NetworkMode = "user"
+
 		return []mesosproto.NetworkInfo{{
 			Name: func() *string { x := e.Compose.Networks[network].Name; return &x }(),
 		}}
@@ -425,4 +440,21 @@ func (e *API) getContainerType() string {
 	}
 
 	return conType
+}
+
+func (e *API) getDockerParameter(cmd mesosutil.Command) []mesosproto.Parameter {
+	param := cmd.DockerParameter
+	if len(param) == 0 {
+		param = make([]mesosproto.Parameter, 0)
+	}
+	if e.Service.NetworkMode != "bridge" && e.getContainerType() == "docker" {
+		return e.addDockerParameter(param, mesosproto.Parameter{Key: "net-alias", Value: e.getHostname()})
+	}
+
+	return param
+}
+
+// Append parameter to the list
+func (e *API) addDockerParameter(current []mesosproto.Parameter, newValues mesosproto.Parameter) []mesosproto.Parameter {
+	return append(current, newValues)
 }

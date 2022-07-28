@@ -70,6 +70,7 @@ func (e *API) GetTaskFromEvent(update *mesosproto.Event_Update) mesosutil.Comman
 		task := mesosutil.DecodeTask(key)
 
 		if task.TaskID == update.Status.TaskID.Value {
+			task.State = update.Status.State.String()
 			return task
 		}
 	}
