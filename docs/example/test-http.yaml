@@ -3,7 +3,6 @@ services:
   test1:
     image: docker.io/avhost/docker-lighttpd
     restart: always
-    network_mode: "host"
     labels:
       traefik.enable: "true"
       traefik.http.routers.test1.entrypoints: "web"
@@ -12,8 +11,15 @@ services:
       traefik.http.services.test1.loadBalancer.healthCheck.path: "/index.html"
       traefik.http.services.test1.loadBalancer.healthCheck.interval: "10s"
       traefik.http.services.test1.loadBalancer.healthCheck.timeout: "3s"
+    network: default
     deploy:
       resources:
         limits:
           cpus: "0.1"
           memory: "50"
+
+networks:
+  default:
+    external: true
+    name: weave
+          
