@@ -34,6 +34,7 @@ func (e *Scheduler) Heartbeat() {
 			// if the state will change in the next 'n min. if not, we have to
 			// give these task a recall.
 			task.StateTime = time.Now()
+			task.DockerPortMappings = e.API.GetDockerPorts()
 
 			// add task to communication channel
 			e.Framework.CommandChan <- task

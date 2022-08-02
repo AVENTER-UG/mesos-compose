@@ -44,7 +44,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Command = e.getCommand()
 	cmd.Labels = e.getLabels()
 	cmd.Executor = e.getExecutor()
-	cmd.DockerPortMappings = e.getDockerPorts(cmd.Agent)
+	cmd.DockerPortMappings = e.GetDockerPorts()
 	cmd.Environment.Variables = e.getEnvironment()
 	cmd.Volumes = e.getVolumes(cmd.ContainerType)
 	cmd.Instances = e.getReplicas()
@@ -119,47 +119,17 @@ func (e *API) getCommand() string {
 }
 
 // Get random hostportnumber
-func (e *API) getRandomHostPort(agent string) int {
+func (e *API) getRandomHostPort() int {
 	rand.Seed(time.Now().UnixNano())
 	// #nosec G404
 	v := rand.Intn(e.Framework.PortRangeTo-e.Framework.PortRangeFrom) + e.Framework.PortRangeFrom
+
 	if v > e.Framework.PortRangeTo {
-		v = e.getRandomHostPort(agent)
+		v = e.getRandomHostPort()
 	} else if v < e.Framework.PortRangeFrom {
-		v = e.getRandomHostPort(agent)
-	}
-	port := uint32(v)
-	if e.portInUse(port, agent) {
-		v = e.getRandomHostPort(agent)
+		v = e.getRandomHostPort()
 	}
 	return v
-}
-
-// Check if the port is already in use
-func (e *API) portInUse(port uint32, agent string) bool {
-	// get all running services
-	logrus.Debug("Check if port is in use: ", port, agent)
-	keys := e.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
-	for keys.Next(e.Redis.RedisCTX) {
-		// get the details of the current running service
-		key := e.GetRedisKey(keys.Val())
-		var task mesosutil.Command
-		json.Unmarshal([]byte(key), &task)
-
-		// check if its the given agent
-		if task.Agent == agent {
-			// check if the given port is already in use
-			ports := task.Discovery.GetPorts()
-			if ports == nil {
-				for _, hostport := range ports.GetPorts() {
-					if hostport.Number == port {
-						return true
-					}
-				}
-			}
-		}
-	}
-	return false
 }
 
 // Get the labels of the compose file
@@ -185,10 +155,10 @@ func (e *API) getLabelValueByKey(label string) string {
 	return ""
 }
 
-// Get the ports of the compose file
-func (e *API) getDockerPorts(agent string) []mesosproto.ContainerInfo_DockerInfo_PortMapping {
+// GetDockerPorts Get the ports of the compose file
+func (e *API) GetDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping {
 	var ports []mesosproto.ContainerInfo_DockerInfo_PortMapping
-	hostport := uint32(e.getRandomHostPort(agent))
+	hostport := uint32(e.getRandomHostPort())
 	for i, c := range e.Service.Ports {
 		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
 		var port int
