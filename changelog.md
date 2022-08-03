@@ -6,7 +6,11 @@
 - ADD: Support of docker-compose capability parameter "cap_add".
 - ADD: Support of mesos command executor. Set the label:
   `biz.aventer.mesos_compose.container_type: "NONE"`
-- ADD: Support of environment variables for executier.
+- ADD: Support of environment variables for executer.
+- CHANGE: Optimize offer handling for ports.
+- CHANGE: Optimize redis key search.
+
+
   
 ## v0.4.0
 

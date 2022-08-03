@@ -195,26 +195,12 @@ func (e *API) GetDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping
 // Get the discoveryinfo ports of the compose file
 func (e *API) getDiscoveryInfoPorts(cmd mesosutil.Command) []mesosproto.Port {
 	var disport []mesosproto.Port
-	for _, c := range e.Service.Ports {
+	for _, c := range cmd.DockerPortMappings {
 		var tmpport mesosproto.Port
-		var port int
-		// "<hostport>:<containerport>"
-		// "<hostip>:<hostport>:<containerport>"
-		count := strings.Count(c, ":")
-		var p []string
-		if count > 0 {
-			p = strings.Split(c, ":")
-			port, _ = strconv.Atoi(p[count])
-		} else {
-			port, _ = strconv.Atoi(c)
-		}
-
-		// create the name of the port
-		name := cmd.TaskName + ":" + p[count]
-
-		// get the random hostport
-		tmpport.Number, tmpport.Protocol = e.getHostPortByContainerPort(port, cmd)
-		tmpport.Name = func() *string { x := name; return &x }()
+		p := func() *string { x := cmd.TaskName + ":" + strconv.FormatUint(uint64(c.ContainerPort), 10); return &x }()
+		tmpport.Name = p
+		tmpport.Number = c.HostPort
+		tmpport.Protocol = c.Protocol
 
 		disport = append(disport, tmpport)
 	}
@@ -230,17 +216,6 @@ func (e *API) getDiscoveryInfo(cmd mesosutil.Command) mesosproto.DiscoveryInfo {
 			Ports: e.getDiscoveryInfoPorts(cmd),
 		},
 	}
-}
-
-// get the random hostport and protcol of the container port
-func (e *API) getHostPortByContainerPort(port int, cmd mesosutil.Command) (uint32, *string) {
-	for _, v := range cmd.DockerPortMappings {
-		ps := v.ContainerPort
-		if uint32(port) == ps {
-			return v.HostPort, v.Protocol
-		}
-	}
-	return 0, nil
 }
 
 // Get the environment of the compose file
