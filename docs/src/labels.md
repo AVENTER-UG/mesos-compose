@@ -23,4 +23,7 @@ With this label it is possible to use a custom executor.
 
 Values: <mesos-executor-uri>
 
-The URL where to fetch the executor. As example: `http://localhost:8080/executor`
+The URL where to fetch the executor and other files. As example: 
+```
+'[{"Value":"https://localhost:1234/executor","OutputFile":"mesos-executor"}]'
+```

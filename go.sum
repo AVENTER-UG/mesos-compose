@@ -2,6 +2,8 @@ github.com/AVENTER-UG/go-logrus-formatter v0.5.4 h1:pT//3WIdLWQYfUGuNdbz3cXQovUh
 github.com/AVENTER-UG/go-logrus-formatter v0.5.4/go.mod h1:EXN8FPKx567UIA2L4jewW7pg48hc3i4fPZ+uBmHXxZI=
 github.com/AVENTER-UG/mesos-util v0.0.35 h1:QoEyhp/nbKdTtuxokQ/W/f4shd/IIkflwhL5XgQ1wPw=
 github.com/AVENTER-UG/mesos-util v0.0.35/go.mod h1:70fymV+AZKb3VQtUtprpJVXtp+mEAsYk7/NEg3s5JQ8=
+github.com/AVENTER-UG/mesos-util v0.0.36 h1:VUXgIs76EPxGU/dY6XysI0FaxZx7y8PycavcgEETvnA=
+github.com/AVENTER-UG/mesos-util v0.0.36/go.mod h1:70fymV+AZKb3VQtUtprpJVXtp+mEAsYk7/NEg3s5JQ8=
 github.com/AVENTER-UG/util v0.3.0 h1:wtUC7e6LMx37BRGBKKBZ4BUM8q4lkLjgBinS09luv6A=
 github.com/AVENTER-UG/util v0.3.0/go.mod h1:8mh50Bes+U3D6ZP3psP4K8LSPNwpeuM5vRNb/vU/sS0=
 github.com/Showmax/go-fqdn v1.0.0 h1:0rG5IbmVliNT5O19Mfuvna9LL7zlHyRfsSvBPZmF9tM=
@@ -118,6 +120,8 @@ golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e/go.mod h1:oPkhp1MJrh7nUepCBc
 golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220803195053-6e608f9ce704 h1:Y7NOhdqIOU8kYI7BxsgL38d0ot0raxvcW+EMQU2QrT4=
 golang.org/x/sys v0.0.0-20220803195053-6e608f9ce704/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20220804214406-8e32c043e418 h1:9vYwv7OjYaky/tlAeD7C4oC9EsPTlaFl1H2jS++V+ME=
+golang.org/x/sys v0.0.0-20220804214406-8e32c043e418/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
 golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 h1:Q5284mrmYTpACcm+eAKjKJH48BBwSyfJqmmGDTtT8Vc=
 golang.org/x/term v0.0.0-20220722155259-a9ba230a4035/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=

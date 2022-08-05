@@ -18,6 +18,10 @@ func (e *Scheduler) Heartbeat() {
 	keys := e.API.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 	suppress := true
 	for keys.Next(e.API.Redis.RedisCTX) {
+		// continue if the key is not a mesos task
+		if e.API.CheckIfTask(keys) {
+			continue
+		}
 		// get the values of the current key
 		key := e.API.GetRedisKey(keys.Val())
 

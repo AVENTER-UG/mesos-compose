@@ -127,6 +127,11 @@ func (e *Scheduler) Reconcile() {
 	var oldTasks []mesosproto.Call_Reconcile_Task
 	keys := e.API.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 	for keys.Next(e.API.Redis.RedisCTX) {
+		// continue if the key is not a mesos task
+		if e.API.CheckIfTask(keys) {
+			continue
+		}
+
 		key := e.API.GetRedisKey(keys.Val())
 
 		task := mesosutil.DecodeTask(key)

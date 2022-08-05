@@ -61,12 +61,11 @@ func (e *API) GetTaskFromEvent(update *mesosproto.Event_Update) mesosutil.Comman
 	keys := e.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 	for keys.Next(e.Redis.RedisCTX) {
 		// ignore redis keys if they are not mesos tasks
-		if keys.Val() == e.Framework.FrameworkName+":framework" || keys.Val() == e.Framework.FrameworkName+":framework_config" {
+		if e.CheckIfTask(keys) {
 			continue
 		}
 		// get the values of the current key
 		key := e.GetRedisKey(keys.Val())
-
 		task := mesosutil.DecodeTask(key)
 
 		if task.TaskID == update.Status.TaskID.Value {
@@ -139,4 +138,12 @@ func (e *API) SaveTaskRedis(cmd mesosutil.Command) {
 func (e *API) SaveFrameworkRedis() {
 	d, _ := json.Marshal(&e.Framework)
 	e.SetRedisKey(d, e.Framework.FrameworkName+":framework")
+}
+
+// CheckIfTask check if the redis key is a mesos task
+func (e *API) CheckIfTask(keys *goredis.ScanIterator) bool {
+	if keys.Val() == e.Framework.FrameworkName+":framework" || keys.Val() == e.Framework.FrameworkName+":framework_config" {
+		return true
+	}
+	return false
 }

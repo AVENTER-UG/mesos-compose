@@ -21,7 +21,7 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			return nil
 		}
 
-		takeOffer, offerIds := getOffer(offers, cmd)
+		takeOffer, offerIds := e.getOffer(offers, cmd)
 		if takeOffer.GetHostname() == "" {
 			e.Framework.CommandChan <- cmd
 			return nil
@@ -74,7 +74,7 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 }
 
 // get the value of a label from the command
-func getLabelValue(label string, cmd mesosutil.Command) string {
+func (e *Scheduler) getLabelValue(label string, cmd mesosutil.Command) string {
 	for _, v := range cmd.Labels {
 		if label == v.Key {
 			return fmt.Sprint(v.GetValue())
@@ -83,7 +83,7 @@ func getLabelValue(label string, cmd mesosutil.Command) string {
 	return ""
 }
 
-func getOffer(offers *mesosproto.Event_Offers, cmd mesosutil.Command) (mesosproto.Offer, []mesosproto.OfferID) {
+func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd mesosutil.Command) (mesosproto.Offer, []mesosproto.OfferID) {
 	var offerIds []mesosproto.OfferID
 	var offerret mesosproto.Offer
 
@@ -99,7 +99,7 @@ func getOffer(offers *mesosproto.Event_Offers, cmd mesosutil.Command) (mesosprot
 		}
 
 		// if contraint_hostname is set, only accept offer with the same hostname
-		valHostname := getLabelValue("biz.aventer.mesos_compose.contraint_hostname", cmd)
+		valHostname := e.getLabelValue("biz.aventer.mesos_compose.contraint_hostname", cmd)
 		if valHostname != "" {
 			if strings.ToLower(valHostname) == offer.GetHostname() {
 				logrus.Debug("Set Server Constraint to:", offer.GetHostname())
@@ -109,5 +109,18 @@ func getOffer(offers *mesosproto.Event_Offers, cmd mesosutil.Command) (mesosprot
 			offerret = offers.Offers[n]
 		}
 	}
+	// remove the offer we took
+	offerIds = e.removeOffer(offerIds, offerret.ID.Value)
 	return offerret, offerIds
+}
+
+// remove the offer we took from the list
+func (e *Scheduler) removeOffer(offers []mesosproto.OfferID, clean string) []mesosproto.OfferID {
+	var offerIds []mesosproto.OfferID
+	for _, offer := range offers {
+		if offer.Value != clean {
+			offerIds = append(offerIds, offer)
+		}
+	}
+	return offerIds
 }

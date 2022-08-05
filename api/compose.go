@@ -305,14 +305,23 @@ func (e *API) getExecutor() mesosproto.ExecutorInfo {
 		}
 
 		if uri != "" {
-			executorInfo.Command.URIs = []mesosproto.CommandInfo_URI{
-				{
-					Value:      uri,
-					Extract:    func() *bool { x := false; return &x }(),
-					Executable: func() *bool { x := true; return &x }(),
-					Cache:      func() *bool { x := false; return &x }(),
-					OutputFile: func() *string { x := path.Base(command); return &x }(),
-				},
+			var fetch []mesosproto.CommandInfo_URI
+			err := json.Unmarshal([]byte(uri), &fetch)
+
+			if err != nil {
+				logrus.WithField("func", "getExecutor").Error("Could not unmarchal biz.aventer.mesos_compose.executor_uri")
+			}
+
+			for _, uri := range fetch {
+				executorInfo.Command.URIs = []mesosproto.CommandInfo_URI{
+					{
+						Value:      uri.GetValue(),
+						Extract:    func() *bool { x := false; return &x }(),
+						Executable: func() *bool { x := true; return &x }(),
+						Cache:      func() *bool { x := false; return &x }(),
+						OutputFile: uri.OutputFile,
+					},
+				}
 			}
 		}
 	}

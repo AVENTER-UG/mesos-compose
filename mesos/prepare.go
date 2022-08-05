@@ -68,6 +68,7 @@ func (e *Scheduler) defaultResources(cmd mesosutil.Command) []mesosproto.Resourc
 }
 
 // PrepareTaskInfoExecuteContainer will create the TaskInfo Protobuf for Mesos
+// nolint: gocyclo
 func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Command) ([]mesosproto.TaskInfo, error) {
 	d, _ := json.Marshal(&cmd)
 	logrus.Debug("HandleOffers cmd: ", util.PrettyJSON(d))
@@ -105,7 +106,7 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 	msg.AgentID = agent
 	msg.Resources = e.defaultResources(cmd)
 
-	if getLabelValue("biz.aventer.mesos_compose.executor", cmd) == "" {
+	if e.getLabelValue("biz.aventer.mesos_compose.executor", cmd) == "" {
 		if cmd.Command == "" {
 			msg.Command = &mesosproto.CommandInfo{
 				Shell:       &cmd.Shell,
@@ -123,7 +124,7 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 	}
 
 	// ExecutorInfo or CommandInfo/Container, both is not supportet
-	if contype != nil && getLabelValue("biz.aventer.mesos_compose.executor", cmd) == "" {
+	if contype != nil && e.getLabelValue("biz.aventer.mesos_compose.executor", cmd) == "" {
 		msg.Container = &mesosproto.ContainerInfo{}
 		msg.Container.Type = contype
 		msg.Container.Volumes = cmd.Volumes
@@ -154,10 +155,22 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 		}
 	}
 
-	if getLabelValue("biz.aventer.mesos_compose.executor", cmd) != "" {
+	if e.getLabelValue("biz.aventer.mesos_compose.executor", cmd) != "" {
 		// FIX: https://github.com/AVENTER-UG/mesos-compose/issues/7
 		cmd.Executor.Resources = e.defaultResources(cmd)
 		msg.Executor = &cmd.Executor
+		if cmd.ContainerType != "" {
+			msg.Executor.Container = &mesosproto.ContainerInfo{}
+			msg.Executor.Container.Type = contype
+			msg.Executor.Container.Volumes = cmd.Volumes
+			msg.Executor.Container.Docker = &mesosproto.ContainerInfo_DockerInfo{
+				Image:          cmd.ContainerImage,
+				Network:        mesosproto.ContainerInfo_DockerInfo_HOST.Enum(),
+				PortMappings:   cmd.DockerPortMappings,
+				Privileged:     &cmd.Privileged,
+				ForcePullImage: func() *bool { x := true; return &x }(),
+			}
+		}
 	}
 
 	return []mesosproto.TaskInfo{msg}, nil

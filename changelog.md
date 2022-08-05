@@ -9,6 +9,7 @@
 - ADD: Support of environment variables for executer.
 - CHANGE: Optimize offer handling for ports.
 - CHANGE: Optimize redis key search.
+- ADD: Docker container support for custom executor.
 
 
   
