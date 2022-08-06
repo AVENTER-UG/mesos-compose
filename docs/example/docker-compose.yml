@@ -15,12 +15,14 @@ services:
       traefik.http.routers.test.service: "mc_test_app_80"
       traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
     network_mode: "BRIDGE"
+    pull_policy: always
     ports:
       - "8080:80"
     network:
       - default
     cap_add:
       - SYS_ADMIN
+    cap_drop:
       - NET_ADMIN
     deploy:
       replicas: 1

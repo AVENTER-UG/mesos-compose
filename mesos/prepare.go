@@ -123,6 +123,12 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 		}
 	}
 
+	// force to pull the container image
+	forcePull := true
+	if cmd.PullPolicy == "missing" {
+		forcePull = false
+	}
+
 	// ExecutorInfo or CommandInfo/Container, both is not supportet
 	if contype != nil && e.getLabelValue("biz.aventer.mesos_compose.executor", cmd) == "" {
 		msg.Container = &mesosproto.ContainerInfo{}
@@ -134,7 +140,7 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 			PortMappings:   cmd.DockerPortMappings,
 			Privileged:     &cmd.Privileged,
 			Parameters:     cmd.DockerParameter,
-			ForcePullImage: func() *bool { x := true; return &x }(),
+			ForcePullImage: func() *bool { x := forcePull; return &x }(),
 		}
 		msg.Container.NetworkInfos = cmd.NetworkInfo
 

@@ -1,13 +1,15 @@
 version: '3.9'
 services:
   test1:
-    image: debian:11
+    image: avhost/firecracker:latest
     command: "sleep 1"
     environment:
-      - FIRECRACKER_WORKDIR=/usr/libexec/mesos 
+      - FIRECRACKER_WORKDIR=/tmp
       - FIRECRACKER_AGENT_PORT=8080
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
     labels:
-      biz.aventer.mesos_compose.executor: "/usr/libexec/mesos/mesos-firecracker-executor"
-      biz.aventer.mesos_compose.executor_uri: '[{"Value":"https://raw.githubusercontent.com/AVENTER-UG/mesos-util/master/types.go","OutputFile":"mesos-firecracker-executor"}]'
+      biz.aventer.mesos_compose.executor: "/tmp/mesos-firecracker-executor"
       biz.aventer.mesos_compose.container_type: "DOCKER"
-      
+      biz.aventer.mesos_compose.force_image_pull: "false"

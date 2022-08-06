@@ -68,6 +68,8 @@ type Service struct {
 	Hostname      string                 `yaml:"hostname"`
 	ContainerName string                 `yaml:"container_name"`
 	CapAdd        []string               `yaml:"cap_add"`
+	CapDrop       []string               `yaml:"cap_drop"`
+	PullPolicy    string                 `yaml:"pull_policy" default:"always"`
 }
 
 // Deploy - The mesos resources to deploy a task

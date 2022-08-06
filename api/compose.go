@@ -52,6 +52,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Shell = e.getShell(cmd)
 	cmd.LinuxInfo = e.getLinuxInfo()
 	cmd.DockerParameter = e.getDockerParameter(cmd)
+	cmd.PullPolicy = e.getPullPolicy()
 
 	// store/update the mesos task in db
 	e.SaveTaskRedis(cmd)
@@ -153,6 +154,11 @@ func (e *API) getLabelValueByKey(label string) string {
 		}
 	}
 	return ""
+}
+
+// geturn the pullpolicy value
+func (e *API) getPullPolicy() string {
+	return e.Service.PullPolicy
 }
 
 // GetDockerPorts Get the ports of the compose file
@@ -370,18 +376,26 @@ func (e *API) getLinuxInfo() mesosproto.LinuxInfo {
 	linuxInfo := mesosproto.LinuxInfo{}
 
 	if len(e.Service.CapAdd) > 0 {
-		caps, err := json.Marshal(e.Service.CapAdd)
-		if err != nil {
-			logrus.WithField("func", "getLinuxInfo").Error("Could not marshal cap_add: ", err.Error())
-		}
-		tmp := "{ \"Capabilities\":" + string(caps) + "}"
-
-		var capability mesosproto.CapabilityInfo
-
-		json.Unmarshal([]byte(tmp), &capability)
-		linuxInfo.EffectiveCapabilities = &capability
+		linuxInfo.EffectiveCapabilities = e.getCapabilities(e.Service.CapAdd)
+	}
+	if len(e.Service.CapDrop) > 0 {
+		linuxInfo.EffectiveCapabilities = e.getCapabilities(e.Service.CapDrop)
 	}
 	return linuxInfo
+}
+
+// get capabilities
+func (e *API) getCapabilities(capa []string) *mesosproto.CapabilityInfo {
+	caps, err := json.Marshal(capa)
+	if err != nil {
+		logrus.WithField("func", "getCapabilities").Error("Could not marshal cap_add/drop: ", err.Error())
+	}
+	tmp := "{ \"Capabilities\":" + string(caps) + "}"
+
+	var capability mesosproto.CapabilityInfo
+
+	json.Unmarshal([]byte(tmp), &capability)
+	return &capability
 }
 
 // get the container type
@@ -401,6 +415,7 @@ func (e *API) getDockerParameter(cmd mesosutil.Command) []mesosproto.Parameter {
 	if len(param) == 0 {
 		param = make([]mesosproto.Parameter, 0)
 	}
+
 	if e.Service.NetworkMode != "bridge" && e.getContainerType() == "docker" && e.getHostname() != "" {
 		return e.addDockerParameter(param, mesosproto.Parameter{Key: "net-alias", Value: e.getHostname()})
 	}
