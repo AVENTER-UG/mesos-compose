@@ -44,7 +44,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Command = e.getCommand()
 	cmd.Labels = e.getLabels()
 	cmd.Executor = e.getExecutor()
-	cmd.DockerPortMappings = e.GetDockerPorts()
+	cmd.DockerPortMappings = e.getDockerPorts()
 	cmd.Environment.Variables = e.getEnvironment()
 	cmd.Volumes = e.getVolumes(cmd.ContainerType)
 	cmd.Instances = e.getReplicas()
@@ -119,16 +119,16 @@ func (e *API) getCommand() string {
 	return ""
 }
 
-// Get random hostportnumber
-func (e *API) getRandomHostPort() int {
+// GetRandomHostPort Get random hostportnumber
+func (e *API) GetRandomHostPort() uint32 {
 	rand.Seed(time.Now().UnixNano())
 	// #nosec G404
-	v := rand.Intn(e.Framework.PortRangeTo-e.Framework.PortRangeFrom) + e.Framework.PortRangeFrom
+	v := uint32(rand.Intn(e.Framework.PortRangeTo-e.Framework.PortRangeFrom) + e.Framework.PortRangeFrom)
 
-	if v > e.Framework.PortRangeTo {
-		v = e.getRandomHostPort()
-	} else if v < e.Framework.PortRangeFrom {
-		v = e.getRandomHostPort()
+	if v > uint32(e.Framework.PortRangeTo) {
+		v = e.GetRandomHostPort()
+	} else if v < uint32(e.Framework.PortRangeFrom) {
+		v = e.GetRandomHostPort()
 	}
 	return v
 }
@@ -162,9 +162,9 @@ func (e *API) getPullPolicy() string {
 }
 
 // GetDockerPorts Get the ports of the compose file
-func (e *API) GetDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping {
+func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping {
 	var ports []mesosproto.ContainerInfo_DockerInfo_PortMapping
-	hostport := uint32(e.getRandomHostPort())
+	hostport := e.GetRandomHostPort()
 	for i, c := range e.Service.Ports {
 		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
 		var port int

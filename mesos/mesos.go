@@ -128,7 +128,7 @@ func (e *Scheduler) Reconcile() {
 	keys := e.API.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 	for keys.Next(e.API.Redis.RedisCTX) {
 		// continue if the key is not a mesos task
-		if e.API.CheckIfTask(keys) {
+		if e.API.CheckIfNotTask(keys) {
 			continue
 		}
 
