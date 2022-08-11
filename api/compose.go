@@ -54,6 +54,9 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.DockerParameter = e.getDockerParameter(cmd)
 	cmd.PullPolicy = e.getPullPolicy()
 
+	// set the docker constraints
+	e.setConstraints(&cmd)
+
 	// store/update the mesos task in db
 	e.SaveTaskRedis(cmd)
 }
@@ -426,4 +429,18 @@ func (e *API) getDockerParameter(cmd mesosutil.Command) []mesosproto.Parameter {
 // Append parameter to the list
 func (e *API) addDockerParameter(current []mesosproto.Parameter, newValues mesosproto.Parameter) []mesosproto.Parameter {
 	return append(current, newValues)
+}
+
+// translate the docker-compose placement constraints to labels
+func (e *API) setConstraints(cmd *mesosutil.Command) {
+	if len(e.Service.Deploy.Placement.Constraints) > 0 {
+		for _, constraint := range e.Service.Deploy.Placement.Constraints {
+			cons := strings.Split(constraint, "==")
+			if len(cons) >= 2 {
+				if cons[0] == "node.hostname" {
+					cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_hostname", Value: &cons[1]})
+				}
+			}
+		}
+	}
 }

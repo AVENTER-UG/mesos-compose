@@ -13,6 +13,7 @@
 - ADD: Support for docker compose "cap-drop".
 - ADD: Support for docker comport "pull_policy". Support always (default) and "missing".
 - FIX: Recalculate the HostPorts if the Mesos Task is failed.
+- ADD: Support for docker compose "placement -> constraints -> node.hostname" command.
 
 
   
