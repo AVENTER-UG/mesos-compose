@@ -32,8 +32,7 @@ services:
     container_name: test
     labels:
       biz.aventer.mesos_compose.container_type: "DOCKER"
-      biz.aventer.mesos_compose.contraint_hostname: "worker-1"
-      biz.aventer.mesos_compose.executor: "./my-custom-executor"
+      iz.aventer.mesos_compose.executor: "./my-custom-executor"
       biz.aventer.mesos_compose.executor_uri: "http://localhost/my-custom-executor"
       traefik.enable: "true"
       traefik.http.routers.test.entrypoints: "web"
@@ -48,6 +47,9 @@ services:
     network:
       - default
     deploy:
+      placement:
+        constraints:
+          - "node.hostname==localhost"
       replicas: 1
       resources:
         limits:
