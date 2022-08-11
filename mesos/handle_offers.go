@@ -99,7 +99,7 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd mesosutil.Comm
 		}
 
 		// if contraint_hostname is set, only accept offer with the same hostname
-		valHostname := e.getLabelValue("biz.aventer.mesos_compose.contraint_hostname", cmd)
+		valHostname := e.getLabelValue("__mc_placement_node_hostname", cmd)
 		if valHostname != "" {
 			if strings.ToLower(valHostname) == offer.GetHostname() {
 				logrus.Debug("Set Server Constraint to:", offer.GetHostname())

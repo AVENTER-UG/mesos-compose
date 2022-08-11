@@ -25,6 +25,9 @@ services:
     cap_drop:
       - NET_ADMIN
     deploy:
+      placement:
+        constraints:
+          - "node.hostname==localhost"
       replicas: 1
       resources:
         limits:
