@@ -46,6 +46,7 @@ func Subscribe(cfg *cfg.Config, frm *mesosutil.FrameworkConfig) *Scheduler {
 			FrameworkInfo: &e.Framework.FrameworkInfo,
 		},
 	}
+
 	logrus.Debug(subscribeCall)
 	body, _ := marshaller.MarshalToString(subscribeCall)
 	logrus.Debug(body)
@@ -75,7 +76,8 @@ func (e *Scheduler) EventLoop() {
 	res, err := e.Client.Do(e.Req)
 
 	if err != nil {
-		logrus.Fatal(err)
+		logrus.Error("Mesos Master connection error: ", err.Error())
+		return
 	}
 	defer res.Body.Close()
 
@@ -88,13 +90,18 @@ func (e *Scheduler) EventLoop() {
 
 	for {
 		// Read line from Mesos
-		line, _ = reader.ReadString('\n')
+		line, err = reader.ReadString('\n')
+		if err != nil {
+			logrus.Error("Error to read data from Mesos Master: ", err.Error())
+			return
+		}
 		line = strings.TrimSuffix(line, "\n")
 		// Read important data
 		var event mesosproto.Event // Event as ProtoBuf
 		err := jsonpb.UnmarshalString(line, &event)
 		if err != nil {
-			logrus.Error("Mesos Unmarshal Data Error: ", err)
+			logrus.Error("Could not unmarshal Mesos Master data: ", err.Error())
+			continue
 		}
 
 		switch event.Type {

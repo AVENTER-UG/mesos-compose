@@ -15,9 +15,6 @@ services:
     ports:
       - 8888:8080
     deploy:
-      placement:
-        constraints:
-          - "node.hostname==localhost"
       resources:
         limits:
           cpus: "0.1"
