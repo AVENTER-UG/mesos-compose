@@ -34,8 +34,10 @@ build-bin:
 publish:
 	@echo ">>>> Publish docker image"
 	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAMEPUB}:${BRANCH}
-	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAMEPUB}:${TAG}
 	@docker push ${IMAGEFULLNAMEPUB}:${BRANCH}
+
+publish-tag:
+	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAMEPUB}:${TAG}
 	@docker push ${IMAGEFULLNAMEPUB}:${TAG}
 
 update-precommit:
