@@ -71,7 +71,7 @@ func (e *Scheduler) Heartbeat() {
 
 // HeartbeatLoop - The main loop for the hearbeat
 func (e *Scheduler) HeartbeatLoop() {
-	ticker := time.NewTicker(time.Second * 1)
+	ticker := time.NewTicker(e.Config.EventLoopTime)
 	defer ticker.Stop()
 	for ; true; <-ticker.C {
 		e.Heartbeat()

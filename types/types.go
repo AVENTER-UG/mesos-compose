@@ -2,8 +2,8 @@ package types
 
 import (
 	"context"
+	"time"
 
-	mesosutil "github.com/AVENTER-UG/mesos-util"
 	goredis "github.com/go-redis/redis/v8"
 )
 
@@ -32,7 +32,7 @@ type Config struct {
 	SSLKey         string
 	SSLCrt         string
 	Suppress       bool
-	Agents         mesosutil.MesosSlaves
+	EventLoopTime  time.Duration
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework

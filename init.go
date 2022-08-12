@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	util "github.com/AVENTER-UG/util"
@@ -45,6 +46,7 @@ func init() {
 	config.SSLCrt = os.Getenv("SSL_CRT_BASE64")
 	config.PrefixTaskName = util.Getenv("PREFIX_TASKNAME", framework.FrameworkName)
 	config.PrefixHostname = util.Getenv("PREFIX_HOSTNAME", framework.FrameworkName)
+	config.EventLoopTime, _ = time.ParseDuration(util.Getenv("HEARTBEAT_INTERVAL", "15s"))
 
 	// The comunication to the mesos server should be via ssl or not
 	if strings.Compare(os.Getenv("MESOS_SSL"), "true") == 0 {
