@@ -7,7 +7,6 @@ TAG=`git describe --tags --abbrev=0`
 BRANCH=`git rev-parse --abbrev-ref HEAD`
 BUILDDATE=`date -u +%Y-%m-%dT%H:%M:%SZ`
 IMAGEFULLNAME=${REPO}/${IMAGENAME}
-IMAGEFULLNAMEPUB=avhost/${IMAGENAME}
 
 .PHONY: help build all docs
 
@@ -33,12 +32,12 @@ build-bin:
 
 publish:
 	@echo ">>>> Publish docker image"
-	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAMEPUB}:${BRANCH}
-	@docker push ${IMAGEFULLNAMEPUB}:${BRANCH}
+	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAME}:latest
+	@docker push ${IMAGEFULLNAME}:latest
 
 publish-tag:
-	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAMEPUB}:${TAG}
-	@docker push ${IMAGEFULLNAMEPUB}:${TAG}
+	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAME}:${TAG}
+	@docker push ${IMAGEFULLNAME}:${TAG}
 
 update-precommit:
 	@virtualenv --no-site-packages ~/.virtualenv
