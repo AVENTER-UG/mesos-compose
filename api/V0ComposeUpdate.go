@@ -39,6 +39,8 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 		logrus.Error("Error: ", err)
 	}
 
+	e.Compose = data
+
 	for service := range data.Services {
 		taskName := e.Config.PrefixTaskName + ":" + vars["project"] + ":" + service
 		// get all keys that start with the taskname
