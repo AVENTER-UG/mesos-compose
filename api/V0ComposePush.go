@@ -34,8 +34,8 @@ func (e *API) V0ComposePush(w http.ResponseWriter, r *http.Request) {
 	err := yaml.NewDecoder(r.Body).Decode(&data)
 
 	if err != nil {
+		logrus.Error("Error: ", err.Error())
 		d = e.ErrorMessage(2, "V0ComposePush", err.Error())
-		logrus.Error("Error: ", err)
 		w.Write(d)
 		return
 	}
