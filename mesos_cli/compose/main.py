@@ -95,8 +95,13 @@ class mesosCompose(PluginBase):
                     filename,
                 )
             )
-            message = json.loads(data["Message"])
-            print(json.dumps(message, indent=2, ensure_ascii=False))
+
+            try:
+                message = json.loads(data["Message"])
+                print(json.dumps(message, indent=2, ensure_ascii=False))
+            except Exception as exception:
+                print(data)
+
         else:
             print("Nothing to launch")
 
