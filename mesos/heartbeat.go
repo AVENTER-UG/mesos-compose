@@ -59,7 +59,12 @@ func (e *Scheduler) Heartbeat() {
 		}
 
 		if task.State == "__KILL" {
-			mesosutil.Kill(task.TaskID, task.Agent)
+			// if agent is unset, the task is not running we can just delete the DB key
+			if task.Agent == "" {
+				e.API.DelRedisKey(task.TaskName + ":" + task.TaskID)
+			} else {
+				mesosutil.Kill(task.TaskID, task.Agent)
+			}
 		}
 	}
 
