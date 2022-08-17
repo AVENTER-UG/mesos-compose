@@ -22,7 +22,7 @@ plugins = [
   "/example/mesos-compose/mesos_cli/compose"
 ]
 
-[compose-<FRAMEWORK_PREFIX>]
+[compose.<FRAMEWORK_PREFIX>]
   principal = "<framework username>"
   secret = "<framework password>"
 
@@ -32,11 +32,11 @@ A example for multiple mesos-compose frameworks:
 
 ```bash
 
-[compose-mc-a]
+[compose.mc-a]
   principal = "<framework username>"
   secret = "<framework password>"
 
-[compose-mc-b]
+[compose.mc-b]
   principal = "<framework username>"
   secret = "<framework password>"
 
