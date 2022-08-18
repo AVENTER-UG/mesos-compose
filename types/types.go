@@ -54,25 +54,25 @@ type Compose struct {
 
 // Service - The docker-compose service parameters
 type Service struct {
-	Network       string                 `yaml:"network"`
-	Networks      []string               `yaml:"networks"`
-	Build         string                 `yaml:"build"`
-	Restart       string                 `yaml:"restart"`
-	Volumes       []string               `yaml:"volumes"`
-	Environment   []string               `yaml:"environment"`
-	DependsOn     []string               `yaml:"depends_on"`
-	Ports         []string               `yaml:"ports"`
-	Image         string                 `yaml:"image"`
-	Labels        map[string]interface{} `yaml:"labels"`
-	NetworkMode   string                 `yaml:"network_mode"`
-	Privileged    bool                   `yaml:"privileged"`
-	Command       string                 `yaml:"command"`
-	Deploy        Deploy                 `yaml:"deploy"`
-	Hostname      string                 `yaml:"hostname"`
-	ContainerName string                 `yaml:"container_name"`
-	CapAdd        []string               `yaml:"cap_add"`
-	CapDrop       []string               `yaml:"cap_drop"`
-	PullPolicy    string                 `yaml:"pull_policy" default:"always"`
+	Network       string                  `yaml:"network"`
+	Networks      map[string]NetworksLong `yaml:"networks"`
+	Build         string                  `yaml:"build"`
+	Restart       string                  `yaml:"restart"`
+	Volumes       []string                `yaml:"volumes"`
+	Environment   []string                `yaml:"environment"`
+	DependsOn     []string                `yaml:"depends_on"`
+	Ports         []string                `yaml:"ports"`
+	Image         string                  `yaml:"image"`
+	Labels        map[string]interface{}  `yaml:"labels"`
+	NetworkMode   string                  `yaml:"network_mode"`
+	Privileged    bool                    `yaml:"privileged"`
+	Command       string                  `yaml:"command"`
+	Deploy        Deploy                  `yaml:"deploy"`
+	Hostname      string                  `yaml:"hostname"`
+	ContainerName string                  `yaml:"container_name"`
+	CapAdd        []string                `yaml:"cap_add"`
+	CapDrop       []string                `yaml:"cap_drop"`
+	PullPolicy    string                  `yaml:"pull_policy" default:"always"`
 }
 
 // Deploy - The mesos resources to deploy a task
@@ -97,6 +97,11 @@ type Networks struct {
 	External bool   `yaml:"external"`
 	Name     string `yaml:"name"`
 	Driver   string `yaml:"driver"`
+}
+
+// NetworksLong - Supportet structure for Networks
+type NetworksLong struct {
+	Aliases []string `yaml:"aliases"`
 }
 
 // Volumes - The docker-compose volumes syntax

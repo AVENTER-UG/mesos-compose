@@ -95,8 +95,13 @@ class mesosCompose(PluginBase):
                     filename,
                 )
             )
-            message = json.loads(data["Message"])
-            print(json.dumps(message, indent=2, ensure_ascii=False))
+
+            try:
+                message = json.loads(data["Message"])
+                print(json.dumps(message, indent=2, ensure_ascii=False))
+            except Exception as exception:
+                print(data)
+
         else:
             print("Nothing to launch")
 
@@ -201,14 +206,14 @@ class mesosCompose(PluginBase):
         Return the principal in the configuration file
         """
 
-        return self.mesos_config["compose-" + self.framework_name].get("principal")
+        return self.mesos_config["compose"].get(self.framework_name).get("principal")
 
     def secret(self):
         """
         Return the secret in the configuration file
         """
 
-        return self.mesos_config["compose-" + self.framework_name].get("secret")
+        return self.mesos_config["compose"].get(self.framework_name).get("secret")
 
     # pylint: disable=no-self-use
     def agent_timeout(self, default=5):

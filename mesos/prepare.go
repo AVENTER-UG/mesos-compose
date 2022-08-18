@@ -2,6 +2,7 @@ package mesos
 
 import (
 	"encoding/json"
+	"strings"
 
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
@@ -86,7 +87,7 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 
 	// Set Container Network Mode
 	networkMode := mesosproto.ContainerInfo_DockerInfo_BRIDGE.Enum()
-	switch cmd.NetworkMode {
+	switch strings.ToLower(cmd.NetworkMode) {
 	case "host":
 		networkMode = mesosproto.ContainerInfo_DockerInfo_HOST.Enum()
 	case "none":
