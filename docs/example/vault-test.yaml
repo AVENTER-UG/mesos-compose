@@ -3,9 +3,9 @@ services:
   test1:
     image: alpine
     restart: always
-    network: default
     environment:
       - test=vault://secret/data/abd
+    network: default
     deploy:
       resources:
         limits:
