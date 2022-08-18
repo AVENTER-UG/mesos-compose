@@ -9,6 +9,7 @@ import (
 
 	api "github.com/AVENTER-UG/mesos-compose/api"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	"github.com/AVENTER-UG/mesos-compose/vault"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
 	"github.com/sirupsen/logrus"
@@ -23,6 +24,7 @@ type Scheduler struct {
 	Client    *http.Client
 	Req       *http.Request
 	API       *api.API
+	Vault     *vault.Vault
 }
 
 // Marshaler to serialize Protobuf Message to JSON

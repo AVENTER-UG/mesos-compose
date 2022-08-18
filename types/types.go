@@ -33,6 +33,9 @@ type Config struct {
 	SSLCrt         string
 	Suppress       bool
 	EventLoopTime  time.Duration
+	VaultToken     string
+	VaultURL       string
+	VaultTimeout   time.Duration
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework
