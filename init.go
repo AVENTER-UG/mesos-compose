@@ -48,7 +48,7 @@ func init() {
 	config.PrefixHostname = util.Getenv("PREFIX_HOSTNAME", framework.FrameworkName)
 	config.EventLoopTime, _ = time.ParseDuration(util.Getenv("HEARTBEAT_INTERVAL", "15s"))
 	config.VaultToken = os.Getenv("VAULT_TOKEN")
-	config.VaultURL = os.Getenv("VAULT_URL")
+	config.VaultURL = util.Getenv("VAULT_URL", "http://127.0.0.1:8200")
 	config.VaultTimeout, _ = time.ParseDuration(util.Getenv("VAULT_TIMEOUT", "10s"))
 
 	// The comunication to the mesos server should be via ssl or not

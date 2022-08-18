@@ -47,14 +47,15 @@ func main() {
 
 	mesosutil.SetConfig(&framework)
 
-	// connect to redis db
-	a := api.New(&config, &framework)
-	a.ConnectRedis()
-
+	// Connect the vault if we got a token
 	v := vault.New(config.VaultToken, config.VaultURL, config.VaultTimeout)
-	if config.VaultToken != "" && config.VaultURL != "" {
-		v.Connect()
+	if config.VaultToken != "" {
+		logrus.Info("Vault Connection: ", v.Connect())
 	}
+
+	// connect to redis db
+	a := api.New(&config, &framework, v)
+	a.ConnectRedis()
 
 	// load framework state from database if they exist
 	key := a.GetRedisKey(framework.FrameworkName + ":framework")

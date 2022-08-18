@@ -239,6 +239,10 @@ func (e *API) getEnvironment() []mesosproto.Environment_Variable {
 			continue
 		}
 		tmp.Name = p[0]
+		// check if the value is a secret
+		if strings.Contains(p[1], "vault://") {
+			p[1] = e.Vault.GetKey(p[1])
+		}
 		tmp.Value = func() *string { x := p[1]; return &x }()
 		env = append(env, tmp)
 	}
@@ -357,7 +361,6 @@ func (e *API) getNetworkMode() string {
 // get the NetworkInfo Name
 func (e *API) getNetworkInfo() []mesosproto.NetworkInfo {
 	if len(e.Compose.Networks) > 0 {
-
 		network := e.getNetworkName(0)
 
 		return []mesosproto.NetworkInfo{{
