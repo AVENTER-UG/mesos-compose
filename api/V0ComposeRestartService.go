@@ -34,7 +34,7 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 	project := vars["project"]
 	servicename := vars["servicename"]
 
-	keys := e.GetAllRedisKeys(e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":*")
+	keys := e.Redis.GetAllRedisKeys(e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":*")
 
 	if keys == nil {
 		logrus.WithField("func", "V0ComposeRestartService").Error("Could not find Project or Servicename")
@@ -43,8 +43,8 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 		w.Write(d)
 	}
 
-	for keys.Next(e.Redis.RedisCTX) {
-		key := e.GetRedisKey(keys.Val())
+	for keys.Next(e.Redis.CTX) {
+		key := e.Redis.GetRedisKey(keys.Val())
 		oldTask := mesosutil.DecodeTask(key)
 		newTask := oldTask
 
@@ -53,11 +53,11 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 		uuid, _ := util.GenUUID()
 		newTask.TaskID = taskName[0] + "." + uuid
 		newTask.State = ""
-		e.SaveTaskRedis(newTask)
+		e.Redis.SaveTaskRedis(newTask)
 
 		// set the old task to be killed
 		oldTask.State = "__KILL"
-		e.SaveTaskRedis(oldTask)
+		e.Redis.SaveTaskRedis(oldTask)
 	}
 
 	d = e.ErrorMessage(0, "V0ComposeRestartService", "ok")

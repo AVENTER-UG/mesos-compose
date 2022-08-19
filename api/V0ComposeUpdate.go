@@ -44,11 +44,11 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 	for service := range data.Services {
 		taskName := e.Config.PrefixTaskName + ":" + vars["project"] + ":" + service
 		// get all keys that start with the taskname
-		keys := e.GetAllRedisKeys(taskName + ":*")
+		keys := e.Redis.GetAllRedisKeys(taskName + ":*")
 
-		for keys.Next(e.Redis.RedisCTX) {
+		for keys.Next(e.Redis.CTX) {
 			// get the values of the current key
-			key := e.GetRedisKey(keys.Val())
+			key := e.Redis.GetRedisKey(keys.Val())
 			task := mesosutil.DecodeTask(key)
 			e.mapComposeServiceToMesosTask(vars, service, task)
 		}
