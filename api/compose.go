@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"path"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -97,7 +98,7 @@ func (e *API) getReplicas() int {
 
 // Get the Hostname value from the compose file, or generate one if it's unset
 func (e *API) getHostname() string {
-	if strings.ToLower(e.Service.NetworkMode) == "host" {
+	if e.getNetworkMode() == "host" {
 		return ""
 	}
 
@@ -238,6 +239,10 @@ func (e *API) getEnvironment() []mesosproto.Environment_Variable {
 			continue
 		}
 		tmp.Name = p[0]
+		// check if the value is a secret
+		if strings.Contains(p[1], "vault://") {
+			p[1] = e.Vault.GetKey(p[1])
+		}
 		tmp.Value = func() *string { x := p[1]; return &x }()
 		env = append(env, tmp)
 	}
@@ -340,8 +345,13 @@ func (e *API) getExecutor() mesosproto.ExecutorInfo {
 
 // get the Network Mode
 func (e *API) getNetworkMode() string {
-	if (len(e.Service.Network) > 0 || len(e.Service.Networks) > 0) && e.Service.NetworkMode == "" {
+	if (e.Service.Network != "" || len(e.Service.Networks) > 0) && e.Service.NetworkMode == "" {
 		// If Network was set, change the network mode to user
+
+		network := e.getNetworkName(0)
+		if strings.ToLower(e.Compose.Networks[network].Name) == "host" {
+			return "host"
+		}
 		return "user"
 	}
 
@@ -351,16 +361,7 @@ func (e *API) getNetworkMode() string {
 // get the NetworkInfo Name
 func (e *API) getNetworkInfo() []mesosproto.NetworkInfo {
 	if len(e.Compose.Networks) > 0 {
-		var network string
-
-		if len(e.Service.Network) > 0 {
-			network = e.Service.Network
-		} else if len(e.Service.Networks) > 0 {
-			network = e.Service.Networks[0]
-		}
-
-		// If Network Info was set, change the network mode to user
-		e.Service.NetworkMode = "user"
+		network := e.getNetworkName(0)
 
 		return []mesosproto.NetworkInfo{{
 			Name: func() *string { x := e.Compose.Networks[network].Name; return &x }(),
@@ -368,6 +369,20 @@ func (e *API) getNetworkInfo() []mesosproto.NetworkInfo {
 	}
 
 	return []mesosproto.NetworkInfo{}
+}
+
+// get the name of the network parameter
+func (e *API) getNetworkName(val int) string {
+	var network string
+
+	if e.Service.Network != "" {
+		network = e.Service.Network
+	} else if len(e.Service.Networks) > val {
+		keys := reflect.ValueOf(e.Service.Networks).MapKeys()
+		network = keys[val].String()
+	}
+
+	return network
 }
 
 // check if the task command inside of the container have to be executed as shell
@@ -421,10 +436,21 @@ func (e *API) getDockerParameter(cmd mesosutil.Command) []mesosproto.Parameter {
 	}
 
 	if e.Service.NetworkMode != "bridge" && e.getContainerType() == "docker" && e.getHostname() != "" {
-		return e.addDockerParameter(param, mesosproto.Parameter{Key: "net-alias", Value: e.getHostname()})
+		return e.addDockerParameter(param, mesosproto.Parameter{Key: "net-alias", Value: e.getNetAlias()})
 	}
 
 	return param
+}
+
+func (e *API) getNetAlias() string {
+	if len(e.Service.Networks) > 0 {
+		network := reflect.ValueOf(e.Service.Networks).MapKeys()[0].String()
+		if len(e.Service.Networks[network].Aliases) > 0 {
+			return e.Service.Networks[network].Aliases[0]
+		}
+	}
+
+	return e.getHostname()
 }
 
 // Append parameter to the list

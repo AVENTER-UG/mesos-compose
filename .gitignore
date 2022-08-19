@@ -8,6 +8,6 @@ bootstrap/.owncloudsync.log
 bootstrap/*.db
 bootstrap/*.db-shm
 bootstrap/*.db-wal
-mesos_cli/m3s/__pycache__
 mesos-compose
 .dccache
+mesos_cli/compose/__pycache__/**

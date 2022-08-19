@@ -12,8 +12,6 @@ services:
       traefik.http.services.test1.loadBalancer.healthCheck.interval: "10s"
       traefik.http.services.test1.loadBalancer.healthCheck.timeout: "3s"
     network: default
-    ports:
-      - 8888:8080
     deploy:
       resources:
         limits:

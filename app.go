@@ -11,6 +11,7 @@ import (
 
 	"github.com/AVENTER-UG/mesos-compose/api"
 	"github.com/AVENTER-UG/mesos-compose/mesos"
+	"github.com/AVENTER-UG/mesos-compose/vault"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	util "github.com/AVENTER-UG/util"
 	"github.com/sirupsen/logrus"
@@ -46,8 +47,14 @@ func main() {
 
 	mesosutil.SetConfig(&framework)
 
+	// Connect the vault if we got a token
+	v := vault.New(config.VaultToken, config.VaultURL, config.VaultTimeout)
+	if config.VaultToken != "" {
+		logrus.Info("Vault Connection: ", v.Connect())
+	}
+
 	// connect to redis db
-	a := api.New(&config, &framework)
+	a := api.New(&config, &framework, v)
 	a.ConnectRedis()
 
 	// load framework state from database if they exist
@@ -102,6 +109,7 @@ func main() {
 		case <-ticker.C:
 			e := mesos.Subscribe(&config, &framework)
 			e.API = a
+			e.Vault = v
 			e.EventLoop()
 		}
 	}
