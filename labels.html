@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="errorcode.html"><strong aria-hidden="true">2.</strong> Errorcodes</a></li><li class="chapter-item expanded "><a href="labels.html" class="active"><strong aria-hidden="true">3.</strong> Custom Labels</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="labels.html" class="active"><strong aria-hidden="true">2.</strong> Custom Labels</a></li><li class="chapter-item expanded "><a href="vars.html"><strong aria-hidden="true">3.</strong> Environment Variables</a></li><li class="chapter-item expanded affix "><li class="part-title">CLI</li><li class="chapter-item expanded "><a href="cli/install.html"><strong aria-hidden="true">4.</strong> Installation for Mesos-CLI</a></li><li class="chapter-item expanded "><a href="cli/usage.html"><strong aria-hidden="true">5.</strong> Usage</a></li><li class="chapter-item expanded affix "><li class="part-title">Hashicorp Vault</li><li class="chapter-item expanded "><a href="vault/vault.html"><strong aria-hidden="true">6.</strong> How to use</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -136,25 +136,27 @@
                     <main>
                         <h1 id="custom-labels"><a class="header" href="#custom-labels">Custom labels</a></h1>
 <h2 id="bizaventermesos_composecontainer_type"><a class="header" href="#bizaventermesos_composecontainer_type">biz.aventer.mesos_compose.container_type</a></h2>
-<p>Values: docker, mesos (todo)</p>
+<p>Values: docker, mesos, none</p>
 <p>This label will control, which container engine mesos will choose to execute the
-container.</p>
-<h2 id="bizaventermesos_composecontraint_hostname"><a class="header" href="#bizaventermesos_composecontraint_hostname">biz.aventer.mesos_compose.contraint_hostname</a></h2>
-<p>Values: <hostname></p>
-<p>This label will control, on which node the container will be executed.</p>
+container. The value &quot;none&quot; will tell mesos to run the command with the command-executer.</p>
 <h2 id="bizaventermesos_composeexecutor"><a class="header" href="#bizaventermesos_composeexecutor">biz.aventer.mesos_compose.executor</a></h2>
 <p>Values: <mesos-executor></p>
 <p>With this label it is possible to use a custom executor.</p>
 <h2 id="bizaventermesos_composeexecutor_uri"><a class="header" href="#bizaventermesos_composeexecutor_uri">biz.aventer.mesos_compose.executor_uri</a></h2>
 <p>Values: <mesos-executor-uri></p>
-<p>The URL where to fetch the executor. As example: <code>http://localhost:8080/executor</code></p>
+<p>The URL where to fetch the executor and other files. As example: </p>
+<pre><code>'[{&quot;Value&quot;:&quot;https://localhost:1234/executor&quot;,&quot;OutputFile&quot;:&quot;mesos-executor&quot;}]'
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="errorcode.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="vars.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
                     </nav>
@@ -162,8 +164,11 @@ container.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="errorcode.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="vars.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 

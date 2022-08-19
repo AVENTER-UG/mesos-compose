@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="errorcode.html"><strong aria-hidden="true">2.</strong> Errorcodes</a></li><li class="chapter-item expanded "><a href="labels.html"><strong aria-hidden="true">3.</strong> Custom Labels</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="labels.html"><strong aria-hidden="true">2.</strong> Custom Labels</a></li><li class="chapter-item expanded "><a href="vars.html"><strong aria-hidden="true">3.</strong> Environment Variables</a></li><li class="chapter-item expanded affix "><li class="part-title">CLI</li><li class="chapter-item expanded "><a href="cli/install.html"><strong aria-hidden="true">4.</strong> Installation for Mesos-CLI</a></li><li class="chapter-item expanded "><a href="cli/usage.html"><strong aria-hidden="true">5.</strong> Usage</a></li><li class="chapter-item expanded affix "><li class="part-title">Hashicorp Vault</li><li class="chapter-item expanded "><a href="vault/vault.html"><strong aria-hidden="true">6.</strong> How to use</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -156,9 +156,10 @@ services:
       - &quot;12345test:/tmp&quot;
     environment:
       - MYSQL_HOST=test
+    hostname: test
+    container_name: test
     labels:
       biz.aventer.mesos_compose.container_type: &quot;DOCKER&quot;
-      biz.aventer.mesos_compose.contraint_hostname: &quot;worker-1&quot;
       biz.aventer.mesos_compose.executor: &quot;./my-custom-executor&quot;
       biz.aventer.mesos_compose.executor_uri: &quot;http://localhost/my-custom-executor&quot;
       traefik.enable: &quot;true&quot;
@@ -174,6 +175,10 @@ services:
     network:
       - default
     deploy:
+      placement:
+        constraints:
+          - &quot;node.hostname==localhost&quot;
+      replicas: 1
       resources:
         limits:
           cpus: &quot;0.01&quot;
@@ -226,25 +231,191 @@ own project name.</p>
 <p>To scale the service, just execute the same call again. To update a already existing docker-compose project, call:</p>
 <pre><code class="language-bash">curl -X UPDATE http://localhost:10000/api/compose/v0/&lt;PROJECTNAME&gt; --data-binary @docs/example/docker-compose.yml
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="error-codes"><a class="header" href="#error-codes">Error Codes</a></h1>
-<p>| 0 | No Error |
-| 1 | Could not save configuration into Redis |
-| 2 | Unspecified error |
-| 3 | Reconcile Error |</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="custom-labels"><a class="header" href="#custom-labels">Custom labels</a></h1>
 <h2 id="bizaventermesos_composecontainer_type"><a class="header" href="#bizaventermesos_composecontainer_type">biz.aventer.mesos_compose.container_type</a></h2>
-<p>Values: docker, mesos (todo)</p>
+<p>Values: docker, mesos, none</p>
 <p>This label will control, which container engine mesos will choose to execute the
-container.</p>
-<h2 id="bizaventermesos_composecontraint_hostname"><a class="header" href="#bizaventermesos_composecontraint_hostname">biz.aventer.mesos_compose.contraint_hostname</a></h2>
-<p>Values: <hostname></p>
-<p>This label will control, on which node the container will be executed.</p>
+container. The value &quot;none&quot; will tell mesos to run the command with the command-executer.</p>
 <h2 id="bizaventermesos_composeexecutor"><a class="header" href="#bizaventermesos_composeexecutor">biz.aventer.mesos_compose.executor</a></h2>
 <p>Values: <mesos-executor></p>
 <p>With this label it is possible to use a custom executor.</p>
 <h2 id="bizaventermesos_composeexecutor_uri"><a class="header" href="#bizaventermesos_composeexecutor_uri">biz.aventer.mesos_compose.executor_uri</a></h2>
 <p>Values: <mesos-executor-uri></p>
-<p>The URL where to fetch the executor. As example: <code>http://localhost:8080/executor</code></p>
+<p>The URL where to fetch the executor and other files. As example: </p>
+<pre><code>'[{&quot;Value&quot;:&quot;https://localhost:1234/executor&quot;,&quot;OutputFile&quot;:&quot;mesos-executor&quot;}]'
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
+<p>The following environment variables are available:</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="mesos-compose-cli-installation-for-mesos-cli"><a class="header" href="#mesos-compose-cli-installation-for-mesos-cli">Mesos-Compose CLI Installation for Mesos-CLI</a></h1>
+<p>If you do not already have installe the mesos cli, please follow the steps under &quot;Install Mesos-CLI&quot; first.</p>
+<p>The installation of the Mesos-Compose plugin for mesos-cli is done in few steps.</p>
+<p>First, edit the mesos-cli config file.</p>
+<pre><code class="language-bash">
+vim .mesos/config.toml
+
+</code></pre>
+<p>Add the absolute path of the plugin into the plugin array:</p>
+<pre><code class="language-bash">
+# The `plugins` array lists the absolute paths of the
+# plugins you want to add to the CLI.
+plugins = [
+  &quot;/example/mesos-compose/mesos_cli/compose&quot;
+]
+
+[compose.&lt;FRAMEWORK_PREFIX&gt;]
+  principal = &quot;&lt;framework username&gt;&quot;
+  secret = &quot;&lt;framework password&gt;&quot;
+
+</code></pre>
+<p>A example for multiple mesos-compose frameworks:</p>
+<pre><code class="language-bash">
+[compose.mc-a]
+  principal = &quot;&lt;framework username&gt;&quot;
+  secret = &quot;&lt;framework password&gt;&quot;
+
+[compose.mc-b]
+  principal = &quot;&lt;framework username&gt;&quot;
+  secret = &quot;&lt;framework password&gt;&quot;
+
+</code></pre>
+<p>As you can see, the &quot;compose&quot; section have to extend with the prefix of Mesos-Compose framework.</p>
+<p>Now we will see the M3s plugin in mesos cli:</p>
+<pre><code class="language-bash">
+mesos-cli help
+Mesos CLI
+
+Usage:
+  mesos (-h | --help)
+  mesos --version
+  mesos &lt;command&gt; [&lt;args&gt;...]
+
+Options:
+  -h --help  Show this screen.
+  --version  Show version info.
+
+Commands:
+  agent      Interacts with the Mesos agents
+  compose    Interacts with the Mesos-Compose Framework
+  config     Interacts with the Mesos CLI configuration file
+  framework  Interacts with the Mesos Frameworks
+  m3s        Interacts with the Kubernetes Framework M3s
+  task       Interacts with the tasks running in a Mesos cluster
+
+</code></pre>
+<h2 id="install-mesos-cli"><a class="header" href="#install-mesos-cli">Install Mesos-CLI</a></h2>
+<p>Download the mesos-cli binary for linux from <a href="https://www.aventer.biz/files/sw/Linux/mesos-cli.zip">here</a>. Extract 
+the mesos-cli and copy the file into your PATH directory.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="mesos-compose-cli-usage"><a class="header" href="#mesos-compose-cli-usage">Mesos-Compose CLI Usage</a></h1>
+<p>The Mesos-Compose framework does support the new version of mesos-cli.</p>
+<p>The following parameters are currently supported:</p>
+<pre><code class="language-bash">
+mesos-cli compose help
+Interacts with the Mesos-Compose Framework
+
+Usage:
+  mesos compose (-h | --help)
+  mesos compose --version
+  mesos compose &lt;command&gt; (-h | --help)
+  mesos compose [options] &lt;command&gt; [&lt;args&gt;...]
+
+Options:
+  -h --help  Show this screen.
+  --version  Show version info.
+
+Commands:
+  info     Get information about the running Mesos compose framework.
+  kill     Kill Mesos compose workload
+  launch   Launch Mesos workload from compose file
+  version  Get the version number of Mesos compose
+
+</code></pre>
+<h2 id="launch-workload"><a class="header" href="#launch-workload">Launch Workload</a></h2>
+<p>To launch workload, you need a compose file.</p>
+<pre><code class="language-bash">
+mesos-cli compose launch
+Launch Mesos workload from compose file
+
+Usage:
+  mesos compose launch (-h | --help)
+  mesos compose launch --version
+  mesos compose launch [options] &lt;framework-name&gt; &lt;project&gt; &lt;compose-file&gt;
+
+Options:
+  -h --help  Show this screen.
+
+Description:
+  Launch Mesos workload from compose file
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-bash">
+mesos compose launch mc allwebserver docs/example/test-http.yaml 
+
+</code></pre>
+<ul>
+<li><code>mc</code> is the Mesos registration name of the framework.</li>
+<li><code>allwebserver</code> is the project name. We can also see it as subcategory. </li>
+</ul>
+<h2 id="kill-workload"><a class="header" href="#kill-workload">Kill Workload</a></h2>
+<p>Kill running or staled workload managed by Mesos-Compose.</p>
+<pre><code class="language-bash">
+mesos compose kill
+Kill Mesos compose workload
+
+Usage:
+  mesos compose kill (-h | --help)
+  mesos compose kill --version
+  mesos compose kill [options] &lt;framework-name&gt; &lt;project&gt; &lt;service&gt; [task-id]
+
+Options:
+  -h --help  Show this screen.
+
+Description:
+  Kill Mesos compose workload
+
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-bash">
+mesos compose kill mc allwebserver test1
+
+</code></pre>
+<ul>
+<li><code>mc</code> is the Mesos registration name of the framework.</li>
+<li><code>allwebserver</code> is the project name. We can also see it as subcategory. </li>
+<li><code>test1</code> is the service name of the container we defined in our compose file.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="how-to-use-hashicorp-vault-with-mesos-compose"><a class="header" href="#how-to-use-hashicorp-vault-with-mesos-compose">How to use Hashicorp Vault with mesos-compose</a></h1>
+<p>Mesos-Compose support to store secrets in Hashicorp Vault (short vault). The configuration is so simple as possible.</p>
+<h2 id="1-set-the-environment-parameter"><a class="header" href="#1-set-the-environment-parameter">1. Set the environment parameter</a></h2>
+<p>Therefore mesos-compose can use vault, we have to configure the following parameter.</p>
+<pre><code class="language-bash">
+export VAULT_URL=https://&lt;YOUR_VAULT_IP&gt;:&lt;YOUR_VAULT_PORT&gt;
+export VAULT_TOKEN=&lt;YOUR_VAULT_TOKEN&gt;
+
+</code></pre>
+<h2 id="2-create-a-secret-in-vault"><a class="header" href="#2-create-a-secret-in-vault">2. Create a secret in Vault</a></h2>
+<p>Create a secret in a KV store.</p>
+<p><img src="vault/vx_images/image_2022-08-19-21-38-45.png" alt="image_2022-08-19-21-38-45" /></p>
+<h2 id="3-use-the-secret"><a class="header" href="#3-use-the-secret">3. Use the secret</a></h2>
+<p>Use the secret in the following term.</p>
+<p><code>vault://&lt;SECRET_PATH&gt;:&lt;KEY_NAME&gt;</code></p>
+<p>As example:</p>
+<pre><code class="language-yaml">version: '3.9'
+services:
+  test1:
+    image: alpine
+    command: &quot;env&quot;
+    restart: always
+    environment:
+      - test=vault://secret/data/m3s/test:test1
+    network: default
+    deploy:
+      resources:
+        limits:
+          cpus: &quot;0.1&quot;
+          memory: &quot;50&quot;
+
+</code></pre>
+<p>Please notice, that the KV V2 store needs &quot;data&quot; inside of the path. Even if it's not visible in the UI.</p>
 
                     </main>
 
