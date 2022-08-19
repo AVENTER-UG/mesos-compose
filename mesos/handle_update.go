@@ -20,7 +20,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 	}
 
 	// get the task of the current event, change the state
-	task := e.API.GetTaskFromEvent(update)
+	task := e.Redis.GetTaskFromEvent(update)
 
 	if task.TaskID == "" {
 		return nil
@@ -36,7 +36,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 		task.State = ""
 	case mesosproto.TASK_KILLED:
 		// remove task
-		e.API.DelRedisKey(task.TaskName + ":" + task.TaskID)
+		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 		return mesosutil.Call(msg)
 	case mesosproto.TASK_LOST:
 		// restart task
@@ -51,7 +51,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 	}
 
 	// save the new state
-	e.API.SaveTaskRedis(task)
+	e.Redis.SaveTaskRedis(task)
 
 	return mesosutil.Call(msg)
 }

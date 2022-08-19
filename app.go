@@ -11,6 +11,7 @@ import (
 
 	"github.com/AVENTER-UG/mesos-compose/api"
 	"github.com/AVENTER-UG/mesos-compose/mesos"
+	"github.com/AVENTER-UG/mesos-compose/redis"
 	"github.com/AVENTER-UG/mesos-compose/vault"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	util "github.com/AVENTER-UG/util"
@@ -53,17 +54,20 @@ func main() {
 		logrus.Info("Vault Connection: ", v.Connect())
 	}
 
-	// connect to redis db
-	a := api.New(&config, &framework, v)
-	a.ConnectRedis()
+	// connect to redis
+	r := redis.New(config.RedisServer, config.RedisPassword, framework.FrameworkName, config.RedisDB)
+	logrus.Info("Redis Connection: ", r.Connect())
+
+	// get API
+	a := api.New(&config, &framework, v, r)
 
 	// load framework state from database if they exist
-	key := a.GetRedisKey(framework.FrameworkName + ":framework")
+	key := r.GetRedisKey(framework.FrameworkName + ":framework")
 	if key != "" {
 		json.Unmarshal([]byte(key), &framework)
 
 		// Save current config
-		a.SaveConfig()
+		r.SaveConfig(config)
 	}
 
 	// The Hostname should ever be set after reading the state file.
@@ -110,6 +114,7 @@ func main() {
 			e := mesos.Subscribe(&config, &framework)
 			e.API = a
 			e.Vault = v
+			e.Redis = r
 			e.EventLoop()
 		}
 	}

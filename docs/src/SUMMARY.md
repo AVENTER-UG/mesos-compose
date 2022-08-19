@@ -1,7 +1,6 @@
 # Summary
 
 - [Introduction](README.md)
-- [Errorcodes](errorcode.md)
 - [Custom Labels](labels.md)
 - [Environment Variables](vars.md)
 
@@ -9,3 +8,7 @@
 
 - [Installation for Mesos-CLI](cli/install.md)
 - [Usage](cli/usage.md)
+
+# Hashicorp Vault
+
+- [How to use](vault/vault.md)

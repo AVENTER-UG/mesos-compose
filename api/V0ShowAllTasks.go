@@ -18,9 +18,9 @@ func (e *API) V0ShowAllTasks(w http.ResponseWriter, r *http.Request) {
 
 	logrus.Debug("HTTP GET V0ShowAllTasks")
 
-	keys := e.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
+	keys := e.Redis.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 
-	for keys.Next(e.Redis.RedisCTX) {
+	for keys.Next(e.Redis.CTX) {
 		logrus.Info("keys: ", keys.Val())
 	}
 }

@@ -1,10 +1,7 @@
 package types
 
 import (
-	"context"
 	"time"
-
-	goredis "github.com/go-redis/redis/v8"
 )
 
 // Config is a struct of the framework configuration
@@ -24,8 +21,6 @@ type Config struct {
 	Memory         float64
 	Disk           float64
 	RedisServer    string
-	RedisClient    *goredis.Client
-	RedisCTX       context.Context
 	RedisPassword  string
 	RedisDB        int
 	SkipSSL        bool

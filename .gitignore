@@ -10,4 +10,4 @@ bootstrap/*.db-shm
 bootstrap/*.db-wal
 mesos-compose
 .dccache
-mesos_cli/compose/__pycache__/**
+mesos_cli/compose/__pycache__/**/**

@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	api "github.com/AVENTER-UG/mesos-compose/api"
+	"github.com/AVENTER-UG/mesos-compose/redis"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	"github.com/AVENTER-UG/mesos-compose/vault"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
@@ -25,6 +26,7 @@ type Scheduler struct {
 	Req       *http.Request
 	API       *api.API
 	Vault     *vault.Vault
+	Redis     *redis.Redis
 }
 
 // Marshaler to serialize Protobuf Message to JSON
@@ -115,11 +117,11 @@ func (e *Scheduler) EventLoop() {
 			e.Framework.MesosStreamID = res.Header.Get("Mesos-Stream-Id")
 
 			e.Reconcile()
-			e.API.SaveFrameworkRedis()
-			e.API.SaveConfig()
+			e.Redis.SaveFrameworkRedis(*e.Framework)
+			e.Redis.SaveConfig(*e.Config)
 		case mesosproto.Event_UPDATE:
 			e.HandleUpdate(&event)
-			e.API.SaveConfig()
+			e.Redis.SaveConfig(*e.Config)
 		case mesosproto.Event_OFFERS:
 			// Search Failed containers and restart them
 			err = e.HandleOffers(event.Offers)
@@ -134,14 +136,14 @@ func (e *Scheduler) EventLoop() {
 func (e *Scheduler) Reconcile() {
 	logrus.Info("Reconcile Tasks")
 	var oldTasks []mesosproto.Call_Reconcile_Task
-	keys := e.API.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
-	for keys.Next(e.API.Redis.RedisCTX) {
+	keys := e.Redis.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
+	for keys.Next(e.Redis.CTX) {
 		// continue if the key is not a mesos task
-		if e.API.CheckIfNotTask(keys) {
+		if e.Redis.CheckIfNotTask(keys) {
 			continue
 		}
 
-		key := e.API.GetRedisKey(keys.Val())
+		key := e.Redis.GetRedisKey(keys.Val())
 
 		task := mesosutil.DecodeTask(key)
 

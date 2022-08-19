@@ -60,7 +60,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	e.setConstraints(&cmd)
 
 	// store/update the mesos task in db
-	e.SaveTaskRedis(cmd)
+	e.Redis.SaveTaskRedis(cmd)
 }
 
 // Get the CPU value from the compose file, or the default one if it's unset

@@ -33,7 +33,7 @@ func (e *API) V0ComposeKillTask(w http.ResponseWriter, r *http.Request) {
 	servicename := vars["servicename"]
 	taskID := vars["taskid"]
 
-	key := e.GetRedisKey(e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":" + taskID)
+	key := e.Redis.GetRedisKey(e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":" + taskID)
 
 	task := mesosutil.DecodeTask(key)
 	if task.TaskID == taskID {

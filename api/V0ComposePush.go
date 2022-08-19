@@ -44,7 +44,7 @@ func (e *API) V0ComposePush(w http.ResponseWriter, r *http.Request) {
 		// only schedule if the max instances is not reached
 		TaskName := e.Config.PrefixTaskName + ":" + vars["project"] + ":" + service
 		Instances := e.getReplicas()
-		if e.CountRedisKey(TaskName+":*") < Instances {
+		if e.Redis.CountRedisKey(TaskName+":*") < Instances {
 			e.Compose = data
 			e.mapComposeServiceToMesosTask(vars, service, mesosutil.Command{})
 		}

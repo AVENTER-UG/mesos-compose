@@ -12,20 +12,20 @@ import (
 // Heartbeat - The Apache Mesos heatbeat function
 func (e *Scheduler) Heartbeat() {
 	// Check Connection state of Redis
-	err := e.API.PingRedis()
+	err := e.Redis.PingRedis()
 	if err != nil {
-		e.API.ConnectRedis()
+		e.Redis.Connect()
 	}
 
-	keys := e.API.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
+	keys := e.Redis.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 	suppress := true
-	for keys.Next(e.API.Redis.RedisCTX) {
+	for keys.Next(e.Redis.CTX) {
 		// continue if the key is not a mesos task
-		if e.API.CheckIfNotTask(keys) {
+		if e.Redis.CheckIfNotTask(keys) {
 			continue
 		}
 		// get the values of the current key
-		key := e.API.GetRedisKey(keys.Val())
+		key := e.Redis.GetRedisKey(keys.Val())
 
 		task := mesosutil.DecodeTask(key)
 
@@ -33,7 +33,7 @@ func (e *Scheduler) Heartbeat() {
 			continue
 		}
 
-		if task.State == "" && e.API.CountRedisKey(task.TaskName+":*") <= task.Instances {
+		if task.State == "" && e.Redis.CountRedisKey(task.TaskName+":*") <= task.Instances {
 			mesosutil.Revive()
 			task.State = "__NEW"
 			// these will save the current time at the task. we need it to check
@@ -48,7 +48,7 @@ func (e *Scheduler) Heartbeat() {
 			// add task to communication channel
 			e.Framework.CommandChan <- task
 
-			e.API.SaveTaskRedis(task)
+			e.Redis.SaveTaskRedis(task)
 
 			logrus.Info("Scheduled Mesos Task: ", task.TaskName)
 		}
@@ -61,7 +61,7 @@ func (e *Scheduler) Heartbeat() {
 		if task.State == "__KILL" {
 			// if agent is unset, the task is not running we can just delete the DB key
 			if task.Agent == "" {
-				e.API.DelRedisKey(task.TaskName + ":" + task.TaskID)
+				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			} else {
 				mesosutil.Kill(task.TaskID, task.Agent)
 			}

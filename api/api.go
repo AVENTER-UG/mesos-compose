@@ -11,6 +11,7 @@ import (
 	//"io/ioutil"
 	"net/http"
 
+	"github.com/AVENTER-UG/mesos-compose/redis"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	"github.com/AVENTER-UG/mesos-compose/vault"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
@@ -22,16 +23,17 @@ type API struct {
 	Framework *mesosutil.FrameworkConfig
 	Service   cfg.Service
 	Compose   cfg.Compose
-	Redis     Redis
+	Redis     *redis.Redis
 	Vault     *vault.Vault
 }
 
 // New will create a new API object
-func New(cfg *cfg.Config, frm *mesosutil.FrameworkConfig, vault *vault.Vault) *API {
+func New(cfg *cfg.Config, frm *mesosutil.FrameworkConfig, vault *vault.Vault, redis *redis.Redis) *API {
 	e := &API{
 		Config:    cfg,
 		Framework: frm,
 		Vault:     vault,
+		Redis:     redis,
 	}
 
 	return e
