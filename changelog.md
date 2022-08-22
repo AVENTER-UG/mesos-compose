@@ -17,6 +17,7 @@
 - ADD: Resubscription after the connection to mesos master is lost.
 - ADD: Mesos CLI Plugin to launch and kill mesos-compose workload.
 - ADD: Support for Hasicorp Vault.
+- ADD: Overwrite the webui URL by env "FRAMEWORK_WEBUIRUL"
 
 
   

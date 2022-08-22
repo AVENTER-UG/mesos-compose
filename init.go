@@ -74,6 +74,11 @@ func init() {
 		webuiurl = fmt.Sprintf("https://%s%s", framework.FrameworkHostname, listen)
 	}
 
+	// overwrite the webui URL
+	if os.Getenv("FRAMEWORK_WEBUIURL") != "" {
+		webuiurl = os.Getenv("FRAMEWORK_WEBUIURL")
+	}
+
 	framework.CommandChan = make(chan mesosutil.Command, 100)
 	config.Hostname = framework.FrameworkHostname
 	config.Listen = listen

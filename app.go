@@ -51,27 +51,30 @@ func main() {
 	// Connect the vault if we got a token
 	v := vault.New(config.VaultToken, config.VaultURL, config.VaultTimeout)
 	if config.VaultToken != "" {
-		logrus.Info("Vault Connection: ", v.Connect())
+		logrus.Info("Vault Connection: ")
+		logrus.Info(v.Connect())
 	}
 
 	// connect to redis
 	r := redis.New(config.RedisServer, config.RedisPassword, framework.FrameworkName, config.RedisDB)
-	logrus.Info("Redis Connection: ", r.Connect())
+	logrus.Info("Redis Connection: ")
+	logrus.Info(r.Connect())
 
 	// get API
 	a := api.New(&config, &framework, v, r)
 
-	// load framework state from database if they exist
+	// load old framework config from database if they exist
+	var oldFramework mesosutil.FrameworkConfig
 	key := r.GetRedisKey(framework.FrameworkName + ":framework")
 	if key != "" {
-		json.Unmarshal([]byte(key), &framework)
+		json.Unmarshal([]byte(key), &oldFramework)
 
-		// Save current config
-		r.SaveConfig(config)
+		framework.FrameworkInfo.ID = oldFramework.FrameworkInfo.ID
+		framework.MesosStreamID = oldFramework.MesosStreamID
 	}
 
-	// The Hostname should ever be set after reading the state file.
-	framework.FrameworkInfo.Hostname = &framework.FrameworkHostname
+	r.SaveConfig(config)
+	r.SaveFrameworkRedis(framework)
 
 	server := &http.Server{
 		Addr:              config.Listen,
