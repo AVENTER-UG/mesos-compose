@@ -436,7 +436,11 @@ func (e *API) getDockerParameter(cmd mesosutil.Command) []mesosproto.Parameter {
 	}
 
 	if e.Service.NetworkMode != "bridge" && e.getContainerType() == "docker" && e.getHostname() != "" {
-		return e.addDockerParameter(param, mesosproto.Parameter{Key: "net-alias", Value: e.getNetAlias()})
+		if e.getNetAlias() != "" {
+			return e.addDockerParameter(param, mesosproto.Parameter{Key: "net-alias", Value: e.getNetAlias()})
+		}
+
+		return param
 	}
 
 	return param
@@ -450,7 +454,7 @@ func (e *API) getNetAlias() string {
 		}
 	}
 
-	return e.getHostname()
+	return ""
 }
 
 // Append parameter to the list

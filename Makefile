@@ -24,7 +24,7 @@ help:
 
 build:
 	@echo ">>>> Build docker image and publish it to private repo"
-	@docker buildx build --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} .
+	@docker build --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} .
 
 build-bin:
 	@echo ">>>> Build binary"
@@ -56,6 +56,9 @@ sboom:
 
 seccheck:
 	gosec --exclude G104 --exclude-dir ./vendor ./... 
+
+test:
+	@go test -v ./...
 
 version:
 	@echo ">>>> Generate version file"
