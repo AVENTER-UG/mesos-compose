@@ -13,8 +13,8 @@ import (
 
 	"github.com/AVENTER-UG/mesos-compose/redis"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
-	"github.com/AVENTER-UG/mesos-compose/vault"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
+	"github.com/AVENTER-UG/util/vault"
 )
 
 // API Service include all the current vars and global config

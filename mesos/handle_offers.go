@@ -9,7 +9,7 @@ import (
 
 	mesosutil "github.com/AVENTER-UG/mesos-util"
 	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
-	"github.com/AVENTER-UG/util"
+	"github.com/AVENTER-UG/util/util"
 )
 
 // HandleOffers will handle the offers event of mesos

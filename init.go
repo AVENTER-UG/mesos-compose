@@ -8,7 +8,7 @@ import (
 	"time"
 
 	mesosutil "github.com/AVENTER-UG/mesos-util"
-	util "github.com/AVENTER-UG/util"
+	util "github.com/AVENTER-UG/util/util"
 	"github.com/Showmax/go-fqdn"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"

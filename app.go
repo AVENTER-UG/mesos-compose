@@ -12,9 +12,9 @@ import (
 	"github.com/AVENTER-UG/mesos-compose/api"
 	"github.com/AVENTER-UG/mesos-compose/mesos"
 	"github.com/AVENTER-UG/mesos-compose/redis"
-	"github.com/AVENTER-UG/mesos-compose/vault"
 	mesosutil "github.com/AVENTER-UG/mesos-util"
-	util "github.com/AVENTER-UG/util"
+	util "github.com/AVENTER-UG/util/util"
+	"github.com/AVENTER-UG/util/vault"
 	"github.com/sirupsen/logrus"
 )
 

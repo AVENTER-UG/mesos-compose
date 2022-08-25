@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	mesosutil "github.com/AVENTER-UG/mesos-util"
-	util "github.com/AVENTER-UG/util"
+	util "github.com/AVENTER-UG/util/util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )

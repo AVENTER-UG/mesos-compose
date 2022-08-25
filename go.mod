@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/AVENTER-UG/mesos-util v0.0.38
-	github.com/AVENTER-UG/util v0.4.2
+	github.com/AVENTER-UG/util v0.5.2
 	github.com/Showmax/go-fqdn v1.0.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gogo/protobuf v1.3.2
