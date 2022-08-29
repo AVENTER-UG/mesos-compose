@@ -19,6 +19,7 @@
 - ADD: Support for Hashicorp Vault.
 - ADD: Overwrite the webui URL by env "FRAMEWORK_WEBUIRUL"
 - ADD: Support for Hashicorp Vault also for the environment variables of the framework.
+- ADD: Mesos CLI restart and update service.
 
 
   
