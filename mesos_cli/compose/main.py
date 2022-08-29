@@ -49,11 +49,23 @@ class mesosCompose(PluginBase):
             "short_help": "Launch Mesos workload from compose file",
             "long_help": "Launch Mesos workload from compose file",
         },
+        "update": {
+            "arguments": ["<framework-name>", "<project>", "<compose-file>"],
+            "flags": {},
+            "short_help": "Update service from compose file",
+            "long_help": "Update service from compose file",
+        },
         "kill": {
             "arguments": ["<framework-name>", "<project>", "<service>", "[task-id]"],
             "flags": {},
             "short_help": "Kill Mesos compose workload",
             "long_help": "Kill Mesos compose workload",
+        },
+        "restart": {
+            "arguments": ["<framework-name>", "<project>", "<service>"],
+            "flags": {},
+            "short_help": "Restart service",
+            "long_help": "Restart service",
         },
     }
 
@@ -101,9 +113,56 @@ class mesosCompose(PluginBase):
                 print(json.dumps(message, indent=2, ensure_ascii=False))
             except Exception as exception:
                 print(data)
+        else:
+            print("Nothing to Launch")
+
+    def update(self, argv):
+        """
+        Update running service from compose file
+        """
+
+        try:
+            master = self.config.master()
+            config = self.config
+            # pylint: disable=attribute-defined-outside-init
+            self.mesos_config = self._get_config()
+        except Exception as exception:
+            raise CLIException(
+                "Unable to get leading master address: {error}".format(error=exception)
+            ) from exception
+
+        project = argv["<project>"]
+        filename = argv["<compose-file>"]
+        self.framework_name = argv["<framework-name>"]
+
+        if (
+            project is not None
+            and filename is not None
+            and self.framework_name is not None
+        ):
+            print("Update workload " + project)
+
+            framework_address = get_framework_address(
+                self.get_framework_id(argv), master, config
+            )
+            data = json.loads(
+                self.write_endpoint(
+                    framework_address,
+                    "/api/compose/v0/" + project,
+                    self,
+                    "UPDATE",
+                    filename,
+                )
+            )
+
+            try:
+                message = json.loads(data["Message"])
+                print(json.dumps(message, indent=2, ensure_ascii=False))
+            except Exception as exception:
+                print(data)
 
         else:
-            print("Nothing to launch")
+            print("Nothing to Update")
 
     def version(self, argv):
         """
@@ -157,6 +216,37 @@ class mesosCompose(PluginBase):
             "/api/compose/v0/" + project + "/" + service,
             self,
             "DELETE",
+        )
+
+        print(data)
+
+    def restart(self, argv):
+        """
+        Restart mesos task
+        """
+
+        try:
+            master = self.config.master()
+            config = self.config
+            # pylint: disable=attribute-defined-outside-init
+            self.mesos_config = self._get_config()
+            self.framework_name = argv["<framework-name>"]
+        except Exception as exception:
+            raise CLIException(
+                "Unable to get leading master address: {error}".format(error=exception)
+            ) from exception
+
+        project = argv.get("<project>")
+        service = argv.get("<service>")
+        framework_address = get_framework_address(
+            self.get_framework_id(argv), master, config
+        )
+
+        data = self.write_endpoint(
+            framework_address,
+            "/api/compose/v0/" + project + "/" + service + "/restart",
+            self,
+            "PUT",
         )
 
         print(data)
