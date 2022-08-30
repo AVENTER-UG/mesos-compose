@@ -355,7 +355,7 @@ func (e *API) getNetworkMode() string {
 		return "user"
 	}
 
-	return e.Service.NetworkMode
+	return strings.ToLower(e.Service.NetworkMode)
 }
 
 // get the NetworkInfo Name
@@ -435,7 +435,7 @@ func (e *API) getDockerParameter(cmd mesosutil.Command) []mesosproto.Parameter {
 		param = make([]mesosproto.Parameter, 0)
 	}
 
-	if e.Service.NetworkMode != "bridge" && e.getContainerType() == "docker" && e.getHostname() != "" {
+	if e.getNetworkMode() != "bridge" && e.getContainerType() == "docker" && e.getHostname() != "" {
 		return e.addDockerParameter(param, mesosproto.Parameter{Key: "net-alias", Value: e.getNetAlias()})
 	}
 
