@@ -23,8 +23,8 @@ help:
 .DEFAULT_GOAL := all
 
 build:
-	@echo ">>>> Build docker image and publish it to private repo"
-	@docker buildx build --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} .
+	@echo ">>>> Build Docker"
+	@docker build --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${TAG} .
 
 build-bin:
 	@echo ">>>> Build binary"
@@ -32,12 +32,11 @@ build-bin:
 
 publish:
 	@echo ">>>> Publish docker image"
-	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAME}:latest
-	@docker push ${IMAGEFULLNAME}:latest
+	@docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:latest .
 
 publish-tag:
-	@docker tag ${IMAGEFULLNAME}:${BRANCH} ${IMAGEFULLNAME}:${TAG}
-	@docker push ${IMAGEFULLNAME}:${TAG}
+	@echo ">>>> Publish docker image"
+	@docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:${TAG} .
 
 update-precommit:
 	@virtualenv --no-site-packages ~/.virtualenv
