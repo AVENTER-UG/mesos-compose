@@ -168,9 +168,11 @@ func (e *API) getPullPolicy() string {
 
 // GetDockerPorts Get the ports of the compose file
 func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping {
+	if e.getNetworkMode() == "host" || e.getNetworkMode() == "user" {
+		return nil
+	}
 	var ports []mesosproto.ContainerInfo_DockerInfo_PortMapping
-	hostport := e.GetRandomHostPort()
-	for i, c := range e.Service.Ports {
+	for _, c := range e.Service.Ports {
 		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
 		var port int
 		// "<hostport>:<containerport>"
@@ -197,7 +199,7 @@ func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping
 		}
 
 		tmp.ContainerPort = uint32(port)
-		tmp.HostPort = hostport + uint32(i)
+		tmp.HostPort = 0 // the port will be generatet during the schedule
 		ports = append(ports, tmp)
 	}
 	return ports

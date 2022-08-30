@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  redis-bridge:
+    image: redis:latest
+    ports:
+      - "9401:6379"
+    network_mode: "bridge"
+
+    
