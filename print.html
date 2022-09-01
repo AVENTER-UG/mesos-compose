@@ -164,7 +164,7 @@ services:
       biz.aventer.mesos_compose.executor_uri: &quot;http://localhost/my-custom-executor&quot;
       traefik.enable: &quot;true&quot;
       traefik.http.routers.test.entrypoints: &quot;web&quot;
-      traefik.http.routers.test.service: &quot;mc_test_app_80&quot;
+      traefik.http.routers.test.service: &quot;mc:test:app:80&quot;
       traefik.http.routers.test.rule: &quot;HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)&quot;
     network_mode: &quot;BRIDGE&quot;
     ports:
