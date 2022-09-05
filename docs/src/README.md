@@ -45,6 +45,8 @@ services:
       placement:
         constraints:
           - "node.hostname==localhost"
+          - "node.platform.os==linux"
+          - "node.platform.arch==arm"
       replicas: 1
       resources:
         limits:

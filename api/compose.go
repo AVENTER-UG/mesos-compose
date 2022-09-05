@@ -469,6 +469,12 @@ func (e *API) setConstraints(cmd *mesosutil.Command) {
 				if cons[0] == "node.hostname" {
 					cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_hostname", Value: &cons[1]})
 				}
+				if cons[0] == "node.platform.os" {
+					cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_platform_os", Value: &cons[1]})
+				}
+				if cons[0] == "node.platform.arch" {
+					cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_platform_arch", Value: &cons[1]})
+				}
 			}
 		}
 	}

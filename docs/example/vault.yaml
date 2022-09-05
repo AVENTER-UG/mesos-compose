@@ -7,3 +7,8 @@ services:
       - VAULT_DEV_ROOT_TOKEN_ID=vault-plaintext-root-token
     network_mode: "host"
     network: default
+    deploy:
+      placement:
+        constraints:
+          - "node.platform.os==linux"
+          - "node.platform.arch==arm"

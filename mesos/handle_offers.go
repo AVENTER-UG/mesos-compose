@@ -23,8 +23,11 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 
 		takeOffer, offerIds := e.getOffer(offers, cmd)
 		if takeOffer.GetHostname() == "" {
-			e.Framework.CommandChan <- cmd
-			return nil
+			cmd.State = ""
+			e.Redis.SaveTaskRedis(cmd)
+			logrus.WithField("func", "mesos.HandleOffers").Debug("No matched offer found.")
+			logrus.Info("Decline unneeded offer: ", offerIds)
+			return mesosutil.Call(mesosutil.DeclineOffer(offerIds))
 		}
 		logrus.Debug("Take Offer From:", takeOffer.GetHostname())
 
@@ -87,7 +90,7 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd mesosutil.Comm
 	var offerIds []mesosproto.OfferID
 	var offerret mesosproto.Offer
 
-	for n, offer := range offers.Offers {
+	for _, offer := range offers.Offers {
 		logrus.Debug("Got Offer From:", offer.GetHostname())
 		offerIds = append(offerIds, offer.ID)
 
@@ -102,16 +105,49 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd mesosutil.Comm
 		valHostname := e.getLabelValue("__mc_placement_node_hostname", cmd)
 		if valHostname != "" {
 			if strings.ToLower(valHostname) == offer.GetHostname() {
-				logrus.Debug("Set Server Constraint to:", offer.GetHostname())
-				offerret = offers.Offers[n]
+				logrus.Debug("Set Server Hostname Constraint to:", offer.GetHostname())
+			} else {
+				logrus.Debug("Could not found hostname, get next offer")
+				continue
 			}
-		} else {
-			offerret = offers.Offers[n]
 		}
+
+		if !e.isAttributeMachted("__mc_placement_node_platform_os", "os", cmd, offer) {
+			continue
+		}
+
+		if !e.isAttributeMachted("__mc_placement_node_platform_arch", "arch", cmd, offer) {
+			continue
+		}
+
+		offerret = offer
 	}
 	// remove the offer we took
 	offerIds = e.removeOffer(offerIds, offerret.ID.Value)
 	return offerret, offerIds
+}
+
+// search matched mesos attributes
+func (e *Scheduler) getAttributes(name string, offer mesosproto.Offer) string {
+	for _, attribute := range offer.Attributes {
+		if strings.EqualFold(attribute.Name, name) {
+			return attribute.GetText().Value
+		}
+	}
+	return ""
+}
+
+func (e *Scheduler) isAttributeMachted(label, attribute string, cmd mesosutil.Command, offer mesosproto.Offer) bool {
+	valOS := e.getLabelValue(label, cmd)
+	if valOS != "" {
+		if strings.ToLower(valOS) == e.getAttributes(attribute, offer) {
+			logrus.WithField("func", "mesos.isAttribute.Matched").Debugf("Set Server %s Constraint to: %s", attribute, offer.GetHostname())
+			return true
+		}
+		logrus.WithField("func", "mesos.isAttribute.Matched").Debugf("Could not found %s, get next offer", attribute)
+		return false
+	}
+	return true
 }
 
 // remove the offer we took from the list
@@ -122,5 +158,6 @@ func (e *Scheduler) removeOffer(offers []mesosproto.OfferID, clean string) []mes
 			offerIds = append(offerIds, offer)
 		}
 	}
+	logrus.WithField("func", "mesos.removeOffer").Debug("Unused offers: ", offerIds)
 	return offerIds
 }
