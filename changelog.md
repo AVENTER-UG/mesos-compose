@@ -21,8 +21,6 @@
 - ADD: Support for Hashicorp Vault also for the environment variables of the framework.
 - ADD: Mesos CLI restart and update service.
 - ADD: Support for `node.platform.os` and `node.platform.arch` constraint
-
-
   
 ## v0.4.0
 

@@ -9,7 +9,9 @@ services:
     cap_add:
       - SYS_ADMIN
       - NET_ADMIN
+    privileged: true        
     labels:
       biz.aventer.mesos_compose.executor: "/tmp/mesos-firecracker-executor"
       biz.aventer.mesos_compose.container_type: "DOCKER"
-      biz.aventer.mesos_compose.force_image_pull: "false"
+    pull_policy: always
+      
