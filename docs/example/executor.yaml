@@ -14,4 +14,5 @@ services:
       biz.aventer.mesos_compose.executor: "/tmp/mesos-firecracker-executor"
       biz.aventer.mesos_compose.container_type: "DOCKER"
     pull_policy: always
+    restart: no
       
