@@ -26,10 +26,11 @@ services:
       - SYS_ADMIN
     cap_drop:
       - NET_ADMIN
+    restart: always
     deploy:
       placement:
-        constraints:
-          - "node.hostname==localhost"
+      constraints:
+        - "node.hostname==localhost"
           - "node.platform.os==linux"
           - "node.platform.arch==arm"
       replicas: 1

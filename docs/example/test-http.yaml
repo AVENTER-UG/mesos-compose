@@ -2,7 +2,6 @@ version: '3.9'
 services:
   test1:
     image: docker.io/avhost/docker-lighttpd
-    restart: always
     labels:
       traefik.enable: "true"
       traefik.http.routers.test1.entrypoints: "web"
@@ -12,11 +11,7 @@ services:
       traefik.http.services.test1.loadBalancer.healthCheck.interval: "10s"
       traefik.http.services.test1.loadBalancer.healthCheck.timeout: "3s"
     network: default
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: "50"
+    restart: always
 
 networks:
   default:

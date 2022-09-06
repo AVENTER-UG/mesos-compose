@@ -55,6 +55,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.LinuxInfo = e.getLinuxInfo()
 	cmd.DockerParameter = e.getDockerParameter(cmd)
 	cmd.PullPolicy = e.getPullPolicy()
+	cmd.Restart = e.Service.Restart
 
 	// set the docker constraints
 	e.setConstraints(&cmd)
