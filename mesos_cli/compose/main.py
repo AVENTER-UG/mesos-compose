@@ -43,6 +43,12 @@ class mesosCompose(PluginBase):
             "short_help": "Get information about the running Mesos compose framework.",
             "long_help": "Get information about the running Mesos compose framework.",
         },
+        "list": {
+            "arguments": ["<framework-name>"],
+            "flags": {"-a --all": "list all tasks, not only running [default: False]"},
+            "short_help": "Show all running tasks.",
+            "long_help": "Show all running tasks.",
+        },
         "launch": {
             "arguments": ["<framework-name>", "<project>", "<compose-file>"],
             "flags": {},
@@ -115,6 +121,62 @@ class mesosCompose(PluginBase):
                 print(data)
         else:
             print("Nothing to Launch")
+
+    def list(self, argv):
+        """
+        Show running tasks
+        """
+
+        try:
+            master = self.config.master()
+            config = self.config
+            # pylint: disable=attribute-defined-outside-init
+            self.mesos_config = self._get_config()
+        except Exception as exception:
+            raise CLIException(
+                "Unable to get leading master address: {error}".format(error=exception)
+            ) from exception
+
+        self.framework_name = argv["<framework-name>"]
+
+        if self.framework_name is not None:
+
+            framework_address = get_framework_address(
+                self.get_framework_id(argv), master, config
+            )
+
+            data = json.loads(
+                http.read_endpoint(framework_address, "/api/compose/v0/tasks", self)
+            )
+
+            try:
+                message = json.loads(data["Message"])
+
+                if not message:
+                    print("There are no tasks running in the cluster.")
+                    return
+
+                table = Table(["ID", "Task Name", "State", "Mesos Agent"])
+                for task in message:
+
+                    if not argv["--all"] and task["State"] != "TASK_RUNNING":
+                        continue
+
+                    table.add_row(
+                        [
+                            task["TaskID"],
+                            task["task_name"],
+                            task["State"],
+                            task["MesosAgent"].get("hostname"),
+                        ]
+                    )
+
+            except Exception as exception:
+                raise CLIException(
+                    "Unable to build table of tasks: {error}".format(error=exception)
+                )
+
+            print(str(table))
 
     def update(self, argv):
         """

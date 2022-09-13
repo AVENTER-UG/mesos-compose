@@ -33,7 +33,7 @@ func (e *Scheduler) Heartbeat() {
 			continue
 		}
 
-		if task.State == "" && e.Redis.CountRedisKey(task.TaskName+":*") <= task.Instances {
+		if task.State == "" && e.Redis.CountRedisKey(task.TaskName+":*", "__KILL") <= task.Instances {
 			mesosutil.Revive()
 			task.State = "__NEW"
 			// these will save the current time at the task. we need it to check

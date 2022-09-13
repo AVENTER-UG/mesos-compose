@@ -97,10 +97,25 @@ func (e *Redis) GetTaskFromEvent(update *mesosproto.Event_Update) mesosutil.Comm
 }
 
 // CountRedisKey will get back the count of the redis key
-func (e *Redis) CountRedisKey(pattern string) int {
+func (e *Redis) CountRedisKey(pattern string, ignoreState string) int {
 	keys := e.GetAllRedisKeys(pattern)
 	count := 0
 	for keys.Next(e.CTX) {
+		// ignore redis keys if they are not mesos tasks
+		if e.CheckIfNotTask(keys) {
+			continue
+		}
+
+		// do not count these key
+		if ignoreState != "" {
+			// get the values of the current key
+			key := e.GetRedisKey(keys.Val())
+			task := mesosutil.DecodeTask(key)
+
+			if task.State == ignoreState {
+				continue
+			}
+		}
 		count++
 	}
 	logrus.Debug("CountRedisKey: ", pattern, count)

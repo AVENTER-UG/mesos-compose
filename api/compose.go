@@ -425,7 +425,7 @@ func (e *API) getContainerType() string {
 	conType := strings.ToLower(e.getLabelValueByKey("biz.aventer.mesos_compose.container_type"))
 
 	// if contype and custom executor is unset, then set the contype to DOCKER
-	if conType == "" && e.getLabelValueByKey("biz.aventer.mesos_compose.executor") == "" {
+	if conType == "" {
 		conType = "docker"
 	}
 
