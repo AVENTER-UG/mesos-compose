@@ -62,7 +62,7 @@ class mesosCompose(PluginBase):
             "long_help": "Update service from compose file",
         },
         "kill": {
-            "arguments": ["<framework-name>", "<project>", "<service>", "[task-id]"],
+            "arguments": ["<framework-name>", "<project>", "<service>"],
             "flags": {},
             "short_help": "Kill Mesos compose workload",
             "long_help": "Kill Mesos compose workload",
@@ -268,7 +268,6 @@ class mesosCompose(PluginBase):
 
         project = argv.get("<project>")
         service = argv.get("<service>")
-        taskid = argv.get("[task-id]")
         framework_address = get_framework_address(
             self.get_framework_id(argv), master, config
         )

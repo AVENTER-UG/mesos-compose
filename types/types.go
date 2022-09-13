@@ -52,7 +52,7 @@ type Service struct {
 	Network       string                  `yaml:"network"`
 	Networks      map[string]NetworksLong `yaml:"networks"`
 	Build         string                  `yaml:"build"`
-	Restart       string                  `yaml:"restart" default:"always"`
+	Restart       string                  `yaml:"restart" default:"unless-stopped"`
 	Volumes       []string                `yaml:"volumes"`
 	Environment   []string                `yaml:"environment"`
 	DependsOn     []string                `yaml:"depends_on"`

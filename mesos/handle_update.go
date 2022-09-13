@@ -47,7 +47,8 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 			return mesosutil.Call(msg)
 		// only restart the tasks if it does not stopped
 		case "unless-stopped":
-			if update.Status.State.String() == mesosproto.TASK_FINISHED.String() {
+			if update.Status.State.String() == mesosproto.TASK_FINISHED.String() ||
+				update.Status.State.String() == mesosproto.TASK_KILLED.String() {
 				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 				return mesosutil.Call(msg)
 			}

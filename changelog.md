@@ -23,6 +23,7 @@
 - ADD: Support for `node.platform.os` and `node.platform.arch` constraint
 - ADD: Support of docker-compose command [restart](https://docs.docker.com/compose/compose-file/#read_only) 
 - ADD: Show all Tasks as API call and mesos-cli command.
+- ADD: Fix kill
   
 ## v0.4.0
 

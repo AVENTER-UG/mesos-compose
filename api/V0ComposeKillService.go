@@ -31,7 +31,6 @@ func (e *API) V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 
 	project := vars["project"]
 	servicename := vars["servicename"]
-	taskID := vars["taskid"]
 
 	keys := e.Redis.GetAllRedisKeys(e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":*")
 
@@ -39,9 +38,10 @@ func (e *API) V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 		key := e.Redis.GetRedisKey(keys.Val())
 
 		task := mesosutil.DecodeTask(key)
+
 		task.State = "__KILL"
 		e.Redis.SaveTaskRedis(task)
-		logrus.Debug("V0ComposeKillService: " + e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":" + taskID)
+		logrus.Debug("V0ComposeKillService: " + e.Config.PrefixTaskName + ":" + project + ":" + servicename)
 	}
 	d = e.ErrorMessage(0, "V0ComposeKillService", "ok")
 	w.Write(d)
