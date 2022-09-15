@@ -55,13 +55,21 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.LinuxInfo = e.getLinuxInfo()
 	cmd.DockerParameter = e.getDockerParameter(cmd)
 	cmd.PullPolicy = e.getPullPolicy()
-	cmd.Restart = e.Service.Restart
+	cmd.Restart = e.getRestart()
 
 	// set the docker constraints
 	e.setConstraints(&cmd)
 
 	// store/update the mesos task in db
 	e.Redis.SaveTaskRedis(cmd)
+}
+
+// Get the Restart value
+func (e *API) getRestart() string {
+	if e.Service.Restart != "" {
+		return e.Service.Restart
+	}
+	return "unless-stopped"
 }
 
 // Get the CPU value from the compose file, or the default one if it's unset

@@ -63,4 +63,4 @@ version:
 	@echo "Saved under .version.json"
 
 
-all: build version
+all: seccheck sboom build version publish

@@ -24,6 +24,9 @@ Commands:
   info     Get information about the running Mesos compose framework.
   kill     Kill Mesos compose workload
   launch   Launch Mesos workload from compose file
+  list     Show all running tasks.
+  restart  Restart service
+  update   Update service from compose file
   version  Get the version number of Mesos compose
 
 ```
@@ -142,7 +145,7 @@ Kill Mesos compose workload
 Usage:
   mesos compose kill (-h | --help)
   mesos compose kill --version
-  mesos compose kill [options] <framework-name> <project> <service> [task-id]
+  mesos compose kill [options] <framework-name> <project> <service> 
 
 Options:
   -h --help  Show this screen.

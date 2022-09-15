@@ -18,12 +18,12 @@
 - ADD: Mesos CLI Plugin to launch and kill mesos-compose workload.
 - ADD: Support for Hashicorp Vault.
 - ADD: Overwrite the webui URL by env "FRAMEWORK_WEBUIRUL"
-- ADD: Support for Hashicorp Vault also for the environment variables of the framework.
 - ADD: Mesos CLI restart and update service.
 - ADD: Support for `node.platform.os` and `node.platform.arch` constraint
 - ADD: Support of docker-compose command [restart](https://docs.docker.com/compose/compose-file/#read_only) 
 - ADD: Show all Tasks as API call and mesos-cli command.
-- ADD: Fix kill
+- FIX: kill.
+- FIX: Offer for multiple host ports.
   
 ## v0.4.0
 
