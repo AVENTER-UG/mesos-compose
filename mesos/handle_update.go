@@ -57,6 +57,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 		case "always":
 			task.State = ""
 		}
+		return mesosutil.Call(msg)
 	case mesosproto.TASK_RUNNING:
 		task.MesosAgent = mesosutil.GetAgentInfo(update.Status.GetAgentID().Value)
 		task.NetworkInfo = mesosutil.GetNetworkInfo(task.TaskID)
