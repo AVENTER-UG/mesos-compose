@@ -62,13 +62,13 @@ class mesosCompose(PluginBase):
             "long_help": "Update service from compose file",
         },
         "kill": {
-            "arguments": ["<framework-name>", "<project>", "<service>"],
+            "arguments": ["<framework-name>", "<task-name>"],
             "flags": {},
             "short_help": "Kill Mesos compose workload",
             "long_help": "Kill Mesos compose workload",
         },
         "restart": {
-            "arguments": ["<framework-name>", "<project>", "<service>"],
+            "arguments": ["<framework-name>", "<task-name>"],
             "flags": {},
             "short_help": "Restart service",
             "long_help": "Restart service",
@@ -266,8 +266,13 @@ class mesosCompose(PluginBase):
                 "Unable to get leading master address: {error}".format(error=exception)
             ) from exception
 
-        project = argv.get("<project>")
-        service = argv.get("<service>")
+        if not argv.get("<task-name>").__contains__(":"):
+            print("Parameter does not looks like a Task Name")
+            return
+
+        task = argv.get("<task-name>").split(":")
+        project = task[1]
+        service = task[2]
         framework_address = get_framework_address(
             self.get_framework_id(argv), master, config
         )
@@ -297,8 +302,13 @@ class mesosCompose(PluginBase):
                 "Unable to get leading master address: {error}".format(error=exception)
             ) from exception
 
-        project = argv.get("<project>")
-        service = argv.get("<service>")
+        if not argv.get("<task-name>").__contains__(":"):
+            print("Parameter does not looks like a Task Name")
+            return
+
+        task = argv.get("<task-name>").split(":")
+        project = task[1]
+        service = task[2]
         framework_address = get_framework_address(
             self.get_framework_id(argv), master, config
         )
