@@ -31,7 +31,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 	logrus.WithField("func", "HandleUpdate").Debug("Task State: ", task.State)
 
 	switch *update.Status.State {
-	case mesosproto.TASK_FAILED, mesosproto.TASK_KILLED, mesosproto.TASK_ERROR, mesosproto.TASK_LOST, mesosproto.TASK_FINISHED:
+	case mesosproto.TASK_FAILED, mesosproto.TASK_ERROR, mesosproto.TASK_LOST, mesosproto.TASK_FINISHED:
 		// check how to handle the event
 		switch task.Restart {
 		// never restart the task
@@ -47,8 +47,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 			return mesosutil.Call(msg)
 		// only restart the tasks if it does not stopped
 		case "unless-stopped":
-			if update.Status.State.String() == mesosproto.TASK_FINISHED.String() ||
-				update.Status.State.String() == mesosproto.TASK_KILLED.String() {
+			if update.Status.State.String() == mesosproto.TASK_FINISHED.String() {
 				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 				return mesosutil.Call(msg)
 			}
@@ -59,6 +58,11 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 		default:
 			task.State = ""
 		}
+
+	case mesosproto.TASK_KILLED:
+		// remove task
+		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
+		return mesosutil.Call(msg)
 
 	case mesosproto.TASK_RUNNING:
 		task.MesosAgent = mesosutil.GetAgentInfo(update.Status.GetAgentID().Value)
