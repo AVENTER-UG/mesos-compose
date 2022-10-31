@@ -29,8 +29,8 @@ services:
     restart: always
     deploy:
       placement:
-      constraints:
-        - "node.hostname==localhost"
+        constraints:
+          - "node.hostname==localhost"
           - "node.platform.os==linux"
           - "node.platform.arch==arm"
       replicas: 1

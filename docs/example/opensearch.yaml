@@ -22,8 +22,7 @@ services:
     ports:
       - 9200:9200
       - 9600:9600 # required for Performance Analyzer
-    networks:
-      - opensearch-net
+    network: opensearch-net
     deploy:
       replicas: 1
       resources:
@@ -53,8 +52,7 @@ services:
     ports:
       - 9200:9200
       - 9600:9600 # required for Performance Analyzer
-    networks:
-      - opensearch-net
+    network: opensearch-net
     deploy:
       replicas: 1
       resources:
@@ -72,7 +70,7 @@ services:
     environment:
       - 'OPENSEARCH_HOSTS=["http://opensearch-node1.weave.local:9200","http://opensearch-node2.weave.local:9200"]'
       - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true" # disables security dashboards plugin in OpenSearch Dashboards
-    networks:
+    network: opensearch-net
     deploy:
       replicas: 1
       resources:

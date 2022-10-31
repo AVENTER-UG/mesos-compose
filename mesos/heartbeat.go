@@ -66,6 +66,11 @@ func (e *Scheduler) Heartbeat() {
 				mesosutil.Kill(task.TaskID, task.Agent)
 			}
 		}
+
+		// Remove corrupt tasks
+		if task.State == "" && task.StateTime.Year() == 1 {
+			e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
+		}
 	}
 
 	if suppress && !e.Config.Suppress {
