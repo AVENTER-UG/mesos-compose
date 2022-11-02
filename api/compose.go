@@ -177,7 +177,7 @@ func (e *API) getPullPolicy() string {
 
 // GetDockerPorts Get the ports of the compose file
 func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping {
-	if e.getNetworkMode() == "host" || e.getNetworkMode() == "user" {
+	if e.getNetworkMode() == "host" {
 		return nil
 	}
 	var ports []mesosproto.ContainerInfo_DockerInfo_PortMapping

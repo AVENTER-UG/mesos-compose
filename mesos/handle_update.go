@@ -101,7 +101,7 @@ func (e *Scheduler) GetNetworkInfo(taskID string) []mesosproto.NetworkInfo {
 	res, err := client.Do(req)
 
 	if err != nil {
-		logrus.WithField("func", "getNetworkInfo").Error("Could not connect to agent: ", err.Error())
+		logrus.WithField("func", "getNetworkInfo").Error("Could not connect to mesos-master: ", err.Error())
 		return []mesosproto.NetworkInfo{}
 	}
 

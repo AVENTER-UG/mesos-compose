@@ -23,8 +23,9 @@
 - ADD: Support of docker-compose command [restart](https://docs.docker.com/compose/compose-file/#read_only) 
 - ADD: Show all Tasks as API call and mesos-cli command.
 - FIX: Offer for multiple host ports.
-- FIX: kill
-- FIX: restart
+- FIX: kill services and tasks 
+- FIX: restart services and tasks to prevent unmanaged tasks
+- ADD: Support for user defined network with exposed ports
   
 ## v0.4.0
 

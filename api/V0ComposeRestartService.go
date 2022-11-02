@@ -45,19 +45,18 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 
 	for keys.Next(e.Redis.CTX) {
 		key := e.Redis.GetRedisKey(keys.Val())
-		oldTask := mesosutil.DecodeTask(key)
-		newTask := oldTask
+		task := mesosutil.DecodeTask(key)
+
+		// Kill the current task
+		task.State = "__KILL"
+		e.Redis.SaveTaskRedis(task)
 
 		// generate new task as copy of old task
-		taskName := strings.Split(oldTask.TaskID, ".")
+		taskName := strings.Split(task.TaskID, ".")
 		uuid, _ := util.GenUUID()
-		newTask.TaskID = taskName[0] + "." + uuid
-		newTask.State = ""
-		e.Redis.SaveTaskRedis(newTask)
-
-		// set the old task to be killed
-		oldTask.State = "__KILL"
-		e.Redis.SaveTaskRedis(oldTask)
+		task.TaskID = taskName[0] + "." + uuid
+		task.State = ""
+		e.Redis.SaveTaskRedis(task)
 	}
 
 	d = e.ErrorMessage(0, "V0ComposeRestartService", "ok")
