@@ -48,8 +48,7 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 		task := mesosutil.DecodeTask(key)
 
 		// Kill the current task
-		task.State = "__KILL"
-		e.Redis.SaveTaskRedis(task)
+		mesosutil.Kill(task.TaskID, task.Agent)
 
 		// generate new task as copy of old task
 		taskName := strings.Split(task.TaskID, ".")

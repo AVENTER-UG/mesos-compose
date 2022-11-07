@@ -1,10 +1,12 @@
 version: "3.9"
 services:
-  vault-server:
+  vault-server1:
     image: vault:latest
     environment:
       - VAULT_ADDR="http://0.0.0.0:8200"
       - VAULT_DEV_ROOT_TOKEN_ID=vault-plaintext-root-token
+    labels:
+      biz.aventer.mesos_compose.taskname: "vault:vault-server"
     network_mode: "host"
     network: default
     restart: unless-stopped

@@ -32,7 +32,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 		cmd.Agent = task.Agent
 	}
 
-	cmd.TaskName = e.Config.PrefixTaskName + ":" + vars["project"] + ":" + name
+	cmd.TaskName = e.getTaskName(vars["project"], name)
 	cmd.CPU = e.getCPU()
 	cmd.Memory = e.getMemory()
 	cmd.Disk = e.getDisk()
@@ -62,6 +62,20 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 
 	// store/update the mesos task in db
 	e.Redis.SaveTaskRedis(cmd)
+}
+
+// Get the name of the task
+func (e *API) getTaskName(project, name string) string {
+	taskName := e.getLabelValueByKey("biz.aventer.mesos_compose.taskname")
+
+	if taskName != "" {
+		// be sure the taskname is only running under the frameworks prefix
+		if strings.Split(taskName, ":")[0] != e.Config.PrefixTaskName {
+			return e.Config.PrefixTaskName + ":" + taskName
+		}
+		return taskName
+	}
+	return e.Config.PrefixTaskName + ":" + project + ":" + name
 }
 
 // Get the Restart value

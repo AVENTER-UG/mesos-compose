@@ -27,11 +27,12 @@ services:
     container_name: test
     labels:
       biz.aventer.mesos_compose.container_type: "DOCKER"
+      bis.aventer.mesos_compose.task_name: "mc:test:app1" # the an alternative taskname
       biz.aventer.mesos_compose.executor: "./my-custom-executor"
       biz.aventer.mesos_compose.executor_uri: "http://localhost/my-custom-executor"
       traefik.enable: "true"
       traefik.http.routers.test.entrypoints: "web"
-      traefik.http.routers.test.service: "mc:test:app:80"
+      traefik.http.routers.test.service: "mc:test:app1:80" # if an alternative taskname is set, we have to use it here to
       traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
     network_mode: "BRIDGE"
     ports:

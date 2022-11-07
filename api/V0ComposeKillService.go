@@ -39,8 +39,7 @@ func (e *API) V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 
 		task := mesosutil.DecodeTask(key)
 
-		task.State = "__KILL"
-		e.Redis.SaveTaskRedis(task)
+		mesosutil.Kill(task.TaskID, task.Agent)
 		logrus.Debug("V0ComposeKillService: " + e.Config.PrefixTaskName + ":" + project + ":" + servicename)
 	}
 	d = e.ErrorMessage(0, "V0ComposeKillService", "ok")

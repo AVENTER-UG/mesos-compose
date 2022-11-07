@@ -111,6 +111,7 @@ func main() {
 	//	this loop is for resubscribtion purpose
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()
+	// nolint:gosimple
 	for {
 		select {
 		case <-ticker.C:

@@ -1,32 +1,33 @@
 version: '3.9'
+
 services:
   app:
     image: alpine:latest
-    command: "sleep 1000"
+    command: ["sleep", "1000"]
+    restart: always
     volumes:
       - "12345test:/tmp"
     environment:
       - MYSQL_HOST=test
+    hostname: test
+    container_name: test
     labels:
       biz.aventer.mesos_compose.container_type: "DOCKER"
+      bis.aventer.mesos_compose.task_name: "mc:test:app1" # an alternative taskname
+      biz.aventer.mesos_compose.executor: "./my-custom-executor"
+      biz.aventer.mesos_compose.executor_uri: "http://localhost/my-custom-executor"
       traefik.enable: "true"
       traefik.http.routers.test.entrypoints: "web"
-      traefik.http.routers.test.service: "mc:test:app:80"
+      traefik.http.routers.test.service: "mc:test:app1:80" # if an alternative taskname is set, we have to use it here to
       traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
     network_mode: "BRIDGE"
-    network: default
-    networks:
-      default:
-        aliases:
-          - "test.example.de"
-    pull_policy: always
     ports:
       - "8080:80"
-    cap_add:
-      - SYS_ADMIN
-    cap_drop:
-      - NET_ADMIN
-    restart: always
+      - "9090"
+      - "8081:81/tcp"
+      - "8082:82/udp"
+    network:
+      - default
     deploy:
       placement:
         constraints:
@@ -47,3 +48,5 @@ networks:
 volumes:
   12345test:
     driver: local
+
+
