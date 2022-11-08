@@ -33,6 +33,15 @@ func (e *Scheduler) Heartbeat() {
 			continue
 		}
 
+		if task.State == "__KILL" {
+			// if agent is unset, the task is not running we can just delete the DB key
+			if task.Agent == "" {
+				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
+			} else {
+				mesosutil.Kill(task.TaskID, task.Agent)
+			}
+		}
+
 		if task.State == "" && e.Redis.CountRedisKey(task.TaskName+":*", "__KILL") <= task.Instances {
 			mesosutil.Revive()
 			task.State = "__NEW"
@@ -56,15 +65,6 @@ func (e *Scheduler) Heartbeat() {
 		if task.State == "__NEW" {
 			suppress = false
 			e.Config.Suppress = false
-		}
-
-		if task.State == "__KILL" {
-			// if agent is unset, the task is not running we can just delete the DB key
-			if task.Agent == "" {
-				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
-			} else {
-				mesosutil.Kill(task.TaskID, task.Agent)
-			}
 		}
 
 		// Remove corrupt tasks

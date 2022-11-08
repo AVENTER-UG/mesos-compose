@@ -26,6 +26,7 @@
 - FIX: kill services and tasks 
 - FIX: restart services and tasks to prevent unmanaged tasks
 - ADD: Support for user defined network with exposed ports
+- ADD: customize taskname `bis.aventer.mesos_compose.taskname: "test:app"`. 
   
 ## v0.4.0
 

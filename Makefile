@@ -32,11 +32,11 @@ build-bin:
 
 publish:
 	@echo ">>>> Publish docker image"
-	@docker buildx build --push --platform linux/amd64,linux/arm64,linux/ppc64le --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:latest .
+	@docker buildx build --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:latest .
 
 publish-tag:
 	@echo ">>>> Publish docker image"
-	@docker buildx build --push --platform linux/amd64,linux/arm64 --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:${TAG} .
+	@docker buildx build --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:${TAG} .
 
 update-precommit:
 	@virtualenv --no-site-packages ~/.virtualenv
@@ -56,11 +56,18 @@ sboom:
 seccheck:
 	gosec --exclude G104 --exclude-dir ./vendor ./... 
 
+go-fmt:
+	@gofmt -w .
+	@golangci-lint run --fix
+
 version:
 	@echo ">>>> Generate version file"
 	@echo "[{ \"version\":\"${TAG}\", \"builddate\":\"${BUILDDATE}\" }]" > .version.json
 	@cat .version.json
 	@echo "Saved under .version.json"
+
+pipe: go-fmt sboom seccheck
+
 
 
 all: seccheck sboom build version publish
