@@ -160,11 +160,12 @@ services:
     container_name: test
     labels:
       biz.aventer.mesos_compose.container_type: &quot;DOCKER&quot;
+      bis.aventer.mesos_compose.task_name: &quot;mc:test:app1&quot; # the an alternative taskname
       biz.aventer.mesos_compose.executor: &quot;./my-custom-executor&quot;
       biz.aventer.mesos_compose.executor_uri: &quot;http://localhost/my-custom-executor&quot;
       traefik.enable: &quot;true&quot;
       traefik.http.routers.test.entrypoints: &quot;web&quot;
-      traefik.http.routers.test.service: &quot;mc:test:app:80&quot;
+      traefik.http.routers.test.service: &quot;mc:test:app1:80&quot; # if an alternative taskname is set, we have to use it here to
       traefik.http.routers.test.rule: &quot;HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)&quot;
     network_mode: &quot;BRIDGE&quot;
     ports:
@@ -178,6 +179,8 @@ services:
       placement:
         constraints:
           - &quot;node.hostname==localhost&quot;
+          - &quot;node.platform.os==linux&quot;
+          - &quot;node.platform.arch==arm&quot;
       replicas: 1
       resources:
         limits:
@@ -244,6 +247,10 @@ container. The value &quot;none&quot; will tell mesos to run the command with th
 <p>The URL where to fetch the executor and other files. As example: </p>
 <pre><code>'[{&quot;Value&quot;:&quot;https://localhost:1234/executor&quot;,&quot;OutputFile&quot;:&quot;mesos-executor&quot;}]'
 </code></pre>
+<h2 id="bizaventermesos_composetaskname"><a class="header" href="#bizaventermesos_composetaskname">biz.aventer.mesos_compose.taskname</a></h2>
+<p>Values: <project>:<service></p>
+<p>With this label it is possible to configure a custom taskname. These feature is helpfull, to connect two different tasks
+under one network discovery label,</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
 <p>The following environment variables are available:</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mesos-compose-cli-installation-for-mesos-cli"><a class="header" href="#mesos-compose-cli-installation-for-mesos-cli">Mesos-Compose CLI Installation for Mesos-CLI</a></h1>
@@ -326,6 +333,9 @@ Commands:
   info     Get information about the running Mesos compose framework.
   kill     Kill Mesos compose workload
   launch   Launch Mesos workload from compose file
+  list     Show all running tasks.
+  restart  Restart service
+  update   Update service from compose file
   version  Get the version number of Mesos compose
 
 </code></pre>
@@ -418,7 +428,7 @@ Kill Mesos compose workload
 Usage:
   mesos compose kill (-h | --help)
   mesos compose kill --version
-  mesos compose kill [options] &lt;framework-name&gt; &lt;project&gt; &lt;service&gt; [task-id]
+  mesos compose kill [options] &lt;framework-name&gt; &lt;project&gt; &lt;service&gt; 
 
 Options:
   -h --help  Show this screen.
