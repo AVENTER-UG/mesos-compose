@@ -21,3 +21,9 @@ The URL where to fetch the executor and other files. As example:
 ```
 '[{"Value":"https://localhost:1234/executor","OutputFile":"mesos-executor"}]'
 ```
+## biz.aventer.mesos_compose.taskname
+
+Values: <project>:<service>
+
+With this label it is possible to configure a custom taskname. These feature is helpfull, to connect two different tasks
+under one network discovery label,
