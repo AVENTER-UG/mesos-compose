@@ -1,7 +1,7 @@
 {
  "artifacts": [
   {
-   "id": "bbb857abcd8f49d3",
+   "id": "96b5fb68d7f6e746",
    "name": "github.com/AVENTER-UG/go-logrus-formatter",
    "version": "v0.5.4",
    "type": "go-module",
@@ -24,7 +24,7 @@
    "purl": "pkg:golang/github.com/AVENTER-UG/go-logrus-formatter@v0.5.4"
   },
   {
-   "id": "6e8b8e38f0e57cc4",
+   "id": "3224d16c3af1863b",
    "name": "github.com/AVENTER-UG/go-logrus-formatter",
    "version": "v0.5.4",
    "type": "go-module",
@@ -54,7 +54,7 @@
    }
   },
   {
-   "id": "adad8b948f05e1ca",
+   "id": "2ab6ff9b0311869b",
    "name": "github.com/AVENTER-UG/mesos-compose",
    "version": "v0.0.0-20220921211106-2d61100b24e5",
    "type": "go-module",
@@ -95,7 +95,7 @@
    }
   },
   {
-   "id": "e27212c1dcc806eb",
+   "id": "9a31bb50cc56d03f",
    "name": "github.com/AVENTER-UG/mesos-util",
    "version": "v0.0.39",
    "type": "go-module",
@@ -125,7 +125,7 @@
    }
   },
   {
-   "id": "f35b0d01327479ac",
+   "id": "3bdf37644ca0d5c4",
    "name": "github.com/AVENTER-UG/mesos-util",
    "version": "v0.0.42",
    "type": "go-module",
@@ -148,7 +148,7 @@
    "purl": "pkg:golang/github.com/AVENTER-UG/mesos-util@v0.0.42"
   },
   {
-   "id": "20d76c1a2a96f949",
+   "id": "905110bcce22940",
    "name": "github.com/AVENTER-UG/util",
    "version": "v0.5.2",
    "type": "go-module",
@@ -168,7 +168,7 @@
    "purl": "pkg:golang/github.com/AVENTER-UG/util@v0.5.2"
   },
   {
-   "id": "a480f14387433dee",
+   "id": "9eb88da73805fb9b",
    "name": "github.com/AVENTER-UG/util",
    "version": "v0.5.2",
    "type": "go-module",
@@ -195,7 +195,7 @@
    }
   },
   {
-   "id": "782dc6e9f5fa0fe",
+   "id": "1b8194e993c8bab9",
    "name": "github.com/Showmax/go-fqdn",
    "version": "v1.0.0",
    "type": "go-module",
@@ -214,7 +214,7 @@
    "purl": "pkg:golang/github.com/Showmax/go-fqdn@v1.0.0"
   },
   {
-   "id": "45441100ee349c35",
+   "id": "ec78f431cadf889f",
    "name": "github.com/Showmax/go-fqdn",
    "version": "v1.0.0",
    "type": "go-module",
@@ -240,7 +240,7 @@
    }
   },
   {
-   "id": "572b7b7f40a22060",
+   "id": "2b315dddcdf78272",
    "name": "github.com/armon/go-metrics",
    "version": "v0.4.1",
    "type": "go-module",
@@ -259,7 +259,7 @@
    "purl": "pkg:golang/github.com/armon/go-metrics@v0.4.1"
   },
   {
-   "id": "997858df6555d83f",
+   "id": "ac8d7224c308c0c5",
    "name": "github.com/armon/go-metrics",
    "version": "v0.4.1",
    "type": "go-module",
@@ -285,7 +285,7 @@
    }
   },
   {
-   "id": "96d7cffe8691ac9f",
+   "id": "736d8ce1025c9093",
    "name": "github.com/armon/go-radix",
    "version": "v1.0.0",
    "type": "go-module",
@@ -304,7 +304,7 @@
    "purl": "pkg:golang/github.com/armon/go-radix@v1.0.0"
   },
   {
-   "id": "76838c91e0657415",
+   "id": "443ff7a685b18205",
    "name": "github.com/armon/go-radix",
    "version": "v1.0.0",
    "type": "go-module",
@@ -330,7 +330,7 @@
    }
   },
   {
-   "id": "fee2396182670d57",
+   "id": "2181bdf02392c709",
    "name": "github.com/cenkalti/backoff/v3",
    "version": "v3.2.2",
    "type": "go-module",
@@ -348,7 +348,7 @@
    "purl": "pkg:golang/github.com/cenkalti/backoff/v3@v3.2.2"
   },
   {
-   "id": "5e5f3be9eced5226",
+   "id": "211f5b6e76d382dd",
    "name": "github.com/cenkalti/backoff/v3",
    "version": "v3.2.2",
    "type": "go-module",
@@ -373,7 +373,7 @@
    }
   },
   {
-   "id": "536c37e2dd530858",
+   "id": "314251f70f3a2918",
    "name": "github.com/cespare/xxhash/v2",
    "version": "v2.1.2",
    "type": "go-module",
@@ -391,7 +391,7 @@
    "purl": "pkg:golang/github.com/cespare/xxhash/v2@v2.1.2"
   },
   {
-   "id": "96f7ed1f7be063cd",
+   "id": "38beeb26a0000bdc",
    "name": "github.com/cespare/xxhash/v2",
    "version": "v2.1.2",
    "type": "go-module",
@@ -416,7 +416,7 @@
    }
   },
   {
-   "id": "36f42be53be65d59",
+   "id": "75e771a836707e3f",
    "name": "github.com/dgryski/go-rendezvous",
    "version": "v0.0.0-20200823014737-9f7001d12a5f",
    "type": "go-module",
@@ -435,7 +435,7 @@
    "purl": "pkg:golang/github.com/dgryski/go-rendezvous@v0.0.0-20200823014737-9f7001d12a5f"
   },
   {
-   "id": "ea00a12130e2983d",
+   "id": "4d1f0d334799b847",
    "name": "github.com/dgryski/go-rendezvous",
    "version": "v0.0.0-20200823014737-9f7001d12a5f",
    "type": "go-module",
@@ -461,7 +461,7 @@
    }
   },
   {
-   "id": "80c1029bb6d1a558",
+   "id": "14ae25840111a2d7",
    "name": "github.com/fatih/color",
    "version": "v1.13.0",
    "type": "go-module",
@@ -479,7 +479,7 @@
    "purl": "pkg:golang/github.com/fatih/color@v1.13.0"
   },
   {
-   "id": "be8fe79c6a0ff033",
+   "id": "d068f3bbb6f685a1",
    "name": "github.com/fatih/color",
    "version": "v1.13.0",
    "type": "go-module",
@@ -504,7 +504,7 @@
    }
   },
   {
-   "id": "2c135609a5a78bd1",
+   "id": "4404304bacd38791",
    "name": "github.com/go-redis/redis/v8",
    "version": "v8.11.5",
    "type": "go-module",
@@ -524,7 +524,7 @@
    "purl": "pkg:golang/github.com/go-redis/redis/v8@v8.11.5"
   },
   {
-   "id": "d59aa7688f16e63c",
+   "id": "9cdf517860b5d798",
    "name": "github.com/go-redis/redis/v8",
    "version": "v8.11.5",
    "type": "go-module",
@@ -551,7 +551,7 @@
    }
   },
   {
-   "id": "56ffe07dbae8143a",
+   "id": "186032c7e1d2bb3f",
    "name": "github.com/gogo/protobuf",
    "version": "v1.3.2",
    "type": "go-module",
@@ -569,7 +569,7 @@
    "purl": "pkg:golang/github.com/gogo/protobuf@v1.3.2"
   },
   {
-   "id": "798049c40687b707",
+   "id": "601a787bfd80c455",
    "name": "github.com/gogo/protobuf",
    "version": "v1.3.2",
    "type": "go-module",
@@ -594,7 +594,7 @@
    }
   },
   {
-   "id": "e526f5575400c5b9",
+   "id": "7ed432121cd20257",
    "name": "github.com/golang/protobuf",
    "version": "v1.5.2",
    "type": "go-module",
@@ -612,7 +612,7 @@
    "purl": "pkg:golang/github.com/golang/protobuf@v1.5.2"
   },
   {
-   "id": "b5f7eeaca4132401",
+   "id": "7dd31ade222d9dc6",
    "name": "github.com/golang/protobuf",
    "version": "v1.5.2",
    "type": "go-module",
@@ -637,7 +637,7 @@
    }
   },
   {
-   "id": "eff0b2a053654edc",
+   "id": "60d3d8f83f919ba2",
    "name": "github.com/golang/snappy",
    "version": "v0.0.4",
    "type": "go-module",
@@ -655,7 +655,7 @@
    "purl": "pkg:golang/github.com/golang/snappy@v0.0.4"
   },
   {
-   "id": "10fa1c9f312fcfdf",
+   "id": "3ba8f39436a4d3e3",
    "name": "github.com/golang/snappy",
    "version": "v0.0.4",
    "type": "go-module",
@@ -680,7 +680,7 @@
    }
   },
   {
-   "id": "7a5f0c7813e85507",
+   "id": "fbe642f765cb86aa",
    "name": "github.com/gorilla/mux",
    "version": "v1.8.0",
    "type": "go-module",
@@ -698,7 +698,7 @@
    "purl": "pkg:golang/github.com/gorilla/mux@v1.8.0"
   },
   {
-   "id": "3b03498fa430bcff",
+   "id": "c3af64af69c0e248",
    "name": "github.com/gorilla/mux",
    "version": "v1.8.0",
    "type": "go-module",
@@ -723,7 +723,7 @@
    }
   },
   {
-   "id": "e3ab2df0976e9003",
+   "id": "e5435757846d6596",
    "name": "github.com/hashicorp/errwrap",
    "version": "v1.1.0",
    "type": "go-module",
@@ -741,7 +741,7 @@
    "purl": "pkg:golang/github.com/hashicorp/errwrap@v1.1.0"
   },
   {
-   "id": "4b0130c3e0202243",
+   "id": "94f68c825007871d",
    "name": "github.com/hashicorp/errwrap",
    "version": "v1.1.0",
    "type": "go-module",
@@ -766,7 +766,7 @@
    }
   },
   {
-   "id": "f96396c57e9a4378",
+   "id": "f0016b605105452",
    "name": "github.com/hashicorp/go-cleanhttp",
    "version": "v0.5.2",
    "type": "go-module",
@@ -785,7 +785,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-cleanhttp@v0.5.2"
   },
   {
-   "id": "d9b23a6d68646007",
+   "id": "e4b92d0201c67876",
    "name": "github.com/hashicorp/go-cleanhttp",
    "version": "v0.5.2",
    "type": "go-module",
@@ -811,7 +811,7 @@
    }
   },
   {
-   "id": "61e049cd40237dd9",
+   "id": "25ce1d53ad6e10aa",
    "name": "github.com/hashicorp/go-hclog",
    "version": "v1.3.1",
    "type": "go-module",
@@ -830,7 +830,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-hclog@v1.3.1"
   },
   {
-   "id": "a869890295054ddf",
+   "id": "62ce4fc42134408b",
    "name": "github.com/hashicorp/go-hclog",
    "version": "v1.3.1",
    "type": "go-module",
@@ -856,7 +856,7 @@
    }
   },
   {
-   "id": "8ec930051fd2fa09",
+   "id": "45a47eeb440bcf8d",
    "name": "github.com/hashicorp/go-immutable-radix",
    "version": "v1.3.1",
    "type": "go-module",
@@ -875,7 +875,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-immutable-radix@v1.3.1"
   },
   {
-   "id": "bbdc05e7b5b044f",
+   "id": "9d3353c9fb15613a",
    "name": "github.com/hashicorp/go-immutable-radix",
    "version": "v1.3.1",
    "type": "go-module",
@@ -901,7 +901,7 @@
    }
   },
   {
-   "id": "880b66edaf30017c",
+   "id": "be73692cec4a065d",
    "name": "github.com/hashicorp/go-multierror",
    "version": "v1.1.1",
    "type": "go-module",
@@ -920,7 +920,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-multierror@v1.1.1"
   },
   {
-   "id": "9b7a9128dc959ecf",
+   "id": "1405de9526349a82",
    "name": "github.com/hashicorp/go-multierror",
    "version": "v1.1.1",
    "type": "go-module",
@@ -946,7 +946,7 @@
    }
   },
   {
-   "id": "703d9345a8964dc8",
+   "id": "387422c11b496d6e",
    "name": "github.com/hashicorp/go-plugin",
    "version": "v1.4.5",
    "type": "go-module",
@@ -965,7 +965,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-plugin@v1.4.5"
   },
   {
-   "id": "449b6bff686df284",
+   "id": "a2c9655b3628b91c",
    "name": "github.com/hashicorp/go-plugin",
    "version": "v1.4.5",
    "type": "go-module",
@@ -991,7 +991,7 @@
    }
   },
   {
-   "id": "56d01b48a55e80dc",
+   "id": "2193c9af5b4cbb12",
    "name": "github.com/hashicorp/go-retryablehttp",
    "version": "v0.7.1",
    "type": "go-module",
@@ -1010,7 +1010,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-retryablehttp@v0.7.1"
   },
   {
-   "id": "e966f734e12123fa",
+   "id": "7a2bf0ef68f9e2cd",
    "name": "github.com/hashicorp/go-retryablehttp",
    "version": "v0.7.1",
    "type": "go-module",
@@ -1036,7 +1036,7 @@
    }
   },
   {
-   "id": "891176c686af35b1",
+   "id": "19095fb4ab5d65ad",
    "name": "github.com/hashicorp/go-rootcerts",
    "version": "v1.0.2",
    "type": "go-module",
@@ -1055,7 +1055,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-rootcerts@v1.0.2"
   },
   {
-   "id": "af8d6b73af5eb022",
+   "id": "cb6a8b0546baa005",
    "name": "github.com/hashicorp/go-rootcerts",
    "version": "v1.0.2",
    "type": "go-module",
@@ -1081,7 +1081,7 @@
    }
   },
   {
-   "id": "d2d121642ce862e4",
+   "id": "f1e27f6f31b23fe0",
    "name": "github.com/hashicorp/go-secure-stdlib/mlock",
    "version": "v0.1.2",
    "type": "go-module",
@@ -1100,7 +1100,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-secure-stdlib/mlock@v0.1.2"
   },
   {
-   "id": "f4e0b0b4956a8124",
+   "id": "b0f44542155745d3",
    "name": "github.com/hashicorp/go-secure-stdlib/mlock",
    "version": "v0.1.2",
    "type": "go-module",
@@ -1126,7 +1126,7 @@
    }
   },
   {
-   "id": "6668696fae0547d9",
+   "id": "a562fa7cd325bd15",
    "name": "github.com/hashicorp/go-secure-stdlib/parseutil",
    "version": "v0.1.7",
    "type": "go-module",
@@ -1145,7 +1145,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-secure-stdlib/parseutil@v0.1.7"
   },
   {
-   "id": "789fef0100a01b8",
+   "id": "414f9690a9518fbc",
    "name": "github.com/hashicorp/go-secure-stdlib/parseutil",
    "version": "v0.1.7",
    "type": "go-module",
@@ -1171,7 +1171,7 @@
    }
   },
   {
-   "id": "78c596224fa6d6bf",
+   "id": "1a69bf8b28ebb1c3",
    "name": "github.com/hashicorp/go-secure-stdlib/strutil",
    "version": "v0.1.2",
    "type": "go-module",
@@ -1190,7 +1190,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-secure-stdlib/strutil@v0.1.2"
   },
   {
-   "id": "df7278cbfc884ff7",
+   "id": "f46d39fd43c94805",
    "name": "github.com/hashicorp/go-secure-stdlib/strutil",
    "version": "v0.1.2",
    "type": "go-module",
@@ -1216,7 +1216,7 @@
    }
   },
   {
-   "id": "e5297a77364926d0",
+   "id": "c8b7dc4c3e413e4d",
    "name": "github.com/hashicorp/go-sockaddr",
    "version": "v1.0.2",
    "type": "go-module",
@@ -1235,7 +1235,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-sockaddr@v1.0.2"
   },
   {
-   "id": "d7c5cfd0048b880c",
+   "id": "3e71b3935f677cbb",
    "name": "github.com/hashicorp/go-sockaddr",
    "version": "v1.0.2",
    "type": "go-module",
@@ -1261,7 +1261,7 @@
    }
   },
   {
-   "id": "751d5dd32dccd437",
+   "id": "d839669bc30e0ec0",
    "name": "github.com/hashicorp/go-uuid",
    "version": "v1.0.3",
    "type": "go-module",
@@ -1280,7 +1280,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-uuid@v1.0.3"
   },
   {
-   "id": "6aadaa4ab2bcf670",
+   "id": "da880dd42deb19e6",
    "name": "github.com/hashicorp/go-uuid",
    "version": "v1.0.3",
    "type": "go-module",
@@ -1306,7 +1306,7 @@
    }
   },
   {
-   "id": "fd6b5d2d2b16ed23",
+   "id": "955881527b9b425d",
    "name": "github.com/hashicorp/go-version",
    "version": "v1.6.0",
    "type": "go-module",
@@ -1325,7 +1325,7 @@
    "purl": "pkg:golang/github.com/hashicorp/go-version@v1.6.0"
   },
   {
-   "id": "67b1197f1bdf0440",
+   "id": "c87f640e3dd50e87",
    "name": "github.com/hashicorp/go-version",
    "version": "v1.6.0",
    "type": "go-module",
@@ -1351,7 +1351,7 @@
    }
   },
   {
-   "id": "b6f1d6f2b7d952e9",
+   "id": "a6d490b6b6a74900",
    "name": "github.com/hashicorp/golang-lru",
    "version": "v0.5.4",
    "type": "go-module",
@@ -1370,7 +1370,7 @@
    "purl": "pkg:golang/github.com/hashicorp/golang-lru@v0.5.4"
   },
   {
-   "id": "45abf4ea4acc7f15",
+   "id": "a89fc09dfc38dcb8",
    "name": "github.com/hashicorp/golang-lru",
    "version": "v0.5.4",
    "type": "go-module",
@@ -1396,7 +1396,7 @@
    }
   },
   {
-   "id": "9b28d6d762724558",
+   "id": "b38cbaa8a90845be",
    "name": "github.com/hashicorp/hcl",
    "version": "v1.0.0",
    "type": "go-module",
@@ -1414,7 +1414,7 @@
    "purl": "pkg:golang/github.com/hashicorp/hcl@v1.0.0"
   },
   {
-   "id": "28c3b9c8a23ebd66",
+   "id": "2a3f36255764b3e6",
    "name": "github.com/hashicorp/hcl",
    "version": "v1.0.0",
    "type": "go-module",
@@ -1439,7 +1439,7 @@
    }
   },
   {
-   "id": "4756c2e3714ac33f",
+   "id": "f5f2fb6e19b52f98",
    "name": "github.com/hashicorp/vault/api",
    "version": "v1.8.1",
    "type": "go-module",
@@ -1464,7 +1464,7 @@
    }
   },
   {
-   "id": "1fba16b2a7622b4d",
+   "id": "2ab969797b4d48be",
    "name": "github.com/hashicorp/vault/api",
    "version": "v1.8.2",
    "type": "go-module",
@@ -1482,7 +1482,7 @@
    "purl": "pkg:golang/github.com/hashicorp/vault/api@v1.8.2"
   },
   {
-   "id": "6fbbd6ac3ada6df8",
+   "id": "1404810608c680da",
    "name": "github.com/hashicorp/vault/sdk",
    "version": "v0.6.0",
    "type": "go-module",
@@ -1507,7 +1507,7 @@
    }
   },
   {
-   "id": "32b43535e147047",
+   "id": "998fa457d559c928",
    "name": "github.com/hashicorp/vault/sdk",
    "version": "v0.6.1",
    "type": "go-module",
@@ -1525,7 +1525,7 @@
    "purl": "pkg:golang/github.com/hashicorp/vault/sdk@v0.6.1"
   },
   {
-   "id": "7333f0f51a30bc8b",
+   "id": "3246246308cbf293",
    "name": "github.com/hashicorp/yamux",
    "version": "v0.1.1",
    "type": "go-module",
@@ -1543,7 +1543,7 @@
    "purl": "pkg:golang/github.com/hashicorp/yamux@v0.1.1"
   },
   {
-   "id": "8e934e5756387b4d",
+   "id": "320aeb291e734a0c",
    "name": "github.com/hashicorp/yamux",
    "version": "v0.1.1",
    "type": "go-module",
@@ -1568,7 +1568,7 @@
    }
   },
   {
-   "id": "dbe335cdb67f7fce",
+   "id": "b95a5505bf1fd0c3",
    "name": "github.com/mattn/go-colorable",
    "version": "v0.1.13",
    "type": "go-module",
@@ -1587,7 +1587,7 @@
    "purl": "pkg:golang/github.com/mattn/go-colorable@v0.1.13"
   },
   {
-   "id": "c887d5662a23fbc2",
+   "id": "cc0ad4c04cd16b68",
    "name": "github.com/mattn/go-colorable",
    "version": "v0.1.13",
    "type": "go-module",
@@ -1613,7 +1613,7 @@
    }
   },
   {
-   "id": "c8e8fc0677d71755",
+   "id": "7b69db564e46c7b6",
    "name": "github.com/mattn/go-isatty",
    "version": "v0.0.16",
    "type": "go-module",
@@ -1632,7 +1632,7 @@
    "purl": "pkg:golang/github.com/mattn/go-isatty@v0.0.16"
   },
   {
-   "id": "b875d6a8eac2c869",
+   "id": "8e395fdbcc1e7a23",
    "name": "github.com/mattn/go-isatty",
    "version": "v0.0.16",
    "type": "go-module",
@@ -1658,7 +1658,7 @@
    }
   },
   {
-   "id": "bae8419ae4c9c0d0",
+   "id": "aeae4fe373979249",
    "name": "github.com/mgutz/ansi",
    "version": "v0.0.0-20200706080929-d51e80ef957d",
    "type": "go-module",
@@ -1676,7 +1676,7 @@
    "purl": "pkg:golang/github.com/mgutz/ansi@v0.0.0-20200706080929-d51e80ef957d"
   },
   {
-   "id": "40dfd0889dd17e78",
+   "id": "aebc235fb6646301",
    "name": "github.com/mgutz/ansi",
    "version": "v0.0.0-20200706080929-d51e80ef957d",
    "type": "go-module",
@@ -1701,7 +1701,7 @@
    }
   },
   {
-   "id": "c395b6582a34a33a",
+   "id": "9c6954d3067ecad9",
    "name": "github.com/mitchellh/copystructure",
    "version": "v1.2.0",
    "type": "go-module",
@@ -1719,7 +1719,7 @@
    "purl": "pkg:golang/github.com/mitchellh/copystructure@v1.2.0"
   },
   {
-   "id": "d49e264acc9c35ed",
+   "id": "1ca1046060a5bcd7",
    "name": "github.com/mitchellh/copystructure",
    "version": "v1.2.0",
    "type": "go-module",
@@ -1744,7 +1744,7 @@
    }
   },
   {
-   "id": "4717fd7e5cb5a886",
+   "id": "949c2ebf18451228",
    "name": "github.com/mitchellh/go-homedir",
    "version": "v1.1.0",
    "type": "go-module",
@@ -1763,7 +1763,7 @@
    "purl": "pkg:golang/github.com/mitchellh/go-homedir@v1.1.0"
   },
   {
-   "id": "570533ccf4a8d647",
+   "id": "6da6a81e8ef8e387",
    "name": "github.com/mitchellh/go-testing-interface",
    "version": "v1.14.1",
    "type": "go-module",
@@ -1782,7 +1782,7 @@
    "purl": "pkg:golang/github.com/mitchellh/go-testing-interface@v1.14.1"
   },
   {
-   "id": "ffeb52118bb2670",
+   "id": "9792ffe41ca1baa4",
    "name": "github.com/mitchellh/go-testing-interface",
    "version": "v1.14.1",
    "type": "go-module",
@@ -1808,7 +1808,7 @@
    }
   },
   {
-   "id": "a8402081d31d53c9",
+   "id": "fe7e275e3e288909",
    "name": "github.com/mitchellh/mapstructure",
    "version": "v1.5.0",
    "type": "go-module",
@@ -1826,7 +1826,7 @@
    "purl": "pkg:golang/github.com/mitchellh/mapstructure@v1.5.0"
   },
   {
-   "id": "a753ad8c5133abf3",
+   "id": "c027b57978151de1",
    "name": "github.com/mitchellh/mapstructure",
    "version": "v1.5.0",
    "type": "go-module",
@@ -1851,7 +1851,7 @@
    }
   },
   {
-   "id": "fd0c7638e226ba50",
+   "id": "843a08d50d36a0bd",
    "name": "github.com/mitchellh/reflectwalk",
    "version": "v1.0.2",
    "type": "go-module",
@@ -1869,7 +1869,7 @@
    "purl": "pkg:golang/github.com/mitchellh/reflectwalk@v1.0.2"
   },
   {
-   "id": "6c3904d5544d1bb",
+   "id": "9f51050e1789a00d",
    "name": "github.com/mitchellh/reflectwalk",
    "version": "v1.0.2",
    "type": "go-module",
@@ -1894,7 +1894,7 @@
    }
   },
   {
-   "id": "31088fdf4c60e70",
+   "id": "e2397e239513c12c",
    "name": "github.com/oklog/run",
    "version": "v1.1.0",
    "type": "go-module",
@@ -1912,7 +1912,7 @@
    "purl": "pkg:golang/github.com/oklog/run@v1.1.0"
   },
   {
-   "id": "50cb5f37acfb621f",
+   "id": "ca36c07241a96ad7",
    "name": "github.com/oklog/run",
    "version": "v1.1.0",
    "type": "go-module",
@@ -1937,7 +1937,7 @@
    }
   },
   {
-   "id": "66351317182ba547",
+   "id": "2635cb2257dc1cdb",
    "name": "github.com/pierrec/lz4",
    "version": "v2.6.1+incompatible",
    "type": "go-module",
@@ -1955,7 +1955,7 @@
    "purl": "pkg:golang/github.com/pierrec/lz4@v2.6.1+incompatible"
   },
   {
-   "id": "a73c3c51b6b33bab",
+   "id": "48d3488351c1d398",
    "name": "github.com/pierrec/lz4",
    "version": "v2.6.1+incompatible",
    "type": "go-module",
@@ -1980,7 +1980,7 @@
    }
   },
   {
-   "id": "831196cb8f04dd1b",
+   "id": "886cdcc7750de4ce",
    "name": "github.com/russross/blackfriday",
    "version": "v1.6.0",
    "type": "go-module",
@@ -1998,7 +1998,7 @@
    "purl": "pkg:golang/github.com/russross/blackfriday@v1.6.0"
   },
   {
-   "id": "198fbf43c3c20c53",
+   "id": "10019401ae87fbc5",
    "name": "github.com/russross/blackfriday",
    "version": "v1.6.0",
    "type": "go-module",
@@ -2023,7 +2023,7 @@
    }
   },
   {
-   "id": "a464bc93332801d7",
+   "id": "5b4a1f901e5e67e7",
    "name": "github.com/ryanuber/go-glob",
    "version": "v1.0.0",
    "type": "go-module",
@@ -2042,7 +2042,7 @@
    "purl": "pkg:golang/github.com/ryanuber/go-glob@v1.0.0"
   },
   {
-   "id": "4ce46666f7f3dd3d",
+   "id": "2d7c1dd05fb819c4",
    "name": "github.com/ryanuber/go-glob",
    "version": "v1.0.0",
    "type": "go-module",
@@ -2068,7 +2068,7 @@
    }
   },
   {
-   "id": "9a0c7256bfe255d2",
+   "id": "2eda87ac48b67502",
    "name": "github.com/sirupsen/logrus",
    "version": "v1.9.0",
    "type": "go-module",
@@ -2086,7 +2086,7 @@
    "purl": "pkg:golang/github.com/sirupsen/logrus@v1.9.0"
   },
   {
-   "id": "761e471f9338930a",
+   "id": "fc74652ef3d87aa5",
    "name": "github.com/sirupsen/logrus",
    "version": "v1.9.0",
    "type": "go-module",
@@ -2111,7 +2111,7 @@
    }
   },
   {
-   "id": "ff033a7e8ffbf722",
+   "id": "4de705d7e7f0a615",
    "name": "go.uber.org/atomic",
    "version": "v1.10.0",
    "type": "go-module",
@@ -2127,7 +2127,7 @@
    "purl": "pkg:golang/go.uber.org/atomic@v1.10.0"
   },
   {
-   "id": "a5a3e201a3b9eb",
+   "id": "3c182966f04cb161",
    "name": "go.uber.org/atomic",
    "version": "v1.10.0",
    "type": "go-module",
@@ -2150,7 +2150,7 @@
    }
   },
   {
-   "id": "b9248862eb0b34fb",
+   "id": "41ec30a2e77f8f81",
    "name": "golang.org/x/crypto",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2168,7 +2168,7 @@
    "purl": "pkg:golang/golang.org/x/crypto@v0.1.0"
   },
   {
-   "id": "8b63ce484e1a434e",
+   "id": "6f73360c3433013f",
    "name": "golang.org/x/crypto",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2193,7 +2193,7 @@
    }
   },
   {
-   "id": "bfdad042974250f0",
+   "id": "96e07a40d53c1c13",
    "name": "golang.org/x/net",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2211,7 +2211,7 @@
    "purl": "pkg:golang/golang.org/x/net@v0.1.0"
   },
   {
-   "id": "f8915c7b81078e72",
+   "id": "29d24808c73d5e76",
    "name": "golang.org/x/net",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2236,7 +2236,7 @@
    }
   },
   {
-   "id": "f0dbacc78b47bc77",
+   "id": "88d3a86bc4c51da9",
    "name": "golang.org/x/sys",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2254,7 +2254,7 @@
    "purl": "pkg:golang/golang.org/x/sys@v0.1.0"
   },
   {
-   "id": "80ea7ee7aec680c8",
+   "id": "87cbb3e75c6d793b",
    "name": "golang.org/x/sys",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2279,7 +2279,7 @@
    }
   },
   {
-   "id": "27295b5ab75e664",
+   "id": "8e536631623c2035",
    "name": "golang.org/x/term",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2297,7 +2297,7 @@
    "purl": "pkg:golang/golang.org/x/term@v0.1.0"
   },
   {
-   "id": "1f1afd151cb7bbf2",
+   "id": "ec05f9fda2b54612",
    "name": "golang.org/x/term",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2322,7 +2322,7 @@
    }
   },
   {
-   "id": "4ce8c6d02da0599a",
+   "id": "f4c6aa8854f5aabf",
    "name": "golang.org/x/text",
    "version": "v0.4.0",
    "type": "go-module",
@@ -2340,7 +2340,7 @@
    "purl": "pkg:golang/golang.org/x/text@v0.4.0"
   },
   {
-   "id": "46a5e30b9b054907",
+   "id": "89be1e5130cdccce",
    "name": "golang.org/x/text",
    "version": "v0.4.0",
    "type": "go-module",
@@ -2365,7 +2365,7 @@
    }
   },
   {
-   "id": "98c490574188717b",
+   "id": "facf7bd96fbdf866",
    "name": "golang.org/x/time",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2383,7 +2383,7 @@
    "purl": "pkg:golang/golang.org/x/time@v0.1.0"
   },
   {
-   "id": "f6269259503906f3",
+   "id": "777b00aff33fb650",
    "name": "golang.org/x/time",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2408,7 +2408,7 @@
    }
   },
   {
-   "id": "44deb4c239df5ecc",
+   "id": "a72a1961e77508b2",
    "name": "google.golang.org/genproto",
    "version": "v0.0.0-20221027153422-115e99e71e1c",
    "type": "go-module",
@@ -2426,7 +2426,7 @@
    "purl": "pkg:golang/google.golang.org/genproto@v0.0.0-20221027153422-115e99e71e1c"
   },
   {
-   "id": "d69060056de0b9bf",
+   "id": "a08966065e5096e6",
    "name": "google.golang.org/genproto",
    "version": "v0.0.0-20221027153422-115e99e71e1c",
    "type": "go-module",
@@ -2451,7 +2451,7 @@
    }
   },
   {
-   "id": "911eaba743386809",
+   "id": "f1aaa5401c72acf",
    "name": "google.golang.org/grpc",
    "version": "v1.50.1",
    "type": "go-module",
@@ -2469,7 +2469,7 @@
    "purl": "pkg:golang/google.golang.org/grpc@v1.50.1"
   },
   {
-   "id": "349d9c6eed4ba867",
+   "id": "e2f4d15e5c956827",
    "name": "google.golang.org/grpc",
    "version": "v1.50.1",
    "type": "go-module",
@@ -2494,7 +2494,7 @@
    }
   },
   {
-   "id": "157015080eecbfc3",
+   "id": "f0001b5154194f7a",
    "name": "google.golang.org/protobuf",
    "version": "v1.28.1",
    "type": "go-module",
@@ -2512,7 +2512,7 @@
    "purl": "pkg:golang/google.golang.org/protobuf@v1.28.1"
   },
   {
-   "id": "3a5d4b95a4afa4af",
+   "id": "7d8bc8235484cfc4",
    "name": "google.golang.org/protobuf",
    "version": "v1.28.1",
    "type": "go-module",
@@ -2537,7 +2537,7 @@
    }
   },
   {
-   "id": "94fe87c67af686e",
+   "id": "58c3eedc84a30d05",
    "name": "gopkg.in/square/go-jose.v2",
    "version": "v2.6.0",
    "type": "go-module",
@@ -2553,7 +2553,7 @@
    "purl": "pkg:golang/gopkg.in/square/go-jose.v2@v2.6.0"
   },
   {
-   "id": "42854367ea690420",
+   "id": "57b5827ccb329e3e",
    "name": "gopkg.in/square/go-jose.v2",
    "version": "v2.6.0",
    "type": "go-module",
@@ -2576,7 +2576,7 @@
    }
   },
   {
-   "id": "7d36a1c0c358a2f8",
+   "id": "1a28581cf57f9a6f",
    "name": "gopkg.in/yaml.v3",
    "version": "v3.0.1",
    "type": "go-module",
@@ -2592,7 +2592,7 @@
    "purl": "pkg:golang/gopkg.in/yaml.v3@v3.0.1"
   },
   {
-   "id": "7cb96624cc175f6d",
+   "id": "5129da70f9b8862d",
    "name": "gopkg.in/yaml.v3",
    "version": "v3.0.1",
    "type": "go-module",
@@ -2615,8 +2615,600 @@
    }
   }
  ],
- "artifactRelationships": [],
+ "artifactRelationships": [
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "10019401ae87fbc5",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "1404810608c680da",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "1405de9526349a82",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "14ae25840111a2d7",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "186032c7e1d2bb3f",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "19095fb4ab5d65ad",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "1a28581cf57f9a6f",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "1a69bf8b28ebb1c3",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "1b8194e993c8bab9",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "1ca1046060a5bcd7",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "211f5b6e76d382dd",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "2181bdf02392c709",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "2193c9af5b4cbb12",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "25ce1d53ad6e10aa",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "2635cb2257dc1cdb",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "29d24808c73d5e76",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "2a3f36255764b3e6",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "2ab6ff9b0311869b",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "2ab969797b4d48be",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "2b315dddcdf78272",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "2d7c1dd05fb819c4",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "2eda87ac48b67502",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "314251f70f3a2918",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "320aeb291e734a0c",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "3224d16c3af1863b",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "3246246308cbf293",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "387422c11b496d6e",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "38beeb26a0000bdc",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "3ba8f39436a4d3e3",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "3bdf37644ca0d5c4",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "3c182966f04cb161",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "3e71b3935f677cbb",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "414f9690a9518fbc",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "41ec30a2e77f8f81",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "4404304bacd38791",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "443ff7a685b18205",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "45a47eeb440bcf8d",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "48d3488351c1d398",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "4d1f0d334799b847",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "4de705d7e7f0a615",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "5129da70f9b8862d",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "57b5827ccb329e3e",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "58c3eedc84a30d05",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "5b4a1f901e5e67e7",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "601a787bfd80c455",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "60d3d8f83f919ba2",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "62ce4fc42134408b",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "6da6a81e8ef8e387",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "6f73360c3433013f",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "736d8ce1025c9093",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "75e771a836707e3f",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "777b00aff33fb650",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "7a2bf0ef68f9e2cd",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "7b69db564e46c7b6",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "7d8bc8235484cfc4",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "7dd31ade222d9dc6",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "7ed432121cd20257",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "843a08d50d36a0bd",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "87cbb3e75c6d793b",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "886cdcc7750de4ce",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "88d3a86bc4c51da9",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "89be1e5130cdccce",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "8e395fdbcc1e7a23",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "8e536631623c2035",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "905110bcce22940",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "949c2ebf18451228",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "94f68c825007871d",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "955881527b9b425d",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "96b5fb68d7f6e746",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "96e07a40d53c1c13",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "9792ffe41ca1baa4",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "998fa457d559c928",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "9a31bb50cc56d03f",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "9c6954d3067ecad9",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "9cdf517860b5d798",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "9d3353c9fb15613a",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "9eb88da73805fb9b",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "9f51050e1789a00d",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "a08966065e5096e6",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "a2c9655b3628b91c",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "a562fa7cd325bd15",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "a6d490b6b6a74900",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "a72a1961e77508b2",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "a89fc09dfc38dcb8",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "ac8d7224c308c0c5",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "aeae4fe373979249",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "aebc235fb6646301",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "b0f44542155745d3",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "b38cbaa8a90845be",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "b95a5505bf1fd0c3",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "be73692cec4a065d",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "c027b57978151de1",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "c3af64af69c0e248",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "c87f640e3dd50e87",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "c8b7dc4c3e413e4d",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "ca36c07241a96ad7",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "cb6a8b0546baa005",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "cc0ad4c04cd16b68",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "d068f3bbb6f685a1",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "d839669bc30e0ec0",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "da880dd42deb19e6",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "e2397e239513c12c",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "e2f4d15e5c956827",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "e4b92d0201c67876",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "e5435757846d6596",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "ec05f9fda2b54612",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "ec78f431cadf889f",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "f0001b5154194f7a",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "f0016b605105452",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "f1aaa5401c72acf",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "f1e27f6f31b23fe0",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "f46d39fd43c94805",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "f4c6aa8854f5aabf",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "f5f2fb6e19b52f98",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "facf7bd96fbdf866",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "fbe642f765cb86aa",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "fc74652ef3d87aa5",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "fe7e275e3e288909",
+   "type": "contains"
+  }
+ ],
  "source": {
+  "id": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
   "type": "directory",
   "target": "."
  },
@@ -2634,20 +3226,13 @@
    "output-template-path": "",
    "file": "",
    "check-for-app-update": true,
-   "anchore": {
-    "host": "",
-    "path": "",
-    "dockerfile": "",
-    "overwrite-existing-image": false,
-    "import-timeout": 30
-   },
    "dev": {
     "profile-cpu": false,
     "profile-mem": false
    },
    "log": {
     "structured": false,
-    "level": "warning",
+    "level": "warn",
     "file-location": ""
    },
    "catalogers": null,
@@ -2713,14 +3298,11 @@
     "oidcClientId": "sigstore",
     "OIDCRedirectURL": ""
    },
-   "platform": "",
-   "external_sources": {
-    "external-sources-enabled": false
-   }
+   "platform": ""
   }
  },
  "schema": {
-  "version": "3.3.2",
-  "url": "https://raw.githubusercontent.com/anchore/syft/main/schema/json/schema-3.3.2.json"
+  "version": "4.1.0",
+  "url": "https://raw.githubusercontent.com/anchore/syft/main/schema/json/schema-4.1.0.json"
  }
 }

@@ -73,6 +73,9 @@ func main() {
 		framework.MesosStreamID = oldFramework.MesosStreamID
 	}
 
+	// The Hostname should ever be set after reading the state file.
+	framework.FrameworkInfo.Hostname = &framework.FrameworkHostname
+
 	r.SaveConfig(config)
 	r.SaveFrameworkRedis(framework)
 

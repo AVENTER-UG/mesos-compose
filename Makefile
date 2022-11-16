@@ -66,8 +66,5 @@ version:
 	@cat .version.json
 	@echo "Saved under .version.json"
 
-pipe: go-fmt sboom seccheck
-
-
-
-all: seccheck sboom build version publish
+check: go-fmt sboom seccheck
+all: check build version publish
