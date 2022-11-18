@@ -53,6 +53,7 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 			e.mapComposeServiceToMesosTask(vars, service, task)
 
 			// restore the old MesosAgent info
+			key = e.Redis.GetRedisKey(keys.Val())
 			updatedTask := mesosutil.DecodeTask(key)
 			updatedTask.MesosAgent = task.MesosAgent
 			e.Redis.SaveTaskRedis(updatedTask)

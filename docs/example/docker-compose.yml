@@ -3,7 +3,7 @@ version: '3.9'
 services:
   app:
     image: alpine:latest
-    command: ["sleep", "1000"]
+    command: "sleep 1000"
     restart: always
     volumes:
       - "12345test:/tmp"

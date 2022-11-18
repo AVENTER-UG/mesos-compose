@@ -35,7 +35,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 	logrus.WithField("func", "HandleUpdate").Debug("Task State: ", task.State)
 
 	switch *update.Status.State {
-	case mesosproto.TASK_FAILED, mesosproto.TASK_ERROR, mesosproto.TASK_FINISHED:
+	case mesosproto.TASK_FAILED, mesosproto.TASK_ERROR, mesosproto.TASK_FINISHED, mesosproto.TASK_KILLED:
 		// check how to handle the event
 		switch task.Restart {
 		// never restart the task
@@ -63,7 +63,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 			task.State = ""
 		}
 
-	case mesosproto.TASK_KILLED, mesosproto.TASK_LOST:
+	case mesosproto.TASK_LOST:
 		// remove task
 		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 		return mesosutil.Call(msg)
