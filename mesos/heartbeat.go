@@ -39,6 +39,7 @@ func (e *Scheduler) Heartbeat() {
 				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			} else {
 				mesosutil.Kill(task.TaskID, task.Agent)
+				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			}
 		}
 

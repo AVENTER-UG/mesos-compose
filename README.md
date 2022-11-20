@@ -10,7 +10,69 @@ Mesos Framework to use docker-compose files.
 - Apache Mesos min 1.6.0
 - Mesos with SSL and Authentication is optional
 - Redis Database
-- Docker Compose Spec 3.9
+
+## Run Framework
+
+The following environment parameters are only a example. All parameters and the default values are documented in 
+the `init.go` file (real documentation will be coming later). These example assume, that we run mesos-mini.
+
+### Step 1
+
+Run a redis server:
+
+```Bash
+docker run --rm --name redis -d -p 6379:6379 redis
+```
+
+### Step 2
+
+mesos-compose needs some parameters to connect to Mesos. The following serve only as an example.
+
+```Bash
+export MESOS_SSL="false"
+export LOGLEVEL="DEBUG"
+export DOMAIN=".mini"
+export AUTH_USERNAME="user"
+export AUTH_PASSWORD="password"
+export PORTRANGE_FROM=31000
+export PORTRANGE_TO=32000
+export SKIP_SSL=true
+```
+
+### Step 3
+
+Before we launch mesos-compose, we create dedicated network in docker.
+
+```Bash
+docker network create --subnet 10.40.0.0/24 mini
+```
+
+### Step 4
+
+Now mesos-compose can be started:
+
+```Bash
+./mesos-compose
+```
+
+### Mesos-Compose in real Apache Mesos environments
+
+In real mesos environments, we have to set at least the following environment variables:
+
+```Bash
+export MESOS_MASTER="leader.mesos:5050"
+export MESOS_USERNAME=""
+export MESOS_PASSWORD=""
+```
+
+Also the following could be usefull.
+
+```Bash
+export REDIS_SERVER="127.0.0.1:6379"
+export REDIS_PASSWORD=""
+export REDIS_DB="1"
+export MESOS_CNI="weave"
+```
 
 ## Example
 
