@@ -91,6 +91,7 @@ func (e *Scheduler) EventLoop() {
 	_ = strings.TrimSuffix(line, "\n")
 
 	go e.HeartbeatLoop()
+	go e.ReconcileLoop()
 
 	for {
 		// Read line from Mesos
@@ -170,4 +171,20 @@ func (e *Scheduler) Reconcile() {
 		e.API.ErrorMessage(3, "Reconcile_Error", err.Error())
 		logrus.Debug("Reconcile Error: ", err)
 	}
+}
+
+func (e *Scheduler) changeDockerPorts(cmd mesosutil.Command) []mesosproto.ContainerInfo_DockerInfo_PortMapping {
+	var ret []mesosproto.ContainerInfo_DockerInfo_PortMapping
+	for _, port := range cmd.DockerPortMappings {
+		port.HostPort = e.API.GetRandomHostPort()
+		ret = append(ret, port)
+	}
+	return ret
+}
+
+func (e *Scheduler) changeDiscoveryInfo(cmd mesosutil.Command) mesosproto.DiscoveryInfo {
+	for i, port := range cmd.DockerPortMappings {
+		cmd.Discovery.Ports.Ports[i].Number = port.HostPort
+	}
+	return cmd.Discovery
 }

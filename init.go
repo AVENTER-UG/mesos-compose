@@ -39,6 +39,7 @@ func init() {
 	config.Credentials.Username = util.Getenv("AUTH_USERNAME", "")
 	config.Credentials.Password = util.Getenv("AUTH_PASSWORD", "")
 	config.AppName = "Mesos Compose Framework"
+	config.ReconcileLoopTime, _ = time.ParseDuration(util.Getenv("RECONCILE_WAIT", "10m"))
 	config.RedisServer = util.Getenv("REDIS_SERVER", "127.0.0.1:6379")
 	config.RedisPassword = util.Getenv("REDIS_PASSWORD", "")
 	config.RedisDB, _ = strconv.Atoi(util.Getenv("REDIS_DB", "1"))
