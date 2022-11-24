@@ -2,6 +2,10 @@
 
 ## master
 
+- CHANGE: Move mesos specific functions into own module
+
+## 0.4.2
+
 - CHANGE: Command attribute from array to string. 
 - ADD: Support of docker-compose capability parameter [cap_add](https://docs.docker.com/compose/compose-file/#cap_add).
 - ADD: Support of mesos command executor. Set the label:
