@@ -1,9 +1,7 @@
-package mesos
+package scheduler
 
 import (
 	"time"
-
-	mesosutil "github.com/AVENTER-UG/mesos-util"
 
 	"github.com/sirupsen/logrus"
 )
@@ -26,7 +24,7 @@ func (e *Scheduler) Heartbeat() {
 		// get the values of the current key
 		key := e.Redis.GetRedisKey(keys.Val())
 
-		task := mesosutil.DecodeTask(key)
+		task := e.Mesos.DecodeTask(key)
 
 		if task.TaskID == "" || task.TaskName == "" {
 			continue
@@ -37,13 +35,13 @@ func (e *Scheduler) Heartbeat() {
 			if task.Agent == "" {
 				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			} else {
-				mesosutil.Kill(task.TaskID, task.Agent)
+				e.Mesos.Kill(task.TaskID, task.Agent)
 				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			}
 		}
 
 		if task.State == "" && e.Redis.CountRedisKey(task.TaskName+":*", "__KILL") <= task.Instances {
-			mesosutil.Revive()
+			e.Mesos.Revive()
 			task.State = "__NEW"
 			// these will save the current time at the task. we need it to check
 			// if the state will change in the next 'n min. if not, we have to
@@ -74,7 +72,7 @@ func (e *Scheduler) Heartbeat() {
 	}
 
 	if suppress && !e.Config.Suppress {
-		mesosutil.SuppressFramework()
+		e.Mesos.SuppressFramework()
 		e.Config.Suppress = true
 	}
 }
@@ -93,6 +91,6 @@ func (e *Scheduler) ReconcileLoop() {
 	ticker := time.NewTicker(e.Config.ReconcileLoopTime)
 	defer ticker.Stop()
 	for ; true; <-ticker.C {
-		go e.Reconcile()
+		go e.reconcile()
 	}
 }

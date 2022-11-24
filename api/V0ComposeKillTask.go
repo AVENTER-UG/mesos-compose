@@ -3,7 +3,6 @@ package api
 import (
 	"net/http"
 
-	mesosutil "github.com/AVENTER-UG/mesos-util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -35,7 +34,7 @@ func (e *API) V0ComposeKillTask(w http.ResponseWriter, r *http.Request) {
 
 	key := e.Redis.GetRedisKey(e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":" + taskID)
 
-	task := mesosutil.DecodeTask(key)
+	task := e.Mesos.DecodeTask(key)
 	if task.TaskID == taskID {
 		task.State = "__KILL"
 		e.Redis.SaveTaskRedis(task)

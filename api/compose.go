@@ -10,15 +10,15 @@ import (
 	"strings"
 	"time"
 
-	mesosutil "github.com/AVENTER-UG/mesos-util"
-	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
+	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
+	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	"github.com/AVENTER-UG/util/util"
 	"github.com/sirupsen/logrus"
 )
 
 // Map the compose parameters into a mesos task
-func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, task mesosutil.Command) {
-	var cmd mesosutil.Command
+func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, task cfg.Command) {
+	var cmd cfg.Command
 
 	e.Service = e.Compose.Services[name]
 
@@ -229,7 +229,7 @@ func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping
 }
 
 // Get the discoveryinfo ports of the compose file
-func (e *API) getDiscoveryInfoPorts(cmd mesosutil.Command) []mesosproto.Port {
+func (e *API) getDiscoveryInfoPorts(cmd cfg.Command) []mesosproto.Port {
 	var disport []mesosproto.Port
 	for _, c := range cmd.DockerPortMappings {
 		var tmpport mesosproto.Port
@@ -244,7 +244,7 @@ func (e *API) getDiscoveryInfoPorts(cmd mesosutil.Command) []mesosproto.Port {
 	return disport
 }
 
-func (e *API) getDiscoveryInfo(cmd mesosutil.Command) mesosproto.DiscoveryInfo {
+func (e *API) getDiscoveryInfo(cmd cfg.Command) mesosproto.DiscoveryInfo {
 	return mesosproto.DiscoveryInfo{
 		Visibility: 2,
 		Name:       &cmd.TaskName,
@@ -411,7 +411,7 @@ func (e *API) getNetworkName(val int) string {
 }
 
 // check if the task command inside of the container have to be executed as shell
-func (e *API) getShell(cmd mesosutil.Command) bool {
+func (e *API) getShell(cmd cfg.Command) bool {
 	return cmd.Command != ""
 }
 
@@ -454,7 +454,7 @@ func (e *API) getContainerType() string {
 	return conType
 }
 
-func (e *API) getDockerParameter(cmd mesosutil.Command) []mesosproto.Parameter {
+func (e *API) getDockerParameter(cmd cfg.Command) []mesosproto.Parameter {
 	param := cmd.DockerParameter
 	if len(param) == 0 {
 		param = make([]mesosproto.Parameter, 0)
@@ -484,7 +484,7 @@ func (e *API) addDockerParameter(current []mesosproto.Parameter, newValues mesos
 }
 
 // translate the docker-compose placement constraints to labels
-func (e *API) setConstraints(cmd *mesosutil.Command) {
+func (e *API) setConstraints(cmd *cfg.Command) {
 	if len(e.Service.Deploy.Placement.Constraints) > 0 {
 		for _, constraint := range e.Service.Deploy.Placement.Constraints {
 			cons := strings.Split(constraint, "==")

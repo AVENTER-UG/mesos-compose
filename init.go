@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	mesosutil "github.com/AVENTER-UG/mesos-util"
 	util "github.com/AVENTER-UG/util/util"
 	"github.com/Showmax/go-fqdn"
 
@@ -15,7 +14,7 @@ import (
 )
 
 var config cfg.Config
-var framework mesosutil.FrameworkConfig
+var framework cfg.FrameworkConfig
 
 func init() {
 	framework.FrameworkUser = util.Getenv("FRAMEWORK_USER", "root")
@@ -80,12 +79,12 @@ func init() {
 		webuiurl = os.Getenv("FRAMEWORK_WEBUIURL")
 	}
 
-	framework.CommandChan = make(chan mesosutil.Command, 100)
+	framework.CommandChan = make(chan cfg.Command, 100)
 	config.Hostname = framework.FrameworkHostname
 	config.Listen = listen
 	config.Suppress = false
 
-	framework.State = map[string]mesosutil.State{}
+	framework.State = map[string]cfg.State{}
 
 	framework.FrameworkInfo.User = framework.FrameworkUser
 	framework.FrameworkInfo.Name = framework.FrameworkName

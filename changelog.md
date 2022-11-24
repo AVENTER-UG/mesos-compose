@@ -29,6 +29,7 @@
 - ADD: customize taskname `bis.aventer.mesos_compose.taskname: "test:app"`. 
 - FIX: restore MesosAgent info after update task by API
 - FIX: Remove LOST mesos tasks from redis
+- ADD: mesos reconcile loop to periodically sync state with mesos
   
 ## v0.4.0
 

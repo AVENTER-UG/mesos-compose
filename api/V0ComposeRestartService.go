@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strings"
 
-	mesosutil "github.com/AVENTER-UG/mesos-util"
 	util "github.com/AVENTER-UG/util/util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
@@ -45,7 +44,7 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 
 	for keys.Next(e.Redis.CTX) {
 		key := e.Redis.GetRedisKey(keys.Val())
-		task := mesosutil.DecodeTask(key)
+		task := e.Mesos.DecodeTask(key)
 		task.State = "__KILL"
 		e.Redis.SaveTaskRedis(task)
 

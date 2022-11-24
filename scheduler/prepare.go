@@ -1,16 +1,16 @@
-package mesos
+package scheduler
 
 import (
 	"encoding/json"
 	"strings"
 
-	mesosutil "github.com/AVENTER-UG/mesos-util"
-	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
+	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
+	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	"github.com/AVENTER-UG/util/util"
 	"github.com/sirupsen/logrus"
 )
 
-func (e *Scheduler) defaultResources(cmd mesosutil.Command) []mesosproto.Resource {
+func (e *Scheduler) defaultResources(cmd cfg.Command) []mesosproto.Resource {
 	PORT := "ports"
 	CPU := "cpus"
 	MEM := "mem"
@@ -67,7 +67,7 @@ func (e *Scheduler) defaultResources(cmd mesosutil.Command) []mesosproto.Resourc
 
 // PrepareTaskInfoExecuteContainer will create the TaskInfo Protobuf for Mesos
 // nolint: gocyclo
-func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd mesosutil.Command) ([]mesosproto.TaskInfo, error) {
+func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd cfg.Command) ([]mesosproto.TaskInfo, error) {
 	d, _ := json.Marshal(&cmd)
 	logrus.Debug("HandleOffers cmd: ", util.PrettyJSON(d))
 

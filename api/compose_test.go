@@ -4,12 +4,11 @@ import (
 	"testing"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
-	mesosutil "github.com/AVENTER-UG/mesos-util"
 )
 
 func TestGetShell(t *testing.T) {
 	var e API
-	cmd := mesosutil.Command{}
+	cmd := cfg.Command{}
 	cmd.Command = "/bin/bash"
 
 	res := e.getShell(cmd)

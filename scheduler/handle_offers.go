@@ -1,4 +1,4 @@
-package mesos
+package scheduler
 
 import (
 	"encoding/json"
@@ -7,8 +7,8 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	mesosutil "github.com/AVENTER-UG/mesos-util"
-	mesosproto "github.com/AVENTER-UG/mesos-util/proto"
+	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
+	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	"github.com/AVENTER-UG/util/util"
 )
 
@@ -27,7 +27,7 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			e.Redis.SaveTaskRedis(cmd)
 			logrus.WithField("func", "mesos.HandleOffers").Debug("No matched offer found.")
 			logrus.Info("Decline unneeded offer: ", offerIds)
-			return mesosutil.Call(mesosutil.DeclineOffer(offerIds))
+			return e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 		}
 		logrus.Debug("Take Offer From:", takeOffer.GetHostname())
 
@@ -59,7 +59,7 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 		logrus.Debug("HandleOffers msg: ", util.PrettyJSON(d))
 
 		logrus.Info("Offer Accept: ", takeOffer.GetID(), " On Node: ", takeOffer.GetHostname())
-		err := mesosutil.Call(accept)
+		err := e.Mesos.Call(accept)
 		if err != nil {
 			logrus.Error("Handle Offers: ", err)
 			return err
@@ -67,17 +67,17 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 
 		// decline unneeded offer
 		logrus.Info("Offer Decline: ", offerIds)
-		return mesosutil.Call(mesosutil.DeclineOffer(offerIds))
+		return e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 	default:
 		// decline unneeded offer
-		_, offerIds := mesosutil.GetOffer(offers, mesosutil.Command{})
+		_, offerIds := e.Mesos.GetOffer(offers, cfg.Command{})
 		logrus.Info("Decline unneeded offer: ", offerIds)
-		return mesosutil.Call(mesosutil.DeclineOffer(offerIds))
+		return e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 	}
 }
 
 // get the value of a label from the command
-func (e *Scheduler) getLabelValue(label string, cmd mesosutil.Command) string {
+func (e *Scheduler) getLabelValue(label string, cmd cfg.Command) string {
 	for _, v := range cmd.Labels {
 		if label == v.Key {
 			return fmt.Sprint(v.GetValue())
@@ -86,7 +86,7 @@ func (e *Scheduler) getLabelValue(label string, cmd mesosutil.Command) string {
 	return ""
 }
 
-func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd mesosutil.Command) (mesosproto.Offer, []mesosproto.OfferID) {
+func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (mesosproto.Offer, []mesosproto.OfferID) {
 	var offerIds []mesosproto.OfferID
 	var offerret mesosproto.Offer
 
@@ -95,9 +95,9 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd mesosutil.Comm
 		offerIds = append(offerIds, offer.ID)
 
 		// if the ressources of this offer does not matched what the command need, the skip
-		if !mesosutil.IsRessourceMatched(offer.Resources, cmd) {
+		if !e.Mesos.IsRessourceMatched(offer.Resources, cmd) {
 			logrus.Debug("Could not found any matched ressources, get next offer")
-			mesosutil.Call(mesosutil.DeclineOffer(offerIds))
+			e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 			continue
 		}
 
@@ -137,7 +137,7 @@ func (e *Scheduler) getAttributes(name string, offer mesosproto.Offer) string {
 	return ""
 }
 
-func (e *Scheduler) isAttributeMachted(label, attribute string, cmd mesosutil.Command, offer mesosproto.Offer) bool {
+func (e *Scheduler) isAttributeMachted(label, attribute string, cmd cfg.Command, offer mesosproto.Offer) bool {
 	valOS := e.getLabelValue(label, cmd)
 	if valOS != "" {
 		if strings.ToLower(valOS) == e.getAttributes(attribute, offer) {

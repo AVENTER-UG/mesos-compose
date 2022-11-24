@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/AVENTER-UG/mesos-compose/api"
-	"github.com/AVENTER-UG/mesos-compose/mesos"
 	"github.com/AVENTER-UG/mesos-compose/redis"
-	mesosutil "github.com/AVENTER-UG/mesos-util"
+	"github.com/AVENTER-UG/mesos-compose/scheduler"
+	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	util "github.com/AVENTER-UG/util/util"
 	"github.com/AVENTER-UG/util/vault"
 	"github.com/sirupsen/logrus"
@@ -46,8 +46,6 @@ func main() {
 	util.SetLogging(config.LogLevel, config.EnableSyslog, config.AppName)
 	logrus.Println(config.AppName + " build " + BuildVersion + " git " + GitVersion)
 
-	mesosutil.SetConfig(&framework)
-
 	// Connect the vault if we got a token
 	v := vault.New(config.VaultToken, config.VaultURL, config.VaultTimeout)
 	if config.VaultToken != "" {
@@ -56,15 +54,13 @@ func main() {
 	}
 
 	// connect to redis
-	r := redis.New(config.RedisServer, config.RedisPassword, framework.FrameworkName, config.RedisDB)
-	logrus.Info("Redis Connection: ")
-	logrus.Info(r.Connect())
+	r := redis.New(&config, &framework)
 
 	// get API
-	a := api.New(&config, &framework, v, r)
+	a := api.New(&config, &framework)
 
 	// load old framework config from database if they exist
-	var oldFramework mesosutil.FrameworkConfig
+	var oldFramework cfg.FrameworkConfig
 	key := r.GetRedisKey(framework.FrameworkName + ":framework")
 	if key != "" {
 		json.Unmarshal([]byte(key), &oldFramework)
@@ -118,7 +114,7 @@ func main() {
 	for {
 		select {
 		case <-ticker.C:
-			e := mesos.Subscribe(&config, &framework)
+			e := scheduler.Subscribe(&config, &framework)
 			e.API = a
 			e.Vault = v
 			e.Redis = r

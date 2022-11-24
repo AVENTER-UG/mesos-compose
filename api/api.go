@@ -7,33 +7,41 @@ import (
 	"encoding/json"
 
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 
 	//"io/ioutil"
 	"net/http"
 
+	"github.com/AVENTER-UG/mesos-compose/mesos"
 	"github.com/AVENTER-UG/mesos-compose/redis"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
-	mesosutil "github.com/AVENTER-UG/mesos-util"
 	"github.com/AVENTER-UG/util/vault"
 )
 
 // API Service include all the current vars and global config
 type API struct {
 	Config    *cfg.Config
-	Framework *mesosutil.FrameworkConfig
+	Framework *cfg.FrameworkConfig
 	Service   cfg.Service
 	Compose   cfg.Compose
 	Redis     *redis.Redis
 	Vault     *vault.Vault
+	Mesos     mesos.Mesos
 }
 
 // New will create a new API object
-func New(cfg *cfg.Config, frm *mesosutil.FrameworkConfig, vault *vault.Vault, redis *redis.Redis) *API {
+func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *API {
 	e := &API{
 		Config:    cfg,
 		Framework: frm,
-		Vault:     vault,
-		Redis:     redis,
+		Mesos:     *mesos.New(cfg, frm),
+		Redis:     redis.New(cfg, frm),
+	}
+
+	// Connect the vault if we got a token
+	e.Vault = vault.New(cfg.VaultToken, cfg.VaultURL, cfg.VaultTimeout)
+	if e.Config.VaultToken != "" {
+		logrus.WithField("func", "api.New").Info("Vault Connection: ", e.Vault.Connect())
 	}
 
 	return e

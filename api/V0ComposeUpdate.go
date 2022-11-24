@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
-	mesosutil "github.com/AVENTER-UG/mesos-util"
 	util "github.com/AVENTER-UG/util/util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
@@ -49,12 +48,12 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 		for keys.Next(e.Redis.CTX) {
 			// get the values of the current key
 			key := e.Redis.GetRedisKey(keys.Val())
-			task := mesosutil.DecodeTask(key)
+			task := e.Mesos.DecodeTask(key)
 			e.mapComposeServiceToMesosTask(vars, service, task)
 
 			// restore the old MesosAgent info
 			key = e.Redis.GetRedisKey(keys.Val())
-			updatedTask := mesosutil.DecodeTask(key)
+			updatedTask := e.Mesos.DecodeTask(key)
 			updatedTask.MesosAgent = task.MesosAgent
 			e.Redis.SaveTaskRedis(updatedTask)
 		}

@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
-	mesosutil "github.com/AVENTER-UG/mesos-util"
 	util "github.com/AVENTER-UG/util/util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
@@ -46,7 +45,7 @@ func (e *API) V0ComposePush(w http.ResponseWriter, r *http.Request) {
 		Instances := e.getReplicas()
 		if e.Redis.CountRedisKey(TaskName+":*", "") < Instances {
 			e.Compose = data
-			e.mapComposeServiceToMesosTask(vars, service, mesosutil.Command{})
+			e.mapComposeServiceToMesosTask(vars, service, cfg.Command{})
 		}
 	}
 
