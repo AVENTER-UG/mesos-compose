@@ -3,6 +3,7 @@
 ## master
 
 - CHANGE: Move mesos specific functions into own module
+- ADD: Implicit reconcile to remove unknown Mesos Tasks
 
 ## 0.4.2
 

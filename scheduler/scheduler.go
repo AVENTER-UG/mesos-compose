@@ -190,3 +190,17 @@ func (e *Scheduler) reconcile() {
 		logrus.WithField("func", "mesos.Reconcile").Debug("Reconcile Error: ", err)
 	}
 }
+
+// implicitReconcile will ask Mesos which tasks and there state are registert to this framework
+func (e *Scheduler) implicitReconcile() {
+	var noTasks []mesosproto.Call_Reconcile_Task
+	err := e.Mesos.Call(&mesosproto.Call{
+		Type:      mesosproto.Call_RECONCILE,
+		Reconcile: &mesosproto.Call_Reconcile{Tasks: noTasks},
+	})
+
+	if err != nil {
+		e.API.ErrorMessage(3, "Reconcile_Error", err.Error())
+		logrus.WithField("func", "scheduler.implicitReconcile").Debug("Reconcile Error: ", err)
+	}
+}
