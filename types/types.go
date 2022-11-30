@@ -8,32 +8,33 @@ import (
 
 // Config is a struct of the framework configuration
 type Config struct {
-	Principal         string
-	LogLevel          string
-	MinVersion        string
-	AppName           string
-	EnableSyslog      bool
-	Hostname          string
-	Listen            string
-	Domain            string
-	Credentials       UserCredentials
-	PrefixHostname    string
-	PrefixTaskName    string
-	CPU               float64
-	Memory            float64
-	Disk              float64
-	RedisServer       string
-	RedisPassword     string
-	RedisDB           int
-	SkipSSL           bool
-	SSLKey            string
-	SSLCrt            string
-	Suppress          bool
-	EventLoopTime     time.Duration
-	ReconcileLoopTime time.Duration
-	VaultToken        string
-	VaultURL          string
-	VaultTimeout      time.Duration
+	Principal           string
+	LogLevel            string
+	MinVersion          string
+	AppName             string
+	EnableSyslog        bool
+	Hostname            string
+	Listen              string
+	Domain              string
+	Credentials         UserCredentials
+	PrefixHostname      string
+	PrefixTaskName      string
+	CPU                 float64
+	Memory              float64
+	Disk                float64
+	RedisServer         string
+	RedisPassword       string
+	RedisDB             int
+	SkipSSL             bool
+	SSLKey              string
+	SSLCrt              string
+	Suppress            bool
+	EventLoopTime       time.Duration
+	ReconcileLoopTime   time.Duration
+	VaultToken          string
+	VaultURL            string
+	VaultTimeout        time.Duration
+	DefaultVolumeDriver string
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework

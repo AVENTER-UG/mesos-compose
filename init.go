@@ -33,6 +33,7 @@ func init() {
 	config.CPU, _ = strconv.ParseFloat(util.Getenv("DEFAULT_CPU", "0.001"), 64)
 	config.Memory, _ = strconv.ParseFloat(util.Getenv("DEFAULT_MEMORY", "50"), 64)
 	config.Disk, _ = strconv.ParseFloat(util.Getenv("DEFAULT_DISK", "1000"), 64)
+	config.DefaultVolumeDriver = util.Getenv("DEFAULT_VOLUME_DRIVER", "local")
 	config.LogLevel = util.Getenv("LOGLEVEL", "info")
 	config.Domain = util.Getenv("DOMAIN", "local")
 	config.Credentials.Username = util.Getenv("AUTH_USERNAME", "")

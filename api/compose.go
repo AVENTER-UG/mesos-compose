@@ -277,6 +277,7 @@ func (e *API) getEnvironment() []mesosproto.Environment_Variable {
 // Get the environment of the compose file
 func (e *API) getVolumes(containerType string) []mesosproto.Volume {
 	var volume []mesosproto.Volume
+
 	for _, c := range e.Service.Volumes {
 		var tmp mesosproto.Volume
 		p := strings.Split(c, ":")
@@ -316,6 +317,7 @@ func (e *API) getVolumes(containerType string) []mesosproto.Volume {
 		}
 		volume = append(volume, tmp)
 	}
+
 	return volume
 }
 
@@ -370,35 +372,39 @@ func (e *API) getExecutor() mesosproto.ExecutorInfo {
 
 // get the Network Mode
 func (e *API) getNetworkMode() string {
-	if (e.Service.Network != "" || len(e.Service.Networks) > 0) && e.Service.NetworkMode == "" {
-		// If Network was set, change the network mode to user
+	// default network mode
+	mode := "user"
 
-		network := e.getNetworkName(0)
-		if strings.ToLower(e.Compose.Networks[network].Name) == "host" {
-			return "host"
-		}
-		return "user"
+	if e.Service.NetworkMode != "" {
+		mode = e.Service.NetworkMode
 	}
 
-	return strings.ToLower(e.Service.NetworkMode)
+	if len(e.Compose.Networks) > 0 {
+		network := e.getNetworkName(0)
+		mode = e.Compose.Networks[network].Name
+	}
+
+	return strings.ToLower(mode)
 }
 
 // get the NetworkInfo Name
 func (e *API) getNetworkInfo() []mesosproto.NetworkInfo {
-	if len(e.Compose.Networks) > 0 {
-		network := e.getNetworkName(0)
+	// get network name
+	name := e.getNetworkName(0)
 
-		return []mesosproto.NetworkInfo{{
-			Name: func() *string { x := e.Compose.Networks[network].Name; return &x }(),
-		}}
+	if len(e.Compose.Networks) > 0 {
+		name = e.Compose.Networks[name].Name
 	}
 
-	return []mesosproto.NetworkInfo{}
+	return []mesosproto.NetworkInfo{{
+		Name: func() *string { x := name; return &x }(),
+	}}
 }
 
 // get the name of the network parameter
 func (e *API) getNetworkName(val int) string {
-	var network string
+	// default network name
+	network := "default"
 
 	if e.Service.Network != "" {
 		network = e.Service.Network
@@ -460,8 +466,14 @@ func (e *API) getDockerParameter(cmd cfg.Command) []mesosproto.Parameter {
 		param = make([]mesosproto.Parameter, 0)
 	}
 
-	if e.getNetworkMode() != "bridge" && e.getContainerType() == "docker" && e.getHostname() != "" {
-		return e.addDockerParameter(param, mesosproto.Parameter{Key: "net-alias", Value: e.getNetAlias()})
+	if e.getContainerType() == "docker" {
+		if e.getNetworkMode() != "bridge" && e.getHostname() != "" && e.getNetworkMode() != "user" {
+			param = e.addDockerParameter(param, mesosproto.Parameter{Key: "net-alias", Value: e.getNetAlias()})
+		}
+		// add default volume driver if there is no defined volume
+		if len(e.Service.Volumes) == 0 {
+			param = e.addDockerParameter(param, mesosproto.Parameter{Key: "volume-driver", Value: e.Config.DefaultVolumeDriver})
+		}
 	}
 
 	return param
