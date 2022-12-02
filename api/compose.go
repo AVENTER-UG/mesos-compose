@@ -467,8 +467,10 @@ func (e *API) getDockerParameter(cmd cfg.Command) []mesosproto.Parameter {
 	}
 
 	if e.getContainerType() == "docker" {
-		if e.getNetworkMode() != "bridge" && e.getHostname() != "" && e.getNetworkMode() != "user" {
-			param = e.addDockerParameter(param, mesosproto.Parameter{Key: "net-alias", Value: e.getNetAlias()})
+		// set net-alias if its defined
+		alias := e.getNetAlias()
+		if alias != "" {
+			param = e.addDockerParameter(param, mesosproto.Parameter{Key: "net-alias", Value: alias})
 		}
 		// add default volume driver if there is no defined volume
 		if len(e.Service.Volumes) == 0 {
@@ -487,7 +489,7 @@ func (e *API) getNetAlias() string {
 		}
 	}
 
-	return e.getHostname()
+	return ""
 }
 
 // Append parameter to the list

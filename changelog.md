@@ -6,6 +6,7 @@
 - ADD: Implicit reconcile to remove unknown Mesos Tasks
 - ADD: Default volume driver parameter `DEFAULT_VOLUME_DRIVER`
 - ADD: Set default values for Network (default) and NetworkMode (user)
+- CHANGE: set net-alias only if it's defined
 
 ## 0.4.2
 
