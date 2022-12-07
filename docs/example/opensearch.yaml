@@ -27,8 +27,8 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: "0.01"
-          memory: "2000"
+          cpus: 0.01
+          memory: 2000
 
   opensearch-node2:
     image: opensearchproject/opensearch:2.0.1
@@ -57,8 +57,8 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: "0.01"
-          memory: "2000"
+          cpus: 0.01
+          memory: 2000
 
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:2.0.1
@@ -76,8 +76,8 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: "0.01"
-          memory: "2000"
+          cpus: 0.01
+          memory: 2000
 
 networks:
   opensearch-net:

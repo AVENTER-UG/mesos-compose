@@ -1,0 +1,59 @@
+version: '3.9'
+services:
+  # MongoDB: https://hub.docker.com/_/mongo/
+  mongo:
+    image: mongo:4.2
+    network: graylog
+    volumes:
+      - /data/graylog/data/mongodb:/data/db
+    ports:
+      - 27017:27017
+  # Elasticsearch: https://www.elastic.co/guide/en/elasticsearch/reference/5.6/docker.html
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.0
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=localhost
+      - network.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    deploy:
+      resources:
+        limits:
+          memory: 2000
+    network: graylog
+    ports:
+      - 9200:9200
+    volumes:
+      - /srv/graylog/data/esdb:/usr/share/elasticsearch/data
+  # Graylog: https://hub.docker.com/r/graylog/graylog/
+  graylog:
+    image: graylog/graylog:4.0.1
+    environment:
+      # CHANGE ME!
+      - GRAYLOG_PASSWORD_SECRET=<PASSWORD>
+      - GRAYLOG_ROOT_PASSWORD_SHA2=<PASSWORD_SHA2>
+      - GRAYLOG_HTTP_EXTERNAL_URI=http://<HOSTIP>:9000/
+    network: graylog
+    depends_on:
+      - mongo
+      - elasticsearch
+    ports:
+      # Graylog web interface and REST API
+      - 9000:9000
+      # Syslog TCP
+      - 514:514
+      # Syslog UDP
+      - 514:514/udp
+      # GELF TCP
+      - 12201:12201
+      # GELF UDP
+      - 12201:12201/udp
+
+networks:
+  graylog:
+    driver: bridge
+

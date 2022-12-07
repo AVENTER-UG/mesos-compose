@@ -72,16 +72,29 @@ type Service struct {
 	CapAdd        []string                `yaml:"cap_add"`
 	CapDrop       []string                `yaml:"cap_drop"`
 	PullPolicy    string                  `yaml:"pull_policy" default:"always"`
+	Ulimits       Ulimits                 `yaml:ulimits`
 }
 
-// Deploy - The mesos resources to deploy a task
+// Ulimits - Configure ulimits of a mesos task
+type Ulimits struct {
+	Memlock struct {
+		Soft int `yaml:"soft"`
+		Hard int `yaml:"hard"`
+	} `yaml:"memlock"`
+	Nofile struct {
+		Soft int `yaml:"soft"`
+		Hard int `yaml:"hard"`
+	} `yaml:"nofile"`
+}
+
+// Deploy - Deploy information of a mesos task
 type Deploy struct {
 	Placement Placement `yaml:"placement"`
 	Replicas  string    `yaml:"replicas"`
 	Resources struct {
 		Limits struct {
-			CPUs   string `yaml:"cpus"`
-			Memory string `yaml:"memory"`
+			CPUs   float64 `yaml:"cpus"`
+			Memory float64 `yaml:"memory"`
 		} `yaml:"limits"`
 	} `yaml:"resources"`
 }

@@ -7,6 +7,8 @@
 - ADD: Default volume driver parameter `DEFAULT_VOLUME_DRIVER`
 - ADD: Set default values for Network (default) and NetworkMode (user)
 - CHANGE: set net-alias only if it's defined
+- ADD: Support for docker ulimits memlock and nofile
+- FIX: Missing port if we use "udp" as protocol under ports
 
 ## 0.4.2
 
