@@ -108,7 +108,7 @@ func main() {
 	}()
 
 	//	this loop is for resubscribtion purpose
-	ticker := time.NewTicker(2 * time.Second)
+	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()
 	// nolint:gosimple
 	for {
