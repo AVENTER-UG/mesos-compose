@@ -380,10 +380,8 @@ func (e *API) getNetworkMode() string {
 
 	if len(e.Compose.Networks) > 0 {
 		network := e.getNetworkName(0)
-		if e.Compose.Networks[network].Driver == "bridge" || e.Compose.Networks[network].Driver == "host" || e.Compose.Networks[network].Driver == "user" {
+		if e.Compose.Networks[network].Driver != "" {
 			mode = e.Compose.Networks[network].Driver
-		} else {
-			mode = e.Compose.Networks[network].Name
 		}
 	}
 
@@ -480,15 +478,19 @@ func (e *API) getDockerParameter(cmd cfg.Command) []mesosproto.Parameter {
 			param = e.addDockerParameter(param, mesosproto.Parameter{Key: "volume-driver", Value: e.Config.DefaultVolumeDriver})
 		}
 		// configure ulimits
-		param = e.getUlimits(param)
+		param = e.getUlimit(param)
 	}
 
 	return param
 }
 
-func (e *API) getUlimits(param []mesosproto.Parameter) []mesosproto.Parameter {
+func (e *API) getUlimit(param []mesosproto.Parameter) []mesosproto.Parameter {
 	if e.Service.Ulimits.Memlock.Hard != 0 {
-		param = e.addDockerParameter(param, mesosproto.Parameter{Key: "ulimits", Value: "memlock=" + strconv.Itoa(e.Service.Ulimits.Memlock.Hard) + ":" + strconv.Itoa(e.Service.Ulimits.Memlock.Soft)})
+		param = e.addDockerParameter(param, mesosproto.Parameter{Key: "ulimit", Value: "memlock=" + strconv.Itoa(e.Service.Ulimits.Memlock.Hard) + ":" + strconv.Itoa(e.Service.Ulimits.Memlock.Soft)})
+	}
+
+	if e.Service.Ulimits.Nofile.Hard != 0 {
+		param = e.addDockerParameter(param, mesosproto.Parameter{Key: "ulimit", Value: "nofile=" + strconv.Itoa(e.Service.Ulimits.Nofile.Hard) + ":" + strconv.Itoa(e.Service.Ulimits.Nofile.Soft)})
 	}
 
 	return param
@@ -500,6 +502,10 @@ func (e *API) getNetAlias() string {
 		if len(e.Service.Networks[network].Aliases) > 0 {
 			return e.Service.Networks[network].Aliases[0]
 		}
+	}
+
+	if e.getNetworkMode() == "user" {
+		return e.getHostname()
 	}
 
 	return ""
