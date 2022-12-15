@@ -168,8 +168,10 @@ func (e *Redis) Connect() bool {
 
 // SaveTaskRedis store mesos task in DB
 func (e *Redis) SaveTaskRedis(cmd cfg.Command) {
-	d, _ := json.Marshal(&cmd)
-	e.SetRedisKey(d, cmd.TaskName+":"+cmd.TaskID)
+	if cmd.TaskName != "" {
+		d, _ := json.Marshal(&cmd)
+		e.SetRedisKey(d, cmd.TaskName+":"+cmd.TaskID)
+	}
 }
 
 // SaveFrameworkRedis store mesos framework in DB

@@ -88,18 +88,16 @@ func (e *API) getRestart() string {
 
 // Get the CPU value from the compose file, or the default one if it's unset
 func (e *API) getCPU() float64 {
-	if e.Service.Deploy.Resources.Limits.CPUs != "" {
-		cpu, _ := strconv.ParseFloat(e.Service.Deploy.Resources.Limits.CPUs, 64)
-		return cpu
+	if e.Service.Deploy.Resources.Limits.CPUs > 0 {
+		return e.Service.Deploy.Resources.Limits.CPUs
 	}
 	return e.Config.CPU
 }
 
 // Get the Memory value from the compose file, or the default one if it's unset
 func (e *API) getMemory() float64 {
-	if e.Service.Deploy.Resources.Limits.Memory != "" {
-		mem, _ := strconv.ParseFloat(e.Service.Deploy.Resources.Limits.Memory, 64)
-		return mem
+	if e.Service.Deploy.Resources.Limits.Memory > 0 {
+		return e.Service.Deploy.Resources.Limits.Memory
 	}
 	return e.Config.Memory
 }
@@ -216,6 +214,7 @@ func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping
 		// check if this is a udp protocol
 		tmp.Protocol = func() *string { x := "tcp"; return &x }()
 		if len(proto) > 1 {
+			port, _ = strconv.Atoi(proto[0])
 			if strings.ToLower(proto[1]) == "udp" {
 				tmp.Protocol = func() *string { x := "udp"; return &x }()
 			}
@@ -381,7 +380,9 @@ func (e *API) getNetworkMode() string {
 
 	if len(e.Compose.Networks) > 0 {
 		network := e.getNetworkName(0)
-		mode = e.Compose.Networks[network].Name
+		if e.Compose.Networks[network].Driver != "" {
+			mode = e.Compose.Networks[network].Driver
+		}
 	}
 
 	return strings.ToLower(mode)
@@ -476,6 +477,20 @@ func (e *API) getDockerParameter(cmd cfg.Command) []mesosproto.Parameter {
 		if len(e.Service.Volumes) == 0 {
 			param = e.addDockerParameter(param, mesosproto.Parameter{Key: "volume-driver", Value: e.Config.DefaultVolumeDriver})
 		}
+		// configure ulimits
+		param = e.getUlimit(param)
+	}
+
+	return param
+}
+
+func (e *API) getUlimit(param []mesosproto.Parameter) []mesosproto.Parameter {
+	if e.Service.Ulimits.Memlock.Hard != 0 {
+		param = e.addDockerParameter(param, mesosproto.Parameter{Key: "ulimit", Value: "memlock=" + strconv.Itoa(e.Service.Ulimits.Memlock.Hard) + ":" + strconv.Itoa(e.Service.Ulimits.Memlock.Soft)})
+	}
+
+	if e.Service.Ulimits.Nofile.Hard != 0 {
+		param = e.addDockerParameter(param, mesosproto.Parameter{Key: "ulimit", Value: "nofile=" + strconv.Itoa(e.Service.Ulimits.Nofile.Hard) + ":" + strconv.Itoa(e.Service.Ulimits.Nofile.Soft)})
 	}
 
 	return param
@@ -487,6 +502,10 @@ func (e *API) getNetAlias() string {
 		if len(e.Service.Networks[network].Aliases) > 0 {
 			return e.Service.Networks[network].Aliases[0]
 		}
+	}
+
+	if e.getNetworkMode() == "user" {
+		return e.getHostname()
 	}
 
 	return ""
