@@ -37,7 +37,7 @@ services:
     environment:
       # CHANGE ME!
       - GRAYLOG_PASSWORD_SECRET=xaesh1Sualu0yahg
-      - GRAYLOG_ROOT_PASSWORD_SHA2=1aa2906e0c00c32c57925631498ce855af1888bc6fd9496192f119580204a2f7
+      - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
       - GRAYLOG_MONGODB_URI=mongodb://mongo.mini:27017/graylog        
       - GRAYLOG_ELASTICSEARCH_HOSTS=http://elasticsearch.mini:9200
     network: graylog
@@ -53,6 +53,8 @@ services:
       traefik.http.routers.__mesos_taskid__.entrypoints: "web"
       traefik.http.routers.__mesos_taskid__.rule: "Host(`your.example.com`)"
       traefik.http.routers.__mesos_taskid__.service: "mc:test:graylog:9000"
+      traefik.http.routers.__mesos_taskid__.middlewares: "graylog-header"
+      traefik.http.middlewares.graylog-header.headers.customrequestheaders.X-Graylog-Server-URL: "http://your.example.com:8080/"
     ports:
       # Graylog web interface and REST API
       - 9000:9000

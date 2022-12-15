@@ -40,6 +40,7 @@ func (e *Scheduler) Heartbeat() {
 				e.Mesos.Kill(task.TaskID, task.Agent)
 				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			}
+			continue
 		}
 
 		if e.Redis.CountRedisKey(task.TaskName+":*", "__KILL") < task.Instances {
@@ -47,6 +48,7 @@ func (e *Scheduler) Heartbeat() {
 			task.TaskID = task.TaskID + "." + strconv.Itoa(e.Redis.CountRedisKey(task.TaskName+":*", "__KILL")+1)
 			task.State = ""
 			e.Redis.SaveTaskRedis(task)
+			continue
 		}
 
 		if task.State == "" && e.Redis.CountRedisKey(task.TaskName+":*", "__KILL") <= task.Instances {
@@ -67,17 +69,20 @@ func (e *Scheduler) Heartbeat() {
 			e.Redis.SaveTaskRedis(task)
 
 			logrus.Info("Scheduled Mesos Task: ", task.TaskName)
+			continue
 		}
 
 		if task.State == "__NEW" {
 			e.Mesos.Revive()
 			suppress = false
 			e.Config.Suppress = false
+			continue
 		}
 
 		// Remove corrupt tasks
 		if task.State == "" && task.StateTime.Year() == 1 {
 			e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
+			continue
 		}
 	}
 

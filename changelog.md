@@ -9,9 +9,10 @@
 - CHANGE: set net-alias only if it's defined
 - ADD: Support for on-demand scale up of an instance
 - ADD: Healthcheck for how much instances are running and if it to less, deploy the missing one
-- UPDATE: Optimize revive and suppress.
+- UPDATE: Optimize revive and suppress
 - ADD: Support for docker ulimits memlock and nofile
 - FIX: Missing port if we use "udp" as protocol under ports
+- CHANGE: Optimize heartbeat
 
 ## 0.4.2
 

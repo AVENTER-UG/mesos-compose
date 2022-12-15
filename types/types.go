@@ -72,7 +72,7 @@ type Service struct {
 	CapAdd        []string                `yaml:"cap_add"`
 	CapDrop       []string                `yaml:"cap_drop"`
 	PullPolicy    string                  `yaml:"pull_policy" default:"always"`
-	Ulimits       Ulimits                 `yaml:ulimits`
+	Ulimits       Ulimits                 `yaml:"ulimits"`
 }
 
 // Ulimits - Configure ulimits of a mesos task

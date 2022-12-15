@@ -20,7 +20,7 @@ func TestGetShell(t *testing.T) {
 
 func TestGetCPU(t *testing.T) {
 	var e API
-	e.Service.Deploy.Resources.Limits.CPUs = "0.1"
+	e.Service.Deploy.Resources.Limits.CPUs = 0.1
 
 	res := e.getCPU()
 
@@ -31,7 +31,7 @@ func TestGetCPU(t *testing.T) {
 
 func TestGetMemory(t *testing.T) {
 	var e API
-	e.Service.Deploy.Resources.Limits.Memory = "1000"
+	e.Service.Deploy.Resources.Limits.Memory = 1000
 
 	res := e.getMemory()
 
