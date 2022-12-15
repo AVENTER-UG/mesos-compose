@@ -122,7 +122,6 @@ func (e *Redis) CountRedisKey(pattern string, ignoreState string) int {
 		}
 		count++
 	}
-	logrus.Debug("CountRedisKey: ", pattern, count)
 	return count
 }
 

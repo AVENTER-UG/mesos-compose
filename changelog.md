@@ -7,6 +7,9 @@
 - ADD: Default volume driver parameter `DEFAULT_VOLUME_DRIVER`
 - ADD: Set default values for Network (default) and NetworkMode (user)
 - CHANGE: set net-alias only if it's defined
+- ADD: Support for on-demand scale up of an instance
+- ADD: Healthcheck for how much instances are running and if it to less, deploy the missing one
+- UPDATE: Optimize revive and suppress.
 
 ## 0.4.2
 

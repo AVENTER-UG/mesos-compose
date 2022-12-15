@@ -24,7 +24,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 
 	// if task is set then its not a new task and we have to save old needed parameter
 	uuid, _ := util.GenUUID()
-	newTaskID := vars["project"] + "_" + name + "." + uuid
+	newTaskID := vars["project"] + "_" + name + "." + uuid + ".1"
 
 	if task.TaskID != "" {
 		newTaskID = task.TaskID

@@ -18,8 +18,10 @@ import (
 
 // Mesos include all the current vars and global config
 type Mesos struct {
-	Config    *cfg.Config
-	Framework *cfg.FrameworkConfig
+	Config     *cfg.Config
+	Framework  *cfg.FrameworkConfig
+	IsSuppress bool
+	IsRevive   bool
 }
 
 // Marshaler to serialize Protobuf Message to JSON
@@ -32,8 +34,10 @@ var marshaller = jsonpb.Marshaler{
 // New will create a new API object
 func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Mesos {
 	e := &Mesos{
-		Config:    cfg,
-		Framework: frm,
+		Config:     cfg,
+		Framework:  frm,
+		IsSuppress: false,
+		IsRevive:   false,
 	}
 
 	return e
@@ -41,25 +45,33 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Mesos {
 
 // Revive will revive the mesos tasks to clean up
 func (e *Mesos) Revive() {
-	logrus.WithField("func", "mesos.Revive").Debug("Revive Tasks")
-	revive := &mesosproto.Call{
-		Type: mesosproto.Call_REVIVE,
-	}
-	err := e.Call(revive)
-	if err != nil {
-		logrus.Error("Call Revive: ", err)
+	if !e.IsRevive {
+		logrus.WithField("func", "mesos.Revive").Debug("Revive Tasks")
+		e.IsSuppress = false
+		e.IsRevive = true
+		revive := &mesosproto.Call{
+			Type: mesosproto.Call_REVIVE,
+		}
+		err := e.Call(revive)
+		if err != nil {
+			logrus.Error("Call Revive: ", err)
+		}
 	}
 }
 
 // SuppressFramework if all Tasks are running, suppress framework offers
 func (e *Mesos) SuppressFramework() {
-	logrus.WithField("func", "mesos.SupressFramework").Debug("Framework Suppress")
-	suppress := &mesosproto.Call{
-		Type: mesosproto.Call_SUPPRESS,
-	}
-	err := e.Call(suppress)
-	if err != nil {
-		logrus.Error("Suppress Framework Call: ")
+	if !e.IsSuppress {
+		logrus.WithField("func", "mesos.SupressFramework").Debug("Framework Suppress")
+		e.IsSuppress = true
+		e.IsRevive = false
+		suppress := &mesosproto.Call{
+			Type: mesosproto.Call_SUPPRESS,
+		}
+		err := e.Call(suppress)
+		if err != nil {
+			logrus.Error("Suppress Framework Call: ")
+		}
 	}
 }
 
