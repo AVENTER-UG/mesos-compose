@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  traefik:
+    image: docker.io/avhost/traefik_mesos:latest
+    command: "/traefik"
+    restart: always
+    network_mode: "host"
+    network: default
+    environment:
+      - TRAEFIK_PROVIDERS_MESOS=true
+      - TRAEFIK_API_INSECURE=true
+      - TRAEFIK_ENTRYPOINTS_WEB=true
+      - TRAEFIK_ENTRYPOINTS_WEB_ADDRESS=:80
+      - TRAEFIK_ENTRYPOINTS_WEBSECURE=true
+      - TRAEFIK_ENTRYPOINTS_WEBSECURE_ADDRESS=:443
+      - TRAEFIK_ENTRYPOINTS_TRAEFIK=true
+      - TRAEFIK_ENTRYPOINTS_TRAEFIK_ADDRESS=:9000
+    labels:
+      biz.aventer.mesos_compose.container_type: "DOCKER"        
+    deploy:
+      resources:
+        limits:
+          cpus: 0.1
+          memory: 500
+      
