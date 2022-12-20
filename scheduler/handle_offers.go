@@ -26,7 +26,7 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			cmd.State = ""
 			e.Redis.SaveTaskRedis(cmd)
 			logrus.WithField("func", "mesos.HandleOffers").Debug("No matched offer found.")
-			logrus.Info("Decline unneeded offer: ", offerIds)
+			logrus.WithField("func", "mesos.HandleOffers").Debug("Decline unneeded offer: ", offerIds)
 			return e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 		}
 		logrus.Debug("Take Offer From:", takeOffer.GetHostname())

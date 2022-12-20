@@ -3,7 +3,7 @@ services:
   # MongoDB: https://hub.docker.com/_/mongo/
   mongo:
     hostname: mongo.mini
-    image: mongo:4.2
+    image: mongo:5.0
     network: graylog
     volumes:
       - /data/graylog/data/mongodb:/data/db
@@ -33,7 +33,7 @@ services:
   # Graylog: https://hub.docker.com/r/graylog/graylog/
   graylog:
     hostname: graylog.mini
-    image: graylog/graylog:4.0.1
+    image: graylog/graylog:5.0.1
     environment:
       # CHANGE ME!
       - GRAYLOG_PASSWORD_SECRET=xaesh1Sualu0yahg
@@ -41,6 +41,7 @@ services:
       - GRAYLOG_MONGODB_URI=mongodb://mongo.mini:27017/graylog        
       - GRAYLOG_ELASTICSEARCH_HOSTS=http://elasticsearch.mini:9200
     network: graylog
+    restart: always
     deploy:
       resources:
         limits:
@@ -54,7 +55,7 @@ services:
       traefik.http.routers.__mesos_taskid__.rule: "Host(`your.example.com`)"
       traefik.http.routers.__mesos_taskid__.service: "mc:test:graylog:9000"
       traefik.http.routers.__mesos_taskid__.middlewares: "graylog-header"
-      traefik.http.middlewares.graylog-header.headers.customrequestheaders.X-Graylog-Server-URL: "http://your.example.com:8080/"
+      traefik.http.middlewares.graylog-header.headers.customrequestheaders.X-Graylog-Server-URL: "http://your.example.com:9080/"
     ports:
       # Graylog web interface and REST API
       - 9000:9000
