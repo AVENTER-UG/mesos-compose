@@ -7,7 +7,6 @@ import (
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	util "github.com/AVENTER-UG/util/util"
-	"github.com/sirupsen/logrus"
 )
 
 // V0ShowAllTasks will print out all tasks
@@ -22,8 +21,6 @@ func (e *API) V0ShowAllTasks(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
-
-	logrus.WithField("func", "api.V0ShowAllTasks").Debug("HTTP GET V0ShowAllTasks")
 
 	keys := e.Redis.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 

@@ -20,7 +20,6 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logrus.Debug("HTTP PUT V0ComposeRestartService")
 	d := e.ErrorMessage(2, "V0ComposePush", "nok")
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
@@ -36,11 +35,14 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 	keys := e.Redis.GetAllRedisKeys(e.Config.PrefixTaskName + ":" + project + ":" + servicename + ":*")
 
 	if keys == nil {
-		logrus.WithField("func", "V0ComposeRestartService").Error("Could not find Project or Servicename")
+		logrus.WithField("func", "api.V0ComposeRestartService").Error("Could not find Project or Servicename")
 
 		d = e.ErrorMessage(0, "V0ComposeRestartService", "Could not find Project or Servicename")
 		w.Write(d)
+		return
 	}
+
+	logrus.WithField("func", "api.V0ComposeRestartService").Info("Restart Task" + e.Config.PrefixTaskName + ":" + project + ":" + servicename)
 
 	for keys.Next(e.Redis.CTX) {
 		key := e.Redis.GetRedisKey(keys.Val())

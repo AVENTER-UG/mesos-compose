@@ -18,7 +18,6 @@ func (e *API) V0ComposePush(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	auth := e.CheckAuth(r, w)
 
-	logrus.Debug("HTTP PUT V0ComposePush")
 	d := e.ErrorMessage(2, "V0ComposePush", "nok")
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
@@ -41,9 +40,11 @@ func (e *API) V0ComposePush(w http.ResponseWriter, r *http.Request) {
 
 	for service := range data.Services {
 		// only schedule if the max instances is not reached
-		TaskName := e.Config.PrefixTaskName + ":" + vars["project"] + ":" + service
+		taskName := e.Config.PrefixTaskName + ":" + vars["project"] + ":" + service
+		logrus.WithField("func", "api.V0ComposePush").Info("Push Task: " + taskName)
+
 		Instances := e.getReplicas()
-		if e.Redis.CountRedisKey(TaskName+":*", "") < Instances {
+		if e.Redis.CountRedisKey(taskName+":*", "") < Instances {
 			e.Compose = data
 			e.mapComposeServiceToMesosTask(vars, service, cfg.Command{})
 		}

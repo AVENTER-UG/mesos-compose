@@ -33,12 +33,15 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 	err := yaml.NewDecoder(r.Body).Decode(&data)
 
 	if err != nil {
+		logrus.WithField("func", "api.V0ComposeUpdate").Error("Error: ", err)
 		d = e.ErrorMessage(2, "V0ComposeUpdate", err.Error())
 		w.Write(d)
-		logrus.Error("Error: ", err)
+		return
 	}
 
 	e.Compose = data
+
+	logrus.WithField("func", "api.V0ComposeUpdate").Info("Update Task" + e.Config.PrefixTaskName + ":" + vars["project"])
 
 	for service := range data.Services {
 		taskName := e.Config.PrefixTaskName + ":" + vars["project"] + ":" + service

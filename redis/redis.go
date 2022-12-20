@@ -34,7 +34,7 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Redis {
 		Mesos:    *mesos.New(cfg, frm),
 	}
 
-	logrus.WithField("funct", "Redis.New").Info("Redis Connection", e.Connect())
+	logrus.WithField("funct", "Redis.New").Info("Redis Connection: ", e.Connect())
 
 	return e
 }

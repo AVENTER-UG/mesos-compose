@@ -10,26 +10,36 @@ services:
     ports:
       - 27017:27017
   # Elasticsearch: https://www.elastic.co/guide/en/elasticsearch/reference/5.6/docker.html
-  elasticsearch:
-    hostname: elasticsearch.mini
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.0
+  opensearch:
+    image: opensearchproject/opensearch:2.0.1
+    container_name: opensearch.mini
     environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch.mini
+      - bootstrap.memory_lock=false # along with the memlock settings below, disables swapping
       - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+      - "DISABLE_INSTALL_DEMO_CONFIG=true" # disables execution of install_demo_configuration.sh bundled with security plugin, which installs demo certificates and security configurations to OpenSearch
+      - "DISABLE_SECURITY_PLUGIN=true" # disables security plugin entirely in OpenSearch by setting plugins.security.disabled: true in opensearch.yml
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    deploy:
-      resources:
-        limits:
-          memory: 2000
-    network: graylog
+      nofile:
+        soft: 65536 # maximum number of open files for the OpenSearch user, set to at least 65536 on modern systems
+        hard: 65536
     ports:
       - 9200:9200
-      - 9300:9300
+    network: graylog
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: 0.01
+          memory: 2000
     volumes:
       - /data/graylog/data/esdb:/usr/share/elasticsearch/data
+
   # Graylog: https://hub.docker.com/r/graylog/graylog/
   graylog:
     hostname: graylog.mini
@@ -39,7 +49,7 @@ services:
       - GRAYLOG_PASSWORD_SECRET=xaesh1Sualu0yahg
       - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
       - GRAYLOG_MONGODB_URI=mongodb://mongo.mini:27017/graylog        
-      - GRAYLOG_ELASTICSEARCH_HOSTS=http://elasticsearch.mini:9200
+      - GRAYLOG_ELASTICSEARCH_HOSTS=http://opensearch.mini:9200
     network: graylog
     restart: always
     deploy:

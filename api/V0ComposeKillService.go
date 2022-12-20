@@ -18,7 +18,6 @@ func (e *API) V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logrus.Debug("HTTP DELETE V0ComposeKillService")
 	d := e.ErrorMessage(2, "V0ComposeKillService", "nok")
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
@@ -41,7 +40,7 @@ func (e *API) V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 		task.Restart = "no"
 		e.Redis.SaveTaskRedis(task)
 
-		logrus.Debug("V0ComposeKillService: " + e.Config.PrefixTaskName + ":" + project + ":" + servicename)
+		logrus.WithField("func", "api.V0ComposeKillService").Info("Kill Service: " + e.Config.PrefixTaskName + ":" + project + ":" + servicename)
 	}
 	d = e.ErrorMessage(0, "V0ComposeKillService", "ok")
 	w.Write(d)
