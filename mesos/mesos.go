@@ -244,7 +244,6 @@ func (e *Mesos) GetAgentInfo(agentID string) cfg.MesosSlaves {
 	}
 
 	if res.StatusCode == http.StatusOK {
-
 		defer res.Body.Close()
 
 		var agent cfg.MesosAgent
