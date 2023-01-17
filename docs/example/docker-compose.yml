@@ -13,11 +13,14 @@ services:
       - MYSQL_HOST=test
     hostname: test
     container_name: test
+    container_type: docker
+    shell: true
+    mesos:
+      task_name: "mc:test:app1" # an alternative taskname      
+      executer:
+        command: "./my-custom-executor"
+        uri: "http://localhost/my-custom-executor"
     labels:
-      biz.aventer.mesos_compose.container_type: "DOCKER"
-      bis.aventer.mesos_compose.task_name: "mc:test:app1" # an alternative taskname
-      biz.aventer.mesos_compose.executor: "./my-custom-executor"
-      biz.aventer.mesos_compose.executor_uri: "http://localhost/my-custom-executor"
       traefik.enable: "true"
       traefik.http.routers.test.entrypoints: "web"
       traefik.http.routers.test.service: "mc:test:app1:80" # if an alternative taskname is set, we have to use it here to

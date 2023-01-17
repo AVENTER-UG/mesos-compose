@@ -5,8 +5,8 @@ services:
     environment:
       - VAULT_ADDR="http://0.0.0.0:8200"
       - VAULT_DEV_ROOT_TOKEN_ID=vault-plaintext-root-token
-    labels:
-      biz.aventer.mesos_compose.taskname: "vault:vault-server"
+    mesos:
+      task_name: "vault:vault-server"
     network_mode: "host"
     network: default
     restart: unless-stopped

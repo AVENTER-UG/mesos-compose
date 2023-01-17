@@ -1,7 +1,6 @@
 package scheduler
 
 import (
-	"strconv"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -45,7 +44,6 @@ func (e *Scheduler) Heartbeat() {
 
 		if e.Redis.CountRedisKey(task.TaskName+":*", "__KILL") < task.Instances {
 			e.Mesos.Revive()
-			task.TaskID = task.TaskID + "." + strconv.Itoa(e.Redis.CountRedisKey(task.TaskName+":*", "__KILL")+1)
 			task.State = ""
 			e.Redis.SaveTaskRedis(task)
 			continue

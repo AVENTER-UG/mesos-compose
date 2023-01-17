@@ -5,6 +5,8 @@ import (
 	//"encoding/json"
 
 	"encoding/json"
+	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
@@ -100,4 +102,14 @@ func (e *API) ErrorMessage(number int, function string, msg string) []byte {
 
 	data, _ := json.Marshal(err)
 	return data
+}
+
+// IncreaseTaskCount split the taskID and increase the app count digit
+func (e *API) IncreaseTaskCount(taskID string) string {
+	tp := strings.Split(taskID, ".")
+	if len(tp) == 3 {
+		taskNr, _ := strconv.Atoi(tp[2])
+		return tp[0] + "." + tp[1] + "." + strconv.Itoa(taskNr+1)
+	}
+	return taskID + ".0"
 }

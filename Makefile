@@ -8,6 +8,7 @@ BRANCH=`git rev-parse --abbrev-ref HEAD`
 BUILDDATE=`date -u +%Y-%m-%dT%H:%M:%SZ`
 IMAGEFULLNAME=${REPO}/${IMAGENAME}
 
+
 .PHONY: help build all docs
 
 help:
@@ -22,6 +23,14 @@ help:
 
 .DEFAULT_GOAL := all
 
+ifeq (${BRANCH}, master) 
+	BRANCH=latest
+endif
+
+ifneq ($B{BRANCH}, latest)
+	BRANCH=${TAG}
+endif
+
 build:
 	@echo ">>>> Build Docker"
 	@docker build --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${TAG} .
@@ -30,16 +39,9 @@ build-bin:
 	@echo ">>>> Build binary"
 	@CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags "-X main.BuildVersion=${BUILDDATE} -X main.GitVersion=${TAG} -extldflags \"-static\"" .
 
-publish:
+push:
 	@echo ">>>> Publish docker image"
-	@docker buildx build --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:latest .
-
-publish-tag:
-	@echo ">>>> Publish docker image"
-	@docker buildx build --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:${TAG} .
-
-update-precommit:
-	@virtualenv --no-site-packages ~/.virtualenv
+	@docker buildx build --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:${BRANCH} .
 
 update-gomod:
 	go get -u
@@ -59,6 +61,7 @@ seccheck:
 go-fmt:
 	@gofmt -w .
 	@golangci-lint run --fix
+	@gocritic check -disable 'whynolint' 	
 
 version:
 	@echo ">>>> Generate version file"

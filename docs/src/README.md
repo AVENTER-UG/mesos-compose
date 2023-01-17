@@ -17,7 +17,7 @@ version: '3.9'
 services:
   app:
     image: alpine:latest
-    command: ["sleep", "1000"]
+    command: "sleep 1000"
     restart: always
     volumes:
       - "12345test:/tmp"
@@ -25,11 +25,14 @@ services:
       - MYSQL_HOST=test
     hostname: test
     container_name: test
+    container_type: docker # or mesos
+    shell: false 
+    mesos:
+      task_name: "mc:test:app1" # an alternative taskname
+      executer:
+        command: "./my-custom-executor"
+        uri: "http://localhost/my-custom-executor"
     labels:
-      biz.aventer.mesos_compose.container_type: "DOCKER"
-      bis.aventer.mesos_compose.task_name: "mc:test:app1" # the an alternative taskname
-      biz.aventer.mesos_compose.executor: "./my-custom-executor"
-      biz.aventer.mesos_compose.executor_uri: "http://localhost/my-custom-executor"
       traefik.enable: "true"
       traefik.http.routers.test.entrypoints: "web"
       traefik.http.routers.test.service: "mc:test:app1:80" # if an alternative taskname is set, we have to use it here to
@@ -42,6 +45,13 @@ services:
       - "8082:82/udp"
     network:
       - default
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536 
+        hard: 65536
     deploy:
       placement:
         constraints:

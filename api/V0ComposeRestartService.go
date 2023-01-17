@@ -2,9 +2,7 @@ package api
 
 import (
 	"net/http"
-	"strings"
 
-	util "github.com/AVENTER-UG/util/util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -52,9 +50,7 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 		e.Redis.SaveTaskRedis(task)
 
 		// generate new task as copy of old task
-		taskName := strings.Split(task.TaskID, ".")
-		uuid, _ := util.GenUUID()
-		task.TaskID = taskName[0] + "." + uuid
+		task.TaskID = e.IncreaseTaskCount(task.TaskID)
 		task.State = ""
 		e.Redis.SaveTaskRedis(task)
 	}

@@ -110,7 +110,7 @@ func main() {
 	//	this loop is for resubscribtion purpose
 	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()
-	// nolint:gosimple
+	//nolint:gosimple
 	for {
 		select {
 		case <-ticker.C:

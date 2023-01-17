@@ -24,7 +24,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 
 	// if task is set then its not a new task and we have to save old needed parameter
 	uuid, _ := util.GenUUID()
-	newTaskID := vars["project"] + "_" + name + "." + uuid + ".1"
+	newTaskID := e.IncreaseTaskCount(vars["project"] + "_" + name + "." + uuid)
 
 	if task.TaskID != "" {
 		newTaskID = task.TaskID
@@ -66,7 +66,13 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 
 // Get the name of the task
 func (e *API) getTaskName(project, name string) string {
-	taskName := e.getLabelValueByKey("biz.aventer.mesos_compose.taskname")
+	var taskName string
+
+	if (e.Service.Mesos != cfg.Mesos{}) {
+		if e.Service.Mesos.TaskName != "" {
+			taskName = e.Service.Mesos.TaskName
+		}
+	}
 
 	if taskName != "" {
 		// be sure the taskname is only running under the frameworks prefix
@@ -170,16 +176,6 @@ func (e *API) getLabels() []mesosproto.Label {
 		label = append(label, tmp)
 	}
 	return label
-}
-
-// Return the value of the given key
-func (e *API) getLabelValueByKey(label string) string {
-	for k, v := range e.Service.Labels {
-		if label == k {
-			return fmt.Sprint(v)
-		}
-	}
-	return ""
 }
 
 // geturn the pullpolicy value
@@ -323,8 +319,16 @@ func (e *API) getVolumes(containerType string) []mesosproto.Volume {
 // Get custome executer
 func (e *API) getExecutor() mesosproto.ExecutorInfo {
 	var executorInfo mesosproto.ExecutorInfo
-	command := e.getLabelValueByKey("biz.aventer.mesos_compose.executor")
-	uri := e.getLabelValueByKey("biz.aventer.mesos_compose.executor_uri")
+	var command, uri string
+
+	if (e.Service.Mesos.Executor != cfg.Executor{}) {
+		if e.Service.Mesos.Executor.Command != "" {
+			command = e.Service.Mesos.Executor.Command
+		}
+		if e.Service.Mesos.Executor.URI != "" {
+			uri = e.Service.Mesos.Executor.URI
+		}
+	}
 
 	if command != "" {
 		command = "exec '" + command + "' " + e.getCommand()
@@ -419,7 +423,7 @@ func (e *API) getNetworkName(val int) string {
 
 // check if the task command inside of the container have to be executed as shell
 func (e *API) getShell(cmd cfg.Command) bool {
-	return cmd.Command != ""
+	return e.Service.Shell
 }
 
 // get linux info like capabilities
@@ -451,7 +455,11 @@ func (e *API) getCapabilities(capa []string) *mesosproto.CapabilityInfo {
 
 // get the container type
 func (e *API) getContainerType() string {
-	conType := strings.ToLower(e.getLabelValueByKey("biz.aventer.mesos_compose.container_type"))
+	var conType string
+
+	if e.Service.ContainerType != "" {
+		conType = strings.ToLower(e.Service.ContainerType)
+	}
 
 	// if contype and custom executor is unset, then set the contype to DOCKER
 	if conType == "" {

@@ -2,6 +2,7 @@
 
 ## master
 
+- CHANGE: !!!! Broken changes !!!! Change mesos-compose specific labels to yaml flags. For an example, see the docs.
 - CHANGE: Move mesos specific functions into own module
 - ADD: Implicit reconcile to remove unknown Mesos Tasks
 - ADD: Default volume driver parameter `DEFAULT_VOLUME_DRIVER`
@@ -13,6 +14,7 @@
 - ADD: Support for docker ulimits memlock and nofile
 - FIX: Missing port if we use "udp" as protocol under ports
 - CHANGE: Optimize heartbeat
+- ADD: Shell flag to tell Mesos it should treat the command as shell (like: `/bin/sh -c <command> <args>`)
 
 ## 0.4.2
 

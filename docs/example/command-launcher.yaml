@@ -2,6 +2,5 @@ version: "3.9"
 services:
   test:
     command: "sleep 1000"
-    labels:
-      biz.aventer.mesos_compose.container_type: "none"
+    container_type: none
     restart: unless-stopped

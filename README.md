@@ -3,7 +3,7 @@
 [![Chat](https://img.shields.io/static/v1?label=Chat&message=Support&color=brightgreen)](https://matrix.to/#/#mesosk3s:matrix.aventer.biz?via=matrix.aventer.biz)
 [![Docs](https://img.shields.io/static/v1?label=Docs&message=Support&color=brightgreen)](https://aventer-ug.github.io/mesos-m3s/index.html)
 
-Mesos Framework to use docker-compose files.
+Mesos Framework to use docker-compose based files.
 
 ## Requirements
 
@@ -84,7 +84,7 @@ version: '3.9'
 services:
   app:
     image: alpine:latest
-    command: ["sleep", "1000"]
+    command: "sleep 1000"
     restart: always
     volumes:
       - "12345test:/tmp"
@@ -92,10 +92,14 @@ services:
       - MYSQL_HOST=test
     hostname: test
     container_name: test
+    container_type: docker # or mesos
+    shell: false 
+    mesos:
+      task_name: "mc:test:app1" # an alternative taskname
+      executer:
+        command: "./my-custom-executor"
+        uri: "http://localhost/my-custom-executor"
     labels:
-      biz.aventer.mesos_compose.container_type: "DOCKER"
-      iz.aventer.mesos_compose.executor: "./my-custom-executor"
-      biz.aventer.mesos_compose.executor_uri: "http://localhost/my-custom-executor"
       traefik.enable: "true"
       traefik.http.routers.test.entrypoints: "web"
       traefik.http.routers.test.service: "mc_test_app_80"
@@ -108,6 +112,13 @@ services:
       - "8082:82/udp"
     network:
       - default
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536 
+        hard: 65536
     deploy:
       placement:
         constraints:

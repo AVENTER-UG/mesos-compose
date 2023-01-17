@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 
 	util "github.com/AVENTER-UG/util/util"
@@ -53,14 +52,14 @@ func init() {
 	config.VaultTimeout, _ = time.ParseDuration(util.Getenv("VAULT_TIMEOUT", "10s"))
 
 	// The comunication to the mesos server should be via ssl or not
-	if strings.Compare(os.Getenv("MESOS_SSL"), "true") == 0 {
+	if util.Getenv("MESOS_SSL", "false") == "true" {
 		framework.MesosSSL = true
 	} else {
 		framework.MesosSSL = false
 	}
 
 	// Skip SSL Verification
-	if strings.Compare(os.Getenv("SKIP_SSL"), "true") == 0 {
+	if util.Getenv("SKIP_SSL", "true") == "true" {
 		config.SkipSSL = true
 	} else {
 		config.SkipSSL = false

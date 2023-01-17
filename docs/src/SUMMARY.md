@@ -1,7 +1,6 @@
 # Summary
 
 - [Introduction](README.md)
-- [Custom Labels](labels.md)
 - [Environment Variables](vars.md)
 
 # CLI

@@ -50,7 +50,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 		// only restart the task if it stopped by a failure
 		case "on-failure":
 			if update.Status.State.String() == mesosproto.TASK_FAILED.String() {
-				task.State = ""
+				break
 			}
 			e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			return e.Mesos.Call(msg)
@@ -60,13 +60,10 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 				return e.Mesos.Call(msg)
 			}
-			task.State = ""
-		// always restart the container
-		case "always":
-			task.State = ""
-		default:
-			task.State = ""
 		}
+		// all other cases, increase task count and restart task
+		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
+		task.State = ""
 
 	case mesosproto.TASK_RUNNING:
 		task.MesosAgent = e.Mesos.GetAgentInfo(update.Status.GetAgentID().Value)

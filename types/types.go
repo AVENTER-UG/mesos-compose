@@ -66,13 +66,28 @@ type Service struct {
 	NetworkMode   string                  `yaml:"network_mode"`
 	Privileged    bool                    `yaml:"privileged"`
 	Command       string                  `yaml:"command"`
+	Shell         bool                    `yaml:"shell" default:"true"`
 	Deploy        Deploy                  `yaml:"deploy"`
 	Hostname      string                  `yaml:"hostname"`
 	ContainerName string                  `yaml:"container_name"`
+	ContainerType string                  `yaml:"container_type" default:"docker"`
 	CapAdd        []string                `yaml:"cap_add"`
 	CapDrop       []string                `yaml:"cap_drop"`
 	PullPolicy    string                  `yaml:"pull_policy" default:"always"`
 	Ulimits       Ulimits                 `yaml:"ulimits"`
+	Mesos         Mesos                   `yaml:"mesos"`
+}
+
+// Mesos custom mesos task configuration
+type Mesos struct {
+	TaskName string   `yaml:"task_name"`
+	Executor Executor `yaml:"executor"`
+}
+
+// Executor to configure the to use executor
+type Executor struct {
+	Command string `yaml:"command"`
+	URI     string `yaml:"uri"`
 }
 
 // Ulimits - Configure ulimits of a mesos task

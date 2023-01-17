@@ -10,8 +10,9 @@ services:
       - SYS_ADMIN
       - NET_ADMIN
     privileged: true        
-    labels:
-      biz.aventer.mesos_compose.executor: "/tmp/mesos-firecracker-executor"
+    mesos:
+      executor:
+        command: "/tmp/mesos-firecracker-executor"
     pull_policy: always
     restart: no
       
