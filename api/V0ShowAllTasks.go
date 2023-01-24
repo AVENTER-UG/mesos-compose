@@ -6,21 +6,24 @@ import (
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
-	util "github.com/AVENTER-UG/util/util"
+	"github.com/sirupsen/logrus"
 )
 
 // V0ShowAllTasks will print out all tasks
 // example:
 // curl -X GET http://user:password@127.0.0.1:10000/api/compose/v0/tasks
 func (e *API) V0ShowAllTasks(w http.ResponseWriter, r *http.Request) {
-	auth := e.CheckAuth(r, w)
+	logrus.WithField("func", "api.V0ShowAllTasks").Debug("Show Mesos Task")
 
-	if !auth {
-		return
-	}
+	auth := e.CheckAuth(r, w)
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
+
+	if !auth {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	keys := e.Redis.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 
@@ -41,6 +44,5 @@ func (e *API) V0ShowAllTasks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	out, _ := json.Marshal(&list)
-	d := e.ErrorMessage(0, "V0ShowAllTasks", util.PrettyJSON(out))
-	w.Write(d)
+	w.Write(out)
 }

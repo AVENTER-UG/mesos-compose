@@ -73,7 +73,44 @@ class mesosCompose(PluginBase):
             "short_help": "Restart service",
             "long_help": "Restart service",
         },
+        "framework": {
+            "arguments": ["<framework-name>", "<operations>"],
+            "flags": {},
+            "short_help": "Framework Commands.",
+            "long_help": "Framework Commands\n\treregister - force the reregistration of the framework. !!! ONLY USE IT DURING MESOS CONNECTION ERRORS. !!!",
+        }
     }
+
+    def framework(self, argv):
+        """
+        Framework commands.
+        """
+
+        try:
+            master = self.config.master()
+            config = self.config
+            # pylint: disable=attribute-defined-outside-init
+            self.mesos_config = self._get_config()
+            self.framework_name = argv["<framework-name>"]
+        except Exception as exception:
+            raise CLIException(
+                "Unable to get leading master address: {error}".format(error=exception)
+            ) from exception
+
+        if argv["<operations>"] == "reregister":
+            print("Force the reregistration of these framework")
+
+            framework_address = get_framework_address(
+                self.get_framework_id(argv), master, config
+            )
+            data = self.write_endpoint(
+                framework_address,
+                "/api/compose/v0/framework/reregister",
+                self,
+                "PUT"
+            )
+            print(data)
+
 
     def launch(self, argv):
         """
@@ -104,7 +141,7 @@ class mesosCompose(PluginBase):
             framework_address = get_framework_address(
                 self.get_framework_id(argv), master, config
             )
-            data = json.loads(
+            message = json.loads(
                 self.write_endpoint(
                     framework_address,
                     "/api/compose/v0/" + project,
@@ -115,10 +152,9 @@ class mesosCompose(PluginBase):
             )
 
             try:
-                message = json.loads(data["Message"])
                 print(json.dumps(message, indent=2, ensure_ascii=False))
             except Exception as exception:
-                print(data)
+                print(message)
         else:
             print("Nothing to Launch")
 
@@ -145,13 +181,11 @@ class mesosCompose(PluginBase):
                 self.get_framework_id(argv), master, config
             )
 
-            data = json.loads(
+            message = json.loads(
                 http.read_endpoint(framework_address, "/api/compose/v0/tasks", self)
             )
 
             try:
-                message = json.loads(data["Message"])
-
                 if not message:
                     print("There are no tasks running in the cluster.")
                     return
@@ -218,8 +252,7 @@ class mesosCompose(PluginBase):
             )
 
             try:
-                message = json.loads(data["Message"])
-                print(json.dumps(message, indent=2, ensure_ascii=False))
+                print(json.dumps(data, indent=2, ensure_ascii=False))
             except Exception as exception:
                 print(data)
 

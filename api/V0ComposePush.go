@@ -15,15 +15,21 @@ import (
 // example:
 // curl -X GET http://user:password@127.0.0.1:10000/api/compose/v0 --data-binary @docker-compose.yml
 func (e *API) V0ComposePush(w http.ResponseWriter, r *http.Request) {
+	logrus.WithField("func", "api.V0ComposePush").Debug("Launch Mesos Task")
+
 	vars := mux.Vars(r)
 	auth := e.CheckAuth(r, w)
 
-	d := e.ErrorMessage(2, "V0ComposePush", "nok")
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
 
-	if vars == nil || !auth {
-		w.Write(d)
+	if !auth {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	if vars["project"] == "" {
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
@@ -32,9 +38,8 @@ func (e *API) V0ComposePush(w http.ResponseWriter, r *http.Request) {
 	err := yaml.NewDecoder(r.Body).Decode(&data)
 
 	if err != nil {
-		logrus.Error("Error: ", err.Error())
-		d = e.ErrorMessage(2, "V0ComposePush", err.Error())
-		w.Write(d)
+		logrus.WithField("func", "V0ComposePush").Error("Error: ", err.Error())
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
@@ -51,6 +56,5 @@ func (e *API) V0ComposePush(w http.ResponseWriter, r *http.Request) {
 	}
 
 	out, _ := json.Marshal(&data)
-	d = e.ErrorMessage(0, "V0ComposePush", util.PrettyJSON(out))
-	w.Write(d)
+	w.Write([]byte(util.PrettyJSON(out)))
 }

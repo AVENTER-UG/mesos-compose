@@ -13,19 +13,21 @@ import (
 // example:
 // curl -X PUT http://user:password@127.0.0.1:10000/api/compose/v0/{projectname}/{servicename}/restart
 func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
+	logrus.WithField("func", "api.V0ComposeRestartService").Debug("Restart Mesos Task")
+
 	vars := mux.Vars(r)
 	auth := e.CheckAuth(r, w)
 
-	if vars == nil || !auth {
-		return
-	}
-
-	d := e.ErrorMessage(2, "V0ComposePush", "nok")
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
 
+	if !auth {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	if vars["project"] == "" || vars["servicename"] == "" {
-		w.Write(d)
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
@@ -36,9 +38,7 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 
 	if keys == nil {
 		logrus.WithField("func", "api.V0ComposeRestartService").Error("Could not find Project or Servicename")
-
-		d = e.ErrorMessage(0, "V0ComposeRestartService", "Could not find Project or Servicename")
-		w.Write(d)
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
@@ -58,7 +58,4 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 		task.State = ""
 		e.Redis.SaveTaskRedis(task)
 	}
-
-	d = e.ErrorMessage(0, "V0ComposeRestartService", "ok")
-	w.Write(d)
 }
