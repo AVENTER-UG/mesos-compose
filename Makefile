@@ -7,6 +7,7 @@ TAG=`git describe --tags --abbrev=0`
 BRANCH=`git rev-parse --abbrev-ref HEAD`
 BUILDDATE=`date -u +%Y-%m-%dT%H:%M:%SZ`
 IMAGEFULLNAME=${REPO}/${IMAGENAME}
+LASTCOMMIT=$(shell git log -1 --pretty=short | tail -n 1 | tr -d " ")
 
 
 .PHONY: help build all docs
@@ -27,8 +28,10 @@ ifeq (${BRANCH}, master)
 	BRANCH=latest
 endif
 
-ifneq ($B{BRANCH}, latest)
-	BRANCH=${TAG}
+ifneq ($(shell echo $(LASTCOMMIT) | grep -E '^v([0-9]+\.){0,2}(\*|[0-9]+)'),)
+	BRANCH=${LASTCOMMIT}
+else
+	BRANCH=latest
 endif
 
 build:
@@ -41,6 +44,7 @@ build-bin:
 
 push:
 	@echo ">>>> Publish docker image"
+	@docker buildx build --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:latest .
 	@docker buildx build --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:${BRANCH} .
 
 update-gomod:
@@ -70,4 +74,4 @@ version:
 	@echo "Saved under .version.json"
 
 check: go-fmt sboom seccheck
-all: check build version publish
+all: check build version push

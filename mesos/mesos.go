@@ -43,6 +43,37 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Mesos {
 	return e
 }
 
+// Subscribe to the mesos backend
+func (e *Mesos) Subscribe() (*http.Client, *http.Request) {
+	subscribeCall := &mesosproto.Call{
+		FrameworkID: e.Framework.FrameworkInfo.ID,
+		Type:        mesosproto.Call_SUBSCRIBE,
+		Subscribe: &mesosproto.Call_Subscribe{
+			FrameworkInfo: &e.Framework.FrameworkInfo,
+		},
+	}
+
+	logrus.WithField("func", "mesos.Subscribe").Debug(subscribeCall)
+	body, _ := marshaller.MarshalToString(subscribeCall)
+	logrus.Debug(body)
+	client := &http.Client{}
+	client.Transport = &http.Transport{
+		// #nosec G402
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: e.Config.SkipSSL},
+	}
+
+	protocol := "https"
+	if !e.Framework.MesosSSL {
+		protocol = "http"
+	}
+	req, _ := http.NewRequest("POST", protocol+"://"+e.Framework.MesosMasterServer+"/api/v1/scheduler", bytes.NewBuffer([]byte(body)))
+	req.Close = true
+	req.SetBasicAuth(e.Framework.Username, e.Framework.Password)
+	req.Header.Set("Content-Type", "application/json")
+
+	return client, req
+}
+
 // Revive will revive the mesos tasks to clean up
 func (e *Mesos) Revive() {
 	if !e.IsRevive {
@@ -54,7 +85,7 @@ func (e *Mesos) Revive() {
 		}
 		err := e.Call(revive)
 		if err != nil {
-			logrus.Error("Call Revive: ", err)
+			logrus.WithField("func", "mesos.Revive").Error("Call Revive: ", err)
 		}
 	}
 }
@@ -70,7 +101,7 @@ func (e *Mesos) SuppressFramework() {
 		}
 		err := e.Call(suppress)
 		if err != nil {
-			logrus.Error("Suppress Framework Call: ")
+			logrus.WithField("func", "mesos.SupressFramework").Error("Suppress Framework Call: ")
 		}
 	}
 }
@@ -121,7 +152,7 @@ func (e *Mesos) Call(message *mesosproto.Call) error {
 	res, err := client.Do(req)
 
 	if err != nil {
-		logrus.Error("Call Message: ", err)
+		logrus.WithField("func", "mesos.Call").Error("Call Message: ", err)
 		return err
 	}
 

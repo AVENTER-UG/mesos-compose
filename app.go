@@ -114,7 +114,7 @@ func main() {
 	for {
 		select {
 		case <-ticker.C:
-			e := scheduler.Subscribe(&config, &framework)
+			e := scheduler.New(&config, &framework)
 			e.API = a
 			e.Vault = v
 			e.Redis = r

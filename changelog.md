@@ -12,9 +12,11 @@
 - ADD: Healthcheck for how much instances are running and if it to less, deploy the missing one
 - UPDATE: Optimize revive and suppress
 - ADD: Support for docker ulimits memlock and nofile
-- FIX: Missing port if we use "udp" as protocol under ports
+- FIX: Missing port if we use "UDP" as protocol under ports
 - CHANGE: Optimize heartbeat
 - ADD: Shell flag to tell Mesos it should treat the command as shell (like: `/bin/sh -c <command> <args>`)
+- ADD: API endpoint for reregistration of the framework. These make it possible to force a registration after Mesos lost the framework.
+- ADD: Mesos shell flag to control how the containerizer execute the command. If shell is true, then the command will be executes with `/bin/sh -c`.
 
 ## 0.4.2
 
