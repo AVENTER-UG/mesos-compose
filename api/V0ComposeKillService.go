@@ -11,19 +11,21 @@ import (
 // example:
 // curl -X DELETE http://user:password@127.0.0.1:10000/api/compose/v0/{projectname}/{servicename}/{taskid}
 func (e *API) V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
+	logrus.WithField("func", "api.V0ComposeKillService").Debug("Kill Service")
+
 	vars := mux.Vars(r)
 	auth := e.CheckAuth(r, w)
 
-	if vars == nil || !auth {
-		return
-	}
-
-	d := e.ErrorMessage(2, "V0ComposeKillService", "nok")
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
 
+	if !auth {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	if vars["project"] == "" || vars["servicename"] == "" {
-		w.Write(d)
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
@@ -42,6 +44,4 @@ func (e *API) V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 
 		logrus.WithField("func", "api.V0ComposeKillService").Info("Kill Service: " + e.Config.PrefixTaskName + ":" + project + ":" + servicename)
 	}
-	d = e.ErrorMessage(0, "V0ComposeKillService", "ok")
-	w.Write(d)
 }

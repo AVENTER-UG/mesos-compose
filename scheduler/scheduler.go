@@ -2,8 +2,6 @@ package scheduler
 
 import (
 	"bufio"
-	"bytes"
-	"crypto/tls"
 	"net/http"
 	"strings"
 
@@ -20,25 +18,19 @@ import (
 
 // Scheduler include all the current vars and global config
 type Scheduler struct {
-	Config    *cfg.Config
-	Framework *cfg.FrameworkConfig
-	Mesos     mesos.Mesos
-	Client    *http.Client
-	Req       *http.Request
-	API       *api.API
-	Vault     *vault.Vault
-	Redis     *redis.Redis
+	Config          *cfg.Config
+	Framework       *cfg.FrameworkConfig
+	Mesos           mesos.Mesos
+	Client          *http.Client
+	Req             *http.Request
+	API             *api.API
+	Vault           *vault.Vault
+	Redis           *redis.Redis
+	ConnectionError bool
 }
 
-// Marshaler to serialize Protobuf Message to JSON
-var marshaller = jsonpb.Marshaler{
-	EnumsAsInts: false,
-	Indent:      " ",
-	OrigName:    true,
-}
-
-// Subscribe to the mesos backend
-func Subscribe(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Scheduler {
+// New will create a new Scheduler object
+func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Scheduler {
 	e := &Scheduler{
 		Config:    cfg,
 		Framework: frm,
@@ -46,34 +38,7 @@ func Subscribe(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Scheduler {
 		Redis:     redis.New(cfg, frm),
 	}
 
-	subscribeCall := &mesosproto.Call{
-		FrameworkID: e.Framework.FrameworkInfo.ID,
-		Type:        mesosproto.Call_SUBSCRIBE,
-		Subscribe: &mesosproto.Call_Subscribe{
-			FrameworkInfo: &e.Framework.FrameworkInfo,
-		},
-	}
-
-	logrus.Debug(subscribeCall)
-	body, _ := marshaller.MarshalToString(subscribeCall)
-	logrus.Debug(body)
-	client := &http.Client{}
-	client.Transport = &http.Transport{
-		// #nosec G402
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: e.Config.SkipSSL},
-	}
-
-	protocol := "https"
-	if !e.Framework.MesosSSL {
-		protocol = "http"
-	}
-	req, _ := http.NewRequest("POST", protocol+"://"+e.Framework.MesosMasterServer+"/api/v1/scheduler", bytes.NewBuffer([]byte(body)))
-	req.Close = true
-	req.SetBasicAuth(e.Framework.Username, e.Framework.Password)
-	req.Header.Set("Content-Type", "application/json")
-
-	e.Req = req
-	e.Client = client
+	e.Client, e.Req = e.Mesos.Subscribe()
 
 	return e
 }
@@ -83,7 +48,7 @@ func (e *Scheduler) EventLoop() {
 	res, err := e.Client.Do(e.Req)
 
 	if err != nil {
-		logrus.Error("Mesos Master connection error: ", err.Error())
+		logrus.WithField("func", "scheduler.EventLoop").Error("Mesos Master connection error: ", err.Error())
 		return
 	}
 	defer res.Body.Close()
@@ -100,7 +65,7 @@ func (e *Scheduler) EventLoop() {
 		// Read line from Mesos
 		line, err = reader.ReadString('\n')
 		if err != nil {
-			logrus.Error("Error to read data from Mesos Master: ", err.Error())
+			logrus.WithField("func", "scheduler.EventLoop").Error("Error to read data from Mesos Master: ", err.Error())
 			return
 		}
 		line = strings.TrimSuffix(line, "\n")
@@ -108,7 +73,7 @@ func (e *Scheduler) EventLoop() {
 		var event mesosproto.Event // Event as ProtoBuf
 		err := jsonpb.UnmarshalString(line, &event)
 		if err != nil {
-			logrus.Error("Could not unmarshal Mesos Master data: ", err.Error())
+			logrus.WithField("func", "scheduler.EventLoop").Warn("Could not unmarshal Mesos Master data: ", err.Error())
 			continue
 		}
 
@@ -130,7 +95,7 @@ func (e *Scheduler) EventLoop() {
 			// Search Failed containers and restart them
 			err = e.HandleOffers(event.Offers)
 			if err != nil {
-				logrus.Error("Switch Event HandleOffers: ", err)
+				logrus.WithField("func", "scheduler.EventLoop").Warn("Switch Event HandleOffers: ", err)
 			}
 		}
 	}

@@ -71,7 +71,7 @@ func (e *Redis) SetRedisKey(data []byte, key string) {
 func (e *Redis) DelRedisKey(key string) int64 {
 	val, err := e.Client.Del(e.CTX, key).Result()
 	if err != nil {
-		logrus.Error("de.Key: ", err)
+		logrus.WithField("func", "redis.DelRedisKey").Error("de.Key: ", err)
 		e.PingRedis()
 	}
 

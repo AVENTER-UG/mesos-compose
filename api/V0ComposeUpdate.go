@@ -15,16 +15,21 @@ import (
 // example:
 // curl -X GET http://user:password@127.0.0.1:10000/api/compose/v0 --data-binary @docker-compose.yml
 func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
+	logrus.WithField("func", "api.V0ComposeUpdate").Debug("Update Mesos Task")
+
 	vars := mux.Vars(r)
 	auth := e.CheckAuth(r, w)
 
-	logrus.Debug("HTTP PUT V0ComposeUpdate")
-	d := e.ErrorMessage(2, "V0ComposeUpdate", "nok")
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Api-Service", "v0")
 
-	if vars == nil || !auth {
-		w.Write(d)
+	if !auth {
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+
+	if vars["project"] == "" {
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
@@ -34,8 +39,7 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		logrus.WithField("func", "api.V0ComposeUpdate").Error("Error: ", err)
-		d = e.ErrorMessage(2, "V0ComposeUpdate", err.Error())
-		w.Write(d)
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
@@ -63,6 +67,5 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	out, _ := json.Marshal(&data)
-	d = e.ErrorMessage(0, "V0ComposeUpdate", util.PrettyJSON(out))
-	w.Write(d)
+	w.Write([]byte(util.PrettyJSON(out)))
 }
