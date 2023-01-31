@@ -103,8 +103,8 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 	}
 	msg.AgentID = agent
 	msg.Resources = e.defaultResources(cmd)
-
-	if e.getLabelValue("biz.aventer.mesos_compose.executor", cmd) == "" {
+	// Do not set the cmd.Command if the mesos task is an executor.
+	if cmd.Mesos.Executor.Command == "" {
 		if cmd.Command == "" {
 			msg.Command = &mesosproto.CommandInfo{
 				Shell:       &cmd.Shell,
@@ -128,7 +128,7 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 	}
 
 	// ExecutorInfo or CommandInfo/Container, both is not supportet
-	if contype != nil && e.getLabelValue("biz.aventer.mesos_compose.executor", cmd) == "" {
+	if contype != nil && cmd.Mesos.Executor.Command == "" {
 		msg.Container = &mesosproto.ContainerInfo{}
 		msg.Container.Type = contype
 		msg.Container.Volumes = cmd.Volumes
@@ -159,7 +159,7 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 		}
 	}
 
-	if e.getLabelValue("biz.aventer.mesos_compose.executor", cmd) != "" {
+	if cmd.Mesos.Executor.Command != "" {
 		// FIX: https://github.com/AVENTER-UG/mesos-compose/issues/7
 		cmd.Executor.Resources = e.defaultResources(cmd)
 		msg.Executor = &cmd.Executor

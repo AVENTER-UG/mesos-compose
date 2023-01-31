@@ -55,6 +55,7 @@ func (e *API) Commands() *mux.Router {
 	rtr.HandleFunc("/api/compose/versions", e.Versions).Methods("GET")
 	rtr.HandleFunc("/api/compose/v0/tasks", e.V0ShowAllTasks).Methods("GET")
 	rtr.HandleFunc("/api/compose/v0/framework/reregister", e.V0FrameworkReRegister).Methods("PUT")
+	rtr.HandleFunc("/api/compose/v0/framework/supress", e.V0FrameworkSupress).Methods("PUT")
 	rtr.HandleFunc("/api/compose/v0/{project}", e.V0ComposePush).Methods("PUT")
 	rtr.HandleFunc("/api/compose/v0/{project}", e.V0ComposeUpdate).Methods("UPDATE")
 	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}", e.V0ComposeKillService).Methods("DELETE")

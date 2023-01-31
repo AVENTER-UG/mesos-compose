@@ -128,9 +128,10 @@ func (e *Mesos) Kill(taskID string, agentID string) error {
 // Call will send messages to mesos
 func (e *Mesos) Call(message *mesosproto.Call) error {
 	message.FrameworkID = e.Framework.FrameworkInfo.ID
+
 	body, err := marshaller.MarshalToString(message)
 	if err != nil {
-		logrus.WithField("func", "mesos.Call").Error("Could not Marshal message:", err.Error())
+		logrus.WithField("func", "mesos.Call").Debug("Could not Marshal message:", err.Error())
 		return err
 	}
 

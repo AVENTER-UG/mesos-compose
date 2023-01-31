@@ -51,7 +51,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Volumes = e.getVolumes(cmd.ContainerType)
 	cmd.Instances = e.getReplicas()
 	cmd.Discovery = e.getDiscoveryInfo(cmd)
-	cmd.Shell = e.getShell(cmd)
+	cmd.Shell = e.Service.Shell
 	cmd.LinuxInfo = e.getLinuxInfo()
 	cmd.DockerParameter = e.getDockerParameter(cmd)
 	cmd.PullPolicy = e.getPullPolicy()
@@ -419,11 +419,6 @@ func (e *API) getNetworkName(val int) string {
 	}
 
 	return network
-}
-
-// check if the task command inside of the container have to be executed as shell
-func (e *API) getShell(cmd cfg.Command) bool {
-	return e.Service.Shell
 }
 
 // get linux info like capabilities

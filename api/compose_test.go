@@ -6,18 +6,6 @@ import (
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 )
 
-func TestGetShell(t *testing.T) {
-	var e API
-	cmd := cfg.Command{}
-	cmd.Command = "/bin/bash"
-
-	res := e.getShell(cmd)
-
-	if !res {
-		t.Errorf("GetShell was incorrect")
-	}
-}
-
 func TestGetCPU(t *testing.T) {
 	var e API
 	e.Service.Deploy.Resources.Limits.CPUs = 0.1

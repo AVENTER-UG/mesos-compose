@@ -17,6 +17,8 @@
 - ADD: Shell flag to tell Mesos it should treat the command as shell (like: `/bin/sh -c <command> <args>`)
 - ADD: API endpoint for reregistration of the framework. These make it possible to force a registration after Mesos lost the framework.
 - ADD: Mesos shell flag to control how the containerizer execute the command. If shell is true, then the command will be executes with `/bin/sh -c`.
+- FIX: Default CPU ressource
+- ADD: API Endpoint to supress the Framework
 
 ## 0.4.2
 

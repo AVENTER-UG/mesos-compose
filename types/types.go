@@ -66,7 +66,7 @@ type Service struct {
 	NetworkMode   string                  `yaml:"network_mode"`
 	Privileged    bool                    `yaml:"privileged"`
 	Command       string                  `yaml:"command"`
-	Shell         bool                    `yaml:"shell" default:"true"`
+	Shell         bool                    `yaml:"shell"`
 	Deploy        Deploy                  `yaml:"deploy"`
 	Hostname      string                  `yaml:"hostname"`
 	ContainerName string                  `yaml:"container_name"`
@@ -191,6 +191,7 @@ type Command struct {
 	InternalID         int
 	TaskID             string
 	Memory             float64
+	Mesos              Mesos
 	CPU                float64
 	Disk               float64
 	Agent              string

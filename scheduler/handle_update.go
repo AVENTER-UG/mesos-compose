@@ -11,7 +11,6 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 
 	if update.Status.UUID == nil {
 		logrus.WithField("func", "scheduler.HandleUpdate").Debug("UUID is not set")
-		return nil
 	}
 
 	msg := &mesosproto.Call{
@@ -46,6 +45,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 		// never restart the task
 		case "no":
 			e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
+			e.Mesos.SuppressFramework()
 			return e.Mesos.Call(msg)
 		// only restart the task if it stopped by a failure
 		case "on-failure":
@@ -53,16 +53,17 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 				break
 			}
 			e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
+			e.Mesos.SuppressFramework()
 			return e.Mesos.Call(msg)
 		// only restart the tasks if it does not stopped
 		case "unless-stopped":
 			if update.Status.State.String() == mesosproto.TASK_FINISHED.String() {
 				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
+				e.Mesos.SuppressFramework()
 				return e.Mesos.Call(msg)
 			}
 		}
 		// all other cases, increase task count and restart task
-		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
 		task.State = ""
 
 	case mesosproto.TASK_RUNNING:
