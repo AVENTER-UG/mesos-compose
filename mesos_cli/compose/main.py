@@ -77,7 +77,7 @@ class mesosCompose(PluginBase):
             "arguments": ["<framework-name>", "<operations>"],
             "flags": {},
             "short_help": "Framework Commands.",
-            "long_help": "Framework Commands\n\treregister - force the reregistration of the framework. !!! ONLY USE IT DURING MESOS CONNECTION ERRORS. !!!\n\tsupress - supress the framework\n",
+            "long_help": "Framework Commands\n\treregister - force the reregistration of the framework. !!! ONLY USE IT DURING MESOS CONNECTION ERRORS. !!!\n\tsuppress - supress the framework\n",
         }
     }
 
@@ -111,7 +111,7 @@ class mesosCompose(PluginBase):
             )
             print(data)
 
-        if argv["<operations>"] == "supress":
+        if argv["<operations>"] == "suppress":
             print("Supress the Framework")
 
             framework_address = get_framework_address(

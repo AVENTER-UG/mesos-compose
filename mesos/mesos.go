@@ -90,10 +90,16 @@ func (e *Mesos) Revive() {
 	}
 }
 
+// ForceSuppressFramework if all Tasks are running, suppress framework offers
+func (e *Mesos) ForceSuppressFramework() {
+	e.IsSuppress = false
+	e.SuppressFramework()
+}
+
 // SuppressFramework if all Tasks are running, suppress framework offers
 func (e *Mesos) SuppressFramework() {
 	if !e.IsSuppress {
-		logrus.WithField("func", "mesos.SupressFramework").Debug("Framework Suppress")
+		logrus.WithField("func", "mesos.SuppressFramework").Debug("Framework Suppress")
 		e.IsSuppress = true
 		e.IsRevive = false
 		suppress := &mesosproto.Call{

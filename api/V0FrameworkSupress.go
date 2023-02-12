@@ -6,11 +6,11 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// V0FrameworkSupress suppress the framework
+// V0FrameworkSuppress suppress the framework
 // example:
 // curl -X PUT http://user:password@127.0.0.1:10000/api/compose/v0/framework/supress
-func (e *API) V0FrameworkSupress(w http.ResponseWriter, r *http.Request) {
-	logrus.WithField("func", "api.V0FrameworkSupress").Debug("Suppress Framework")
+func (e *API) V0FrameworkSuppress(w http.ResponseWriter, r *http.Request) {
+	logrus.WithField("func", "api.V0FrameworkSuppress").Debug("Suppress Framework")
 
 	auth := e.CheckAuth(r, w)
 
@@ -22,5 +22,5 @@ func (e *API) V0FrameworkSupress(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	e.Mesos.SuppressFramework()
+	e.Mesos.ForceSuppressFramework()
 }

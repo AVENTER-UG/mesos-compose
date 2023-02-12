@@ -51,7 +51,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Volumes = e.getVolumes(cmd.ContainerType)
 	cmd.Instances = e.getReplicas()
 	cmd.Discovery = e.getDiscoveryInfo(cmd)
-	cmd.Shell = e.Service.Shell
+	cmd.Shell = e.getShell()
 	cmd.LinuxInfo = e.getLinuxInfo()
 	cmd.DockerParameter = e.getDockerParameter(cmd)
 	cmd.PullPolicy = e.getPullPolicy()
@@ -82,6 +82,17 @@ func (e *API) getTaskName(project, name string) string {
 		return taskName
 	}
 	return e.Config.PrefixTaskName + ":" + project + ":" + name
+}
+
+// Get shell
+func (e *API) getShell() bool {
+	if e.Service.Shell {
+		if e.Service.Command == "" {
+			return false
+		}
+		return true
+	}
+	return false
 }
 
 // Get the Restart value
