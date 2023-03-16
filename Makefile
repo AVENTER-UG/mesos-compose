@@ -44,8 +44,8 @@ build-bin:
 
 push:
 	@echo ">>>> Publish docker image"
-	@docker buildx build --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:latest .
-	@docker buildx build --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:${BRANCH} .
+	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:latest .
+	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:${BRANCH} .
 
 update-gomod:
 	go get -u
@@ -60,12 +60,10 @@ sboom:
 	syft dir:. -o json > sbom.json
 
 seccheck:
-	gosec --exclude G104 --exclude-dir ./vendor ./... 
+	grype --add-cpes-if-none .
 
 go-fmt:
 	@gofmt -w .
-	@golangci-lint run --fix
-	@gocritic check -disable 'whynolint' 	
 
 version:
 	@echo ">>>> Generate version file"
