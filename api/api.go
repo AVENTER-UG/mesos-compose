@@ -4,7 +4,6 @@ import (
 
 	//"encoding/json"
 
-	"encoding/json"
 	"strconv"
 	"strings"
 
@@ -93,17 +92,6 @@ func (e *API) CheckAuth(r *http.Request, w http.ResponseWriter) bool {
 
 	w.WriteHeader(http.StatusUnauthorized)
 	return false
-}
-
-// ErrorMessage will create a message json
-func (e *API) ErrorMessage(number int, function string, msg string) []byte {
-	var err cfg.ErrorMsg
-	err.Function = function
-	err.Number = number
-	err.Message = msg
-
-	data, _ := json.Marshal(err)
-	return data
 }
 
 // IncreaseTaskCount split the taskID and increase the app count digit

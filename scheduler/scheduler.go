@@ -151,7 +151,6 @@ func (e *Scheduler) reconcile() {
 	})
 
 	if err != nil {
-		e.API.ErrorMessage(3, "Reconcile_Error", err.Error())
 		logrus.WithField("func", "mesos.Reconcile").Debug("Reconcile Error: ", err)
 	}
 }
@@ -165,7 +164,6 @@ func (e *Scheduler) implicitReconcile() {
 	})
 
 	if err != nil {
-		e.API.ErrorMessage(3, "Reconcile_Error", err.Error())
 		logrus.WithField("func", "scheduler.implicitReconcile").Debug("Reconcile Error: ", err)
 	}
 }

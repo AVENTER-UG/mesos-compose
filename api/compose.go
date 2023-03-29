@@ -218,12 +218,24 @@ func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping
 			proto = strings.Split(c, "/")
 		}
 
-		// check if this is a udp protocol
+		// set protocol. default is tcp.
 		tmp.Protocol = func() *string { x := "tcp"; return &x }()
 		if len(proto) > 1 {
 			port, _ = strconv.Atoi(proto[0])
 			if strings.ToLower(proto[1]) == "udp" {
 				tmp.Protocol = func() *string { x := "udp"; return &x }()
+			}
+			if strings.ToLower(proto[1]) == "wss" {
+				tmp.Protocol = func() *string { x := "wss"; return &x }()
+			}
+			if strings.ToLower(proto[1]) == "http" {
+				tmp.Protocol = func() *string { x := "http"; return &x }()
+			}
+			if strings.ToLower(proto[1]) == "https" {
+				tmp.Protocol = func() *string { x := "https"; return &x }()
+			}
+			if strings.ToLower(proto[1]) == "h2c" {
+				tmp.Protocol = func() *string { x := "h2c"; return &x }()
 			}
 		}
 
@@ -237,12 +249,17 @@ func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping
 // Get the discoveryinfo ports of the compose file
 func (e *API) getDiscoveryInfoPorts(cmd cfg.Command) []mesosproto.Port {
 	var disport []mesosproto.Port
-	for _, c := range cmd.DockerPortMappings {
+	for i, c := range cmd.DockerPortMappings {
 		var tmpport mesosproto.Port
 		p := func() *string { x := cmd.TaskName + ":" + strconv.FormatUint(uint64(c.ContainerPort), 10); return &x }()
 		tmpport.Name = p
 		tmpport.Number = c.HostPort
 		tmpport.Protocol = c.Protocol
+
+		// Docker understand only tcp and udp.
+		if *c.Protocol != "udp" && *c.Protocol != "tcp" {
+			cmd.DockerPortMappings[i].Protocol = func() *string { x := "tcp"; return &x }()
+		}
 
 		disport = append(disport, tmpport)
 	}

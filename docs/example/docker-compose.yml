@@ -31,6 +31,10 @@ services:
       - "9090"
       - "8081:81/tcp"
       - "8082:82/udp"
+      - "8082:82/http"
+      - "8082:82/https"  
+      - "8082:82/h2c"
+      - "8082:82/wss"       
     network: default
     ulimits:
       memlock:

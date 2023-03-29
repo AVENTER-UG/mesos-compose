@@ -9,10 +9,6 @@ import (
 func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 	update := event.Update
 
-	if update.Status.UUID == nil {
-		logrus.WithField("func", "scheduler.HandleUpdate").Debug("UUID is not set")
-	}
-
 	msg := &mesosproto.Call{
 		Type: mesosproto.Call_ACKNOWLEDGE,
 		Acknowledge: &mesosproto.Call_Acknowledge{
@@ -35,8 +31,6 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 	}
 
 	task.State = update.Status.State.String()
-
-	logrus.WithField("func", "HandleUpdate").Debug("Task State: ", task.State)
 
 	switch *update.Status.State {
 	case mesosproto.TASK_FAILED, mesosproto.TASK_ERROR, mesosproto.TASK_FINISHED, mesosproto.TASK_KILLED, mesosproto.TASK_LOST:
