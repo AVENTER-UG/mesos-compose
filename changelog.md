@@ -19,6 +19,7 @@
 - ADD: Mesos shell flag to control how the containerizer execute the command. If shell is true, then the command will be executes with `/bin/sh -c`.
 - FIX: Default CPU ressource
 - ADD: API Endpoint to supress the Framework
+- ADD: support for wss and h2c
 
 ## 0.4.2
 

@@ -55,7 +55,6 @@ func (e *Mesos) Subscribe() (*http.Client, *http.Request) {
 
 	logrus.WithField("func", "mesos.Subscribe").Debug(subscribeCall)
 	body, _ := marshaller.MarshalToString(subscribeCall)
-	logrus.Debug(body)
 	client := &http.Client{}
 	client.Transport = &http.Transport{
 		// #nosec G402
@@ -137,7 +136,6 @@ func (e *Mesos) Call(message *mesosproto.Call) error {
 
 	body, err := marshaller.MarshalToString(message)
 	if err != nil {
-		logrus.WithField("func", "mesos.Call").Debug("Could not Marshal message:", err.Error())
 		return err
 	}
 
@@ -168,7 +166,7 @@ func (e *Mesos) Call(message *mesosproto.Call) error {
 	if res.StatusCode != 202 {
 		_, err := io.Copy(os.Stderr, res.Body)
 		if err != nil {
-			logrus.Error("Call Handling: ", err)
+			logrus.WithField("func", "mesos.Call").Error("Call Handling: ", err)
 		}
 		return fmt.Errorf("Error %d", res.StatusCode)
 	}
