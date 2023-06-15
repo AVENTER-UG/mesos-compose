@@ -34,19 +34,19 @@ else
 endif
 
 build:
-	@echo ">>>> Build Docker"
-	@docker build --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${TAG} .
+	@echo ">>>> Build Docker: " ${BRANCH}
+	@docker build --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:latest .
 
 build-bin:
 	@echo ">>>> Build binary"
 	@CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags "-X main.BuildVersion=${BUILDDATE} -X main.GitVersion=${TAG} -extldflags \"-static\"" .
 
 push:
-	@echo ">>>> Publish docker image"
-	@docker run -d --rm --name buildkitd --privileged moby/buildkit:latest
-	@BUILDKIT_HOST=docker-container://buildkitd docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:latest .
-	@BUILDKIT_HOST=docker-container://buildkitd docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:${BRANCH} .
-	@docker stop buildkitd 
+	@echo ">>>> Publish docker image: " ${BRANCH}
+	@docker buildx create --use --name buildkit
+	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:latest .
+	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:${BRANCH} .
+	@docker buildx rm buildkit
 
 update-gomod:
 	go get -u
@@ -63,6 +63,9 @@ sboom:
 seccheck:
 	grype --add-cpes-if-none .
 
+imagecheck:
+	trivy image ${IMAGEFULLNAME}:latest
+
 go-fmt:
 	@gofmt -w .
 
@@ -73,4 +76,4 @@ version:
 	@echo "Saved under .version.json"
 
 check: go-fmt sboom seccheck
-all: check build version push
+all: check build imagecheck version 

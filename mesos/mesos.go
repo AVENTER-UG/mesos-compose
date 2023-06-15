@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
@@ -164,11 +164,13 @@ func (e *Mesos) Call(message *mesosproto.Call) error {
 	defer res.Body.Close()
 
 	if res.StatusCode != 202 {
-		_, err := io.Copy(os.Stderr, res.Body)
+		body, err := ioutil.ReadAll(res.Body)
 		if err != nil {
-			logrus.WithField("func", "mesos.Call").Error("Call Handling: ", err)
+			logrus.WithField("func", "mesos.Call").Error("Call Handling (could not read res.Body)")
+			return fmt.Errorf("Error %d", res.StatusCode)
 		}
-		return fmt.Errorf("Error %d", res.StatusCode)
+
+		logrus.WithField("func", "mesos.Call").Error("Call Handling: ", string(body))
 	}
 
 	return nil
