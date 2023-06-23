@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
@@ -76,7 +76,7 @@ func (e *Mesos) Subscribe() (*http.Client, *http.Request) {
 // Revive will revive the mesos tasks to clean up
 func (e *Mesos) Revive() {
 	if !e.IsRevive {
-		logrus.WithField("func", "mesos.Revive").Debug("Revive Tasks")
+		logrus.WithField("func", "mesos.Revive").Info("Framework Revive")
 		e.IsSuppress = false
 		e.IsRevive = true
 		revive := &mesosproto.Call{
@@ -98,7 +98,7 @@ func (e *Mesos) ForceSuppressFramework() {
 // SuppressFramework if all Tasks are running, suppress framework offers
 func (e *Mesos) SuppressFramework() {
 	if !e.IsSuppress {
-		logrus.WithField("func", "mesos.SuppressFramework").Debug("Framework Suppress")
+		logrus.WithField("func", "mesos.SuppressFramework").Info("Framework Suppress")
 		e.IsSuppress = true
 		e.IsRevive = false
 		suppress := &mesosproto.Call{
@@ -113,7 +113,7 @@ func (e *Mesos) SuppressFramework() {
 
 // Kill a Task with the given taskID
 func (e *Mesos) Kill(taskID string, agentID string) error {
-	logrus.WithField("func", "mesos.Kill").Debug("Kill task ", taskID)
+	logrus.WithField("func", "mesos.Kill").Info("Kill task ", taskID)
 	// tell mesos to shutdonw the given task
 	err := e.Call(&mesosproto.Call{
 		Type: mesosproto.Call_KILL,
@@ -164,11 +164,13 @@ func (e *Mesos) Call(message *mesosproto.Call) error {
 	defer res.Body.Close()
 
 	if res.StatusCode != 202 {
-		_, err := io.Copy(os.Stderr, res.Body)
+		body, err := ioutil.ReadAll(res.Body)
 		if err != nil {
-			logrus.WithField("func", "mesos.Call").Error("Call Handling: ", err)
+			logrus.WithField("func", "mesos.Call").Error("Call Handling (could not read res.Body)")
+			return fmt.Errorf("Error %d", res.StatusCode)
 		}
-		return fmt.Errorf("Error %d", res.StatusCode)
+
+		logrus.WithField("func", "mesos.Call").Error("Call Handling: ", string(body))
 	}
 
 	return nil
@@ -227,11 +229,11 @@ func (e *Mesos) IsRessourceMatched(ressource []mesosproto.Resource, cmd cfg.Comm
 
 	for _, v := range ressource {
 		if v.GetName() == "cpus" && v.Scalar.GetValue() >= cmd.CPU {
-			logrus.Debug("Matched Offer CPU")
+			logrus.WithField("func", "mesos.IsRessourceMatched").Debug("Matched Offer CPU: ", cmd.CPU)
 			cpu = true
 		}
 		if v.GetName() == "mem" && v.Scalar.GetValue() >= cmd.Memory {
-			logrus.Debug("Matched Offer Memory")
+			logrus.WithField("func", "mesos.IsRessourceMatched").Debug("Matched Offer Memory: ", cmd.Memory)
 			mem = true
 		}
 		if len(cmd.DockerPortMappings) > 0 {
@@ -239,8 +241,8 @@ func (e *Mesos) IsRessourceMatched(ressource []mesosproto.Resource, cmd cfg.Comm
 				for _, taskPort := range cmd.DockerPortMappings {
 					for _, portRange := range v.GetRanges().Range {
 						if taskPort.HostPort >= uint32(portRange.Begin) && taskPort.HostPort <= uint32(portRange.End) {
-							logrus.Debug("Matched Offer TaskPort: ", taskPort.HostPort)
-							logrus.Debug("Matched Offer RangePort: ", portRange)
+							logrus.WithField("func", "mesos.IsRessourceMatched").Debug("Matched Offer TaskPort: ", taskPort.HostPort)
+							logrus.WithField("func", "mesos.IsRessourceMatched").Debug("Matched Offer RangePort: ", portRange)
 							ports = ports || true
 							break
 						}

@@ -56,6 +56,8 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.DockerParameter = e.getDockerParameter(cmd)
 	cmd.PullPolicy = e.getPullPolicy()
 	cmd.Restart = e.getRestart()
+	cmd.Mesos = e.Service.Mesos
+	cmd.Uris = e.getURIs()
 
 	// set the docker constraints
 	e.setConstraints(&cmd)
@@ -64,17 +66,22 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	e.Redis.SaveTaskRedis(cmd)
 }
 
+// Get the URIS to fetch
+func (e *API) getURIs() []mesosproto.CommandInfo_URI {
+	if len(e.Service.Mesos.Fetch) > 0 {
+		return e.Service.Mesos.Fetch
+	}
+
+	var res []mesosproto.CommandInfo_URI
+	return res
+}
+
 // Get the name of the task
 func (e *API) getTaskName(project, name string) string {
 	var taskName string
 
-	if (e.Service.Mesos != cfg.Mesos{}) {
-		if e.Service.Mesos.TaskName != "" {
-			taskName = e.Service.Mesos.TaskName
-		}
-	}
-
-	if taskName != "" {
+	if e.Service.Mesos.TaskName != "" {
+		taskName = e.Service.Mesos.TaskName
 		// be sure the taskname is only running under the frameworks prefix
 		if strings.Split(taskName, ":")[0] != e.Config.PrefixTaskName {
 			return e.Config.PrefixTaskName + ":" + taskName
@@ -347,14 +354,11 @@ func (e *API) getVolumes(containerType string) []mesosproto.Volume {
 // Get custome executer
 func (e *API) getExecutor() mesosproto.ExecutorInfo {
 	var executorInfo mesosproto.ExecutorInfo
-	var command, uri string
+	var command string
 
 	if (e.Service.Mesos.Executor != cfg.Executor{}) {
 		if e.Service.Mesos.Executor.Command != "" {
 			command = e.Service.Mesos.Executor.Command
-		}
-		if e.Service.Mesos.Executor.URI != "" {
-			uri = e.Service.Mesos.Executor.URI
 		}
 	}
 
@@ -376,27 +380,7 @@ func (e *API) getExecutor() mesosproto.ExecutorInfo {
 				},
 			},
 		}
-
-		if uri != "" {
-			var fetch []mesosproto.CommandInfo_URI
-			err := json.Unmarshal([]byte(uri), &fetch)
-
-			if err != nil {
-				logrus.WithField("func", "getExecutor").Error("Could not unmarchal biz.aventer.mesos_compose.executor_uri")
-			}
-
-			for _, uri := range fetch {
-				executorInfo.Command.URIs = []mesosproto.CommandInfo_URI{
-					{
-						Value:      uri.GetValue(),
-						Extract:    func() *bool { x := false; return &x }(),
-						Executable: func() *bool { x := true; return &x }(),
-						Cache:      func() *bool { x := false; return &x }(),
-						OutputFile: uri.OutputFile,
-					},
-				}
-			}
-		}
+		executorInfo.Command.URIs = e.getURIs()
 	}
 	return executorInfo
 }

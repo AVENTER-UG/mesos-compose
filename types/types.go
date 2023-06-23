@@ -80,14 +80,14 @@ type Service struct {
 
 // Mesos custom mesos task configuration
 type Mesos struct {
-	TaskName string   `yaml:"task_name"`
-	Executor Executor `yaml:"executor"`
+	TaskName string                       `yaml:"task_name"`
+	Executor Executor                     `yaml:"executor"`
+	Fetch    []mesosproto.CommandInfo_URI `yaml:"fetch"`
 }
 
 // Executor to configure the to use executor
 type Executor struct {
 	Command string `yaml:"command"`
-	URI     string `yaml:"uri"`
 }
 
 // Ulimits - Configure ulimits of a mesos task

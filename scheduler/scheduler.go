@@ -79,7 +79,6 @@ func (e *Scheduler) EventLoop() {
 
 		switch event.Type {
 		case mesosproto.Event_SUBSCRIBED:
-			logrus.WithField("func", "scheduler.EventLoop").Debug("Event: ", event)
 			logrus.WithField("func", "scheduler.EventLoop").Info("Subscribed")
 			logrus.WithField("func", "scheduler.EventLoop").Debug("FrameworkId: ", event.Subscribed.GetFrameworkID())
 			e.Framework.FrameworkInfo.ID = event.Subscribed.GetFrameworkID()

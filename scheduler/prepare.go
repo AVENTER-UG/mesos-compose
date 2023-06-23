@@ -69,7 +69,7 @@ func (e *Scheduler) defaultResources(cmd cfg.Command) []mesosproto.Resource {
 // nolint: gocyclo
 func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd cfg.Command) ([]mesosproto.TaskInfo, error) {
 	d, _ := json.Marshal(&cmd)
-	logrus.Debug("HandleOffers cmd: ", util.PrettyJSON(d))
+	logrus.WithField("func", "scheduler.PrepareTaskInfoExecuteContainer").Trace("HandleOffers cmd: ", util.PrettyJSON(d))
 
 	// Set Container Type
 	var contype *mesosproto.ContainerInfo_Type
@@ -127,7 +127,7 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 		forcePull = false
 	}
 
-	// ExecutorInfo or CommandInfo/Container, both is not supportet
+	// ExecutorInfo or CommandInfo/Container, both at the same time is not supported
 	if contype != nil && cmd.Mesos.Executor.Command == "" {
 		msg.Container = &mesosproto.ContainerInfo{}
 		msg.Container.Type = contype
@@ -176,6 +176,9 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 			}
 		}
 	}
+
+	d, _ = json.Marshal(&msg)
+	logrus.WithField("func", "scheduler.PrepareTaskInfoExecuteContainer").Trace("HandleOffers msg: ", util.PrettyJSON(d))
 
 	return []mesosproto.TaskInfo{msg}, nil
 }
