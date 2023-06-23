@@ -5,6 +5,7 @@ services:
     ports:
       - "9999:8888/http"
     network_mode: "bridge"
+    hostname: test.weave.local
     labels:
       traefik.enable: "true"
       traefik.http.routers.test1.entrypoints: "web"
@@ -19,5 +20,5 @@ services:
 networks:
   default:
     external: true
-    name: mini
+    name: weave
           

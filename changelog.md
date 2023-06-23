@@ -20,6 +20,8 @@
 - FIX: Default CPU ressource
 - ADD: API Endpoint to supress the Framework
 - ADD: support for wss and h2c
+- FIX: Custom Executor command was not set 
+- ADD: Support Mesos fetch to download files during runtime into the containers sandbox.
 
 ## 0.4.2
 

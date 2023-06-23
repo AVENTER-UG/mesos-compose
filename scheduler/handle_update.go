@@ -23,7 +23,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 
 	// if these object have not TaskID it's currently unknown by these framework.
 	if task.TaskID == "" {
-		logrus.WithField("func", "scheduler.HandleUpdate").Info("Could not found Task in Redis: ", update.Status.TaskID.Value)
+		logrus.WithField("func", "scheduler.HandleUpdate").Debug("Could not found Task in Redis: ", update.Status.TaskID.Value)
 
 		if *update.Status.State != mesosproto.TASK_LOST {
 			e.Mesos.Kill(update.Status.TaskID.Value, update.Status.AgentID.Value)
@@ -34,6 +34,11 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 
 	switch *update.Status.State {
 	case mesosproto.TASK_FAILED, mesosproto.TASK_ERROR, mesosproto.TASK_FINISHED, mesosproto.TASK_KILLED, mesosproto.TASK_LOST:
+		if task.TaskID == "" {
+			return e.Mesos.Call(msg)
+		}
+		logrus.WithField("func", "scheduler.HandleUpdate").Warn("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")
+
 		// check how to handle the event
 		switch task.Restart {
 		// never restart the task
@@ -59,8 +64,11 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 		}
 		// all other cases, increase task count and restart task
 		task.State = ""
-
 	case mesosproto.TASK_RUNNING:
+		if !e.Mesos.IsSuppress {
+			logrus.WithField("func", "scheduler.HandleUpdate").Info("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")
+		}
+
 		task.MesosAgent = e.Mesos.GetAgentInfo(update.Status.GetAgentID().Value)
 		task.NetworkInfo = e.Mesos.GetNetworkInfo(task.TaskID)
 		task.Agent = update.Status.GetAgentID().Value

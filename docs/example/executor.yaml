@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   test1:
-    image: avhost/firecracker:latest
+    image: ubuntu:latest
     command: "sleep 1"
     environment:
       - FIRECRACKER_WORKDIR=/tmp
@@ -9,10 +9,11 @@ services:
     cap_add:
       - SYS_ADMIN
       - NET_ADMIN
-    privileged: true        
+    privileged: true
     mesos:
       executor:
-        command: "/tmp/mesos-firecracker-executor"
+        command: "/mnt/mesos/sandbox/mesos-firecracker-executor"
+        uri: "http://devtest.lab.local:8881/mesos-firecracker-executor"
     pull_policy: always
     restart: no
       

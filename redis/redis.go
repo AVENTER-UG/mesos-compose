@@ -43,7 +43,7 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Redis {
 func (e *Redis) GetAllRedisKeys(pattern string) *goredis.ScanIterator {
 	val := e.Client.Scan(e.CTX, 0, pattern, 0).Iterator()
 	if err := val.Err(); err != nil {
-		logrus.Error("getAllRedisKeys: ", err)
+		logrus.WithField("func", "redis.GetAllRedisKeys").Error("Error getting all keys: ", err)
 	}
 
 	return val
@@ -53,7 +53,7 @@ func (e *Redis) GetAllRedisKeys(pattern string) *goredis.ScanIterator {
 func (e *Redis) GetRedisKey(key string) string {
 	val, err := e.Client.Get(e.CTX, key).Result()
 	if err != nil {
-		logrus.Error("ge.Key: ", err)
+		logrus.WithField("func", "redis.GetRedisKey").Error("Error getting key: ", err)
 	}
 
 	return val
@@ -130,7 +130,7 @@ func (e *Redis) SaveConfig(config cfg.Config) {
 	data, _ := json.Marshal(config)
 	err := e.Client.Set(e.CTX, e.Prefix+":framework_config", data, 0).Err()
 	if err != nil {
-		logrus.Error("Framework save config state into redis error:", err)
+		logrus.WithField("func", "redis.SaveConfig").Error("Framework save config state into redis error:", err)
 	}
 }
 

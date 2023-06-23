@@ -1,7 +1,6 @@
 package scheduler
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -9,7 +8,6 @@ import (
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
-	"github.com/AVENTER-UG/util/util"
 )
 
 // HandleOffers will handle the offers event of mesos
@@ -29,7 +27,7 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			logrus.WithField("func", "mesos.HandleOffers").Debug("Decline unneeded offer: ", offerIds)
 			return e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 		}
-		logrus.Debug("Take Offer From:", takeOffer.GetHostname())
+		logrus.WithField("func", "scheduler.HandleOffers").Info("Take Offer from " + takeOffer.GetHostname() + " for task " + cmd.TaskID + " (" + cmd.TaskName + ")")
 
 		var taskInfo []mesosproto.TaskInfo
 		RefuseSeconds := 5.0
@@ -55,25 +53,27 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			},
 		}}
 
-		d, _ := json.Marshal(&accept)
-		logrus.Debug("HandleOffers msg: ", util.PrettyJSON(d))
+		logrus.WithField("func", "scheduler.HandleOffers").Debug("Offer Accept: ", takeOffer.GetID(), " On Node: ", takeOffer.GetHostname())
 
-		logrus.Info("Offer Accept: ", takeOffer.GetID(), " On Node: ", takeOffer.GetHostname())
 		err := e.Mesos.Call(accept)
 		if err != nil {
-			logrus.Error("Handle Offers: ", err)
+			logrus.WithField("func", "scheduler.HandleOffers").Error(err.Error())
 			return err
 		}
 
 		// decline unneeded offer
-		logrus.WithField("func", "scheduler.HandleOffer").Debug("Offer Decline: ", offerIds)
-		return e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
+		if len(offerIds) > 0 {
+			logrus.WithField("func", "scheduler.HandleOffer").Debug("Offer Decline: ", offerIds)
+			return e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
+		}
 	default:
 		// decline unneeded offer
 		_, offerIds := e.Mesos.GetOffer(offers, cfg.Command{})
 		logrus.WithField("func", "scheduler.HandleOffer").Debug("Decline unneeded offer: ", offerIds)
 		return e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 	}
+
+	return nil
 }
 
 // get the value of a label from the command
@@ -91,7 +91,7 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (
 	var offerret mesosproto.Offer
 
 	for _, offer := range offers.Offers {
-		logrus.Debug("Got Offer From:", offer.GetHostname())
+		logrus.WithField("func", "scheduler.getOffer").Debug("Got Offer From:", offer.GetHostname())
 		offerIds = append(offerIds, offer.ID)
 
 		// if the ressources of this offer does not matched what the command need, the skip

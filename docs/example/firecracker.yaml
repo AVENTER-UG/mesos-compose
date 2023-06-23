@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  test1:
+    image: avhost/mesos-firecracker-executor:latest
+    command: "sleep 1"
+    environment:
+      - FIRECRACKER_WORKDIR=/mnt/mesos/sandbox
+      - FIRECRACKER_AGENT_PORT=8085
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+    privileged: true
+    pull_policy: always
+    restart: no
+    mesos:
+      executor:
+        command: "/tmp/mesos-firecracker-executor"
+      fetch:
+        - value: http://192.168.150.6:8881/vmlinux
+          executable: true
+        - value: http://192.168.150.6:8881/rootfs.ext4
+          executable: true
+
+      
