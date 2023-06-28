@@ -53,11 +53,11 @@ func main() {
 		logrus.Info(v.Connect())
 	}
 
-	// connect to redis
 	r := redis.New(&config, &framework)
 
 	// get API
 	a := api.New(&config, &framework)
+	a.Redis = r
 
 	// load old framework config from database if they exist
 	var oldFramework cfg.FrameworkConfig

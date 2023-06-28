@@ -4,6 +4,7 @@ services:
     image: avhost/mesos-firecracker-executor:latest
     command: "sleep 1"
     environment:
+      - FIRECRACKER_PAYLOAD_FILE=/mnt/mesos/sandbox/payload.sh
       - FIRECRACKER_WORKDIR=/mnt/mesos/sandbox
       - FIRECRACKER_AGENT_PORT=8085
     cap_add:
@@ -19,6 +20,8 @@ services:
         - value: http://192.168.150.6:8881/vmlinux
           executable: true
         - value: http://192.168.150.6:8881/rootfs.ext4
+          executable: true
+        - value: http://192.168.150.6:8881/payload.sh
           executable: true
 
       

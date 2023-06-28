@@ -36,7 +36,6 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *API {
 		Config:    cfg,
 		Framework: frm,
 		Mesos:     *mesos.New(cfg, frm),
-		Redis:     redis.New(cfg, frm),
 	}
 
 	// Connect the vault if we got a token

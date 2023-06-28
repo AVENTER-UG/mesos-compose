@@ -160,7 +160,6 @@ func (e *Redis) Connect() bool {
 	err := e.PingRedis()
 	if err != nil {
 		e.Client.Close()
-		e.Connect()
 	}
 
 	return true

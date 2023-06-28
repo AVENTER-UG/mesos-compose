@@ -35,7 +35,6 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Scheduler {
 		Config:    cfg,
 		Framework: frm,
 		Mesos:     *mesos.New(cfg, frm),
-		Redis:     redis.New(cfg, frm),
 	}
 
 	e.Client, e.Req = e.Mesos.Subscribe()
