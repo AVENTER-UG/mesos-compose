@@ -16,6 +16,8 @@ services:
       traefik.http.services.test1.loadBalancer.healthCheck.timeout: "3s"
     network: default
     restart: always
+    deploy:
+      replicas: 2
 
 networks:
   default:

@@ -23,7 +23,11 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	e.Service = e.Compose.Services[name]
 
 	// if task is set then its not a new task and we have to save old needed parameter
-	uuid, _ := util.GenUUID()
+	uuid, err := util.GenUUID()
+	if err != nil {
+		logrus.WithField("func", "api.mapComposeServiceToMesosTask").Error("Error during create uuid: ", err.Error())
+		return
+	}
 	newTaskID := e.IncreaseTaskCount(vars["project"] + "_" + name + "." + uuid)
 
 	if task.TaskID != "" {

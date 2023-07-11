@@ -22,6 +22,7 @@
 - ADD: support for wss and h2c
 - FIX: Custom Executor command was not set 
 - ADD: Support Mesos fetch to download files during runtime into the containers sandbox.
+- ADD: Scale up and down of mesos tasks
 
 ## 0.4.2
 

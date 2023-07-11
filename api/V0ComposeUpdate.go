@@ -15,8 +15,6 @@ import (
 // example:
 // curl -X GET http://user:password@127.0.0.1:10000/api/compose/v0 --data-binary @docker-compose.yml
 func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
-	logrus.WithField("func", "api.V0ComposeUpdate").Debug("Update Mesos Task")
-
 	vars := mux.Vars(r)
 	auth := e.CheckAuth(r, w)
 
@@ -45,7 +43,7 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 
 	e.Compose = data
 
-	logrus.WithField("func", "api.V0ComposeUpdate").Info("Update Task" + e.Config.PrefixTaskName + ":" + vars["project"])
+	logrus.WithField("func", "api.V0ComposeUpdate").Info("Update Mesos Task: " + e.Config.PrefixTaskName + ":" + vars["project"])
 
 	for service := range data.Services {
 		taskName := e.Config.PrefixTaskName + ":" + vars["project"] + ":" + service
@@ -62,6 +60,7 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 			key = e.Redis.GetRedisKey(keys.Val())
 			updatedTask := e.Mesos.DecodeTask(key)
 			updatedTask.MesosAgent = task.MesosAgent
+			updatedTask.State = task.State
 			e.Redis.SaveTaskRedis(updatedTask)
 		}
 	}

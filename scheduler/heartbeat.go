@@ -31,6 +31,7 @@ func (e *Scheduler) Heartbeat() {
 			continue
 		}
 
+		// kill task and remove it from DB
 		if task.State == "__KILL" {
 			// if agent is unset, the task is not running we can just delete the DB key
 			if task.Agent == "" {
@@ -42,13 +43,26 @@ func (e *Scheduler) Heartbeat() {
 			continue
 		}
 
+		// there are lesser instances are running as it should be
 		if e.Redis.CountRedisKey(task.TaskName+":*", "__KILL") < task.Instances {
+			logrus.WithField("func", "scheduler.CheckState").Info("Scale up Mesos Task: ", task.TaskName)
 			e.Mesos.Revive()
 			task.State = ""
+			task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
 			e.Redis.SaveTaskRedis(task)
 			continue
 		}
 
+		// there are more instances are running as it should be
+		if e.Redis.CountRedisKey(task.TaskName+":*", "__KILL") > task.Instances {
+			logrus.WithField("func", "scheduler.CheckState").Info("Scale down Mesos Task: ", task.TaskName)
+			e.Mesos.Revive()
+			task.State = "__KILL"
+			e.Redis.SaveTaskRedis(task)
+			continue
+		}
+
+		// Schedule task
 		if task.State == "" && e.Redis.CountRedisKey(task.TaskName+":*", "__KILL") <= task.Instances {
 			e.Mesos.Revive()
 			task.State = "__NEW"
@@ -70,6 +84,7 @@ func (e *Scheduler) Heartbeat() {
 			continue
 		}
 
+		// Revieve Mesos to get new offers
 		if task.State == "__NEW" {
 			e.Mesos.Revive()
 			suppress = false
