@@ -45,7 +45,7 @@ class mesosCompose(PluginBase):
         },
         "list": {
             "arguments": ["<framework-name>"],
-            "flags": {"-a --all": "list all tasks, not only running [default: False]"},
+            "flags": {},
             "short_help": "Show all running tasks.",
             "long_help": "Show all running tasks.",
         },
@@ -206,9 +206,6 @@ class mesosCompose(PluginBase):
 
                 table = Table(["ID", "Task Name", "State", "Mesos Agent"])
                 for task in message:
-
-                    if not argv["--all"] and task["State"] != "TASK_RUNNING":
-                        continue
 
                     table.add_row(
                         [
