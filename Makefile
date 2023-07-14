@@ -2,11 +2,11 @@
 #vars
 IMAGENAME=mesos-compose
 REPO=avhost
-TAG=`git describe --tags --abbrev=0`
-BRANCH=`git rev-parse --abbrev-ref HEAD`
-BUILDDATE=`date -u +%Y-%m-%dT%H:%M:%SZ`
+TAG=$(shell git describe --tags --abbrev=0)
+BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
+BUILDDATE=$(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 IMAGEFULLNAME=${REPO}/${IMAGENAME}
-LASTCOMMIT=$(shell git log -1 --pretty=short | tail -n 1 | tr -d " ")
+LASTCOMMIT=$(shell git log -1 --pretty=short | tail -n 1 | tr -d " " | tr -d "UPDATE:")
 
 
 .PHONY: help build all docs
@@ -34,7 +34,7 @@ else
 endif
 
 build:
-	@echo ">>>> Build Docker: " ${BRANCH}
+	@echo ">>>> Build Docker: latest"
 	@docker build --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:latest .
 
 build-bin:
@@ -44,8 +44,8 @@ build-bin:
 push:
 	@echo ">>>> Publish docker image: " ${BRANCH}
 	@docker buildx create --use --name buildkit
-	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:latest .
-	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} --build-arg VERSION_URL=${VERSION_URL} -t ${IMAGEFULLNAME}:${BRANCH} .
+	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:latest .
+	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} .
 	@docker buildx rm buildkit
 
 update-gomod:

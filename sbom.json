@@ -8,7 +8,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -35,7 +38,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -65,7 +71,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -106,7 +115,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -136,7 +148,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -160,7 +175,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -187,7 +205,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -210,7 +231,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -236,7 +260,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -262,7 +289,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -288,7 +318,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -310,7 +343,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -335,7 +371,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -360,7 +399,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -382,7 +424,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -405,7 +450,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -431,7 +479,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -456,7 +507,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -478,7 +532,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -502,7 +559,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -529,7 +589,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -551,7 +614,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -576,7 +642,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -601,7 +670,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -626,7 +698,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -649,7 +724,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -671,7 +749,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -696,7 +777,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -718,7 +802,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -743,7 +830,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -766,7 +856,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -792,7 +885,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -818,7 +914,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -841,7 +940,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -867,7 +969,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -890,7 +995,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -916,7 +1024,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -942,7 +1053,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -968,7 +1082,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -991,7 +1108,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1014,7 +1134,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1040,7 +1163,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1066,7 +1192,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1089,7 +1218,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1115,7 +1247,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1138,7 +1273,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1164,7 +1302,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1187,7 +1328,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1213,7 +1357,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1239,7 +1386,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1265,7 +1415,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1291,7 +1444,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1313,7 +1469,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1338,7 +1497,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1363,7 +1525,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1385,7 +1550,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1410,7 +1578,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1435,7 +1606,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1457,7 +1631,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1479,7 +1656,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1502,7 +1682,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1528,7 +1711,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1554,7 +1740,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1577,7 +1766,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1599,7 +1791,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1624,7 +1819,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1649,7 +1847,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1672,7 +1873,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1698,7 +1902,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1720,7 +1927,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1745,7 +1955,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1770,7 +1983,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1795,7 +2011,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1820,7 +2039,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1842,7 +2064,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1867,7 +2092,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1890,7 +2118,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1916,7 +2147,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1938,7 +2172,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1963,7 +2200,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -1985,7 +2225,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2008,7 +2251,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2033,7 +2279,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2055,7 +2304,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2080,7 +2332,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2102,7 +2357,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2127,7 +2385,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2149,7 +2410,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2174,7 +2438,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2196,7 +2463,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2221,7 +2491,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2243,7 +2516,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2268,7 +2544,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2290,7 +2569,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2315,7 +2597,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2340,7 +2625,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2365,7 +2653,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2385,7 +2676,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2405,7 +2699,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2428,7 +2725,10 @@
    "foundBy": "go-mod-file-cataloger",
    "locations": [
     {
-     "path": "go.mod"
+     "path": "go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2448,7 +2748,10 @@
    "foundBy": "go-module-binary-cataloger",
    "locations": [
     {
-     "path": "mesos-compose"
+     "path": "mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
     }
    ],
    "licenses": [],
@@ -2465,6 +2768,411 @@
   }
  ],
  "artifactRelationships": [
+  {
+   "parent": "11b3e298ad079a59",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "1228868a78c4aa49",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "14732289fdecd2da",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "17f420aa97e56339",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "1a2c907648910946",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "1abd08d837970b8f",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "1d618f71ac4309fd",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "23653df0ede57b7",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "23826b63990dd6b2",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "27d4e17055e26e09",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "282d4afef2b5985d",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "2ba2ade917d4f2a9",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "2e4d18cfac096b45",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "2ee1c1d75e3db884",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "3007f46f7e642a69",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "31465c82ee794a6d",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "31c094165f8edfb5",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "32ec97700ab12409",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "3af398ea103aaa57",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "4613e62ded3baa1a",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "46920e28fb9cb52",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "4b593cf189d8b9de",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "4be395b49de5ae74",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "4d61f6cc29fb3a45",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "50304e75059df989",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "56679eda5ff0528d",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "57ff3661b1ce9051",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "5bac34eaa298bc55",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "603247923534cffd",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "6646e60a37de51a7",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "67e91ddbe1874a47",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "6ad7807b69cb2353",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "6c0fe90d20dd5d99",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "6c61e6ecf1549565",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "6c83e989595e29d4",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "6f1cdb1978cb218c",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "720b52a6a57a3f26",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "799fe11db0b31ec7",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "8168e6da7ff60c32",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "81ae9ec60bc149cf",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "827a1c4a5f0d5cc0",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "86a2523b9bcd2d5d",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "86dce0356a01d76e",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "87e041f7ba899133",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "88043efa3dffc91c",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "8b02402612337706",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "8e1cef9c0cf3aa8c",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "9275d66e6e718f98",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "965404179e0b694",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "971b363f1318d408",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "9a23df0a7d4170e9",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "9b0b1121e1a46b4b",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "9bf31604f19b7a03",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "9ca18a70f8397b89",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "9f4e22fe2bab1712",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "9f74046362004ff4",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "a1a1d741bb9ba339",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "ab8673ec81faa992",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "aba2609b232a80db",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "aefae87d5755a9df",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "afef97cc32e96f34",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "b3ee3a94fe8b0428",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "b42b9491873bd53b",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "b4f44af32b053ef7",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "b6078d1fca94622c",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "b7fc46e3e47360e8",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "b8c6784754ba4491",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "b93efe8723403573",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "ba2112c8307e1717",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "bae8d5c3a374297c",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "bb5ce721255da8c1",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "be0f96cd5043bf1f",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "c0200d0fcb0c4cf2",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "c28273b530577c36",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "c31eae7303116a2a",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "c668d768dd2d1da1",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "c6e1240d23bf190f",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "c911fc7cee608ac2",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "c91ada000cfc1efa",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "ca1e5c92ee0c8924",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "cd0469f33951c630",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
    "child": "11b3e298ad079a59",
@@ -2969,6 +3677,120 @@
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
    "child": "fcaf524561670c85",
    "type": "contains"
+  },
+  {
+   "parent": "ceddf32254e255a9",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "d022ae337011130e",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "d0b95d044401fb92",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "d13eaac44630c549",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "d47e267b79a17b04",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "d6bdc72c1ca1b475",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "da9458ee16f4468e",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "db58cbd2b2e05612",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "db983303dc31596f",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "df5ba84b0ab635af",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "e6c91bcebfb835a3",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "e7189c252db10ac9",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "ebdcbf054e0db6fd",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "edaefa2c5d7e5a6c",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "f0f8091ed4379f33",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "f5bc74294eea960a",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "f622902c81babf8e",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "fa73a30d99b681a9",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  },
+  {
+   "parent": "fac887c3e4c9e044",
+   "child": "ed9ca1d5b0eb32bc",
+   "type": "evident-by"
+  },
+  {
+   "parent": "fcaf524561670c85",
+   "child": "7072cf4473a36764",
+   "type": "evident-by"
+  }
+ ],
+ "files": [
+  {
+   "id": "ed9ca1d5b0eb32bc",
+   "location": {
+    "path": "go.mod"
+   }
+  },
+  {
+   "id": "7072cf4473a36764",
+   "location": {
+    "path": "mesos-compose"
+   }
   }
  ],
  "source": {
@@ -3007,6 +3829,16 @@
     },
     "search-unindexed-archives": false,
     "search-indexed-archives": true
+   },
+   "golang": {
+    "search-local-mod-cache-licenses": false,
+    "local-mod-cache-dir": "",
+    "search-remote-licenses": false,
+    "proxy": "",
+    "no-proxy": ""
+   },
+   "linux-kernel": {
+    "catalog-modules": true
    },
    "attest": {},
    "file-metadata": {
@@ -3050,11 +3882,12 @@
    "exclude": [],
    "platform": "",
    "name": "",
-   "parallelism": 1
+   "parallelism": 1,
+   "default-image-pull-source": ""
   }
  },
  "schema": {
-  "version": "7.0.1",
-  "url": "https://raw.githubusercontent.com/anchore/syft/main/schema/json/schema-7.0.1.json"
+  "version": "7.1.5",
+  "url": "https://raw.githubusercontent.com/anchore/syft/main/schema/json/schema-7.1.5.json"
  }
 }
