@@ -477,6 +477,10 @@ func (e *API) getContainerType() string {
 		conType = "docker"
 	}
 
+	if conType != "mesos" && conType != "docker" {
+		conType = "docker"
+	}
+
 	return conType
 }
 
