@@ -63,6 +63,8 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 			}
 		}
 		// all other cases, increase task count and restart task
+		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
+		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
 		task.State = ""
 	case mesosproto.TASK_RUNNING:
 		if !e.Mesos.IsSuppress {
