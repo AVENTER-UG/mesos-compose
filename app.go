@@ -54,6 +54,9 @@ func main() {
 	}
 
 	r := redis.New(&config, &framework)
+	if !r.Connect() {
+		logrus.WithField("func", "main").Fatal("Could not connect to redis DB")
+	}
 
 	// get API
 	a := api.New(&config, &framework)

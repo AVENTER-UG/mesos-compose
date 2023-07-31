@@ -24,6 +24,7 @@
 - ADD: Support Mesos fetch to download files during runtime into the containers sandbox.
 - ADD: Scale up and down of mesos tasks
 - FIX: Increase TASK_ID during task_lost restart 
+- FIX: Exit startup if cannot connect redis
 
 ## 0.4.2
 

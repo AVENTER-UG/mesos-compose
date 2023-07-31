@@ -25,7 +25,8 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			e.Redis.SaveTaskRedis(cmd)
 			logrus.WithField("func", "mesos.HandleOffers").Debug("No matched offer found.")
 			logrus.WithField("func", "mesos.HandleOffers").Debug("Decline unneeded offer: ", offerIds)
-			return e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
+			go e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
+			return nil
 		}
 		logrus.WithField("func", "scheduler.HandleOffers").Info("Take Offer from " + takeOffer.GetHostname() + " for task " + cmd.TaskID + " (" + cmd.TaskName + ")")
 
@@ -53,6 +54,8 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			},
 		}}
 
+		e.Redis.SaveTaskRedis(cmd)
+
 		logrus.WithField("func", "scheduler.HandleOffers").Debug("Offer Accept: ", takeOffer.GetID(), " On Node: ", takeOffer.GetHostname())
 
 		err := e.Mesos.Call(accept)
@@ -64,13 +67,14 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 		// decline unneeded offer
 		if len(offerIds) > 0 {
 			logrus.WithField("func", "scheduler.HandleOffer").Debug("Offer Decline: ", offerIds)
-			return e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
+			go e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 		}
 	default:
 		// decline unneeded offer
 		_, offerIds := e.Mesos.GetOffer(offers, cfg.Command{})
 		logrus.WithField("func", "scheduler.HandleOffer").Debug("Decline unneeded offer: ", offerIds)
-		return e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
+		go e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
+
 	}
 
 	return nil
