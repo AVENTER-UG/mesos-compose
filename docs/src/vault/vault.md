@@ -35,7 +35,7 @@ services:
     command: "env"
     restart: always
     environment:
-      - test=vault://secret/data/m3s/test:test1
+      test: vault://secret/data/m3s/test:test1
     network: default
     deploy:
       resources:

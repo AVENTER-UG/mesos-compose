@@ -8854,7 +8854,7 @@ type ContainerInfo struct {
 	// At most one of the following *Info messages should be set to match
 	// the type, i.e. the "protobuf union" in ContainerInfo should be valid.
 	Docker *ContainerInfo_DockerInfo `protobuf:"bytes,3,opt,name=docker" json:"docker,omitempty"`
-	Mesos  *ContainerInfo_MesosInfo  `protobuf:"bytes,5,opt,name=mesosproto. json:"mesosproto.omitempty"`
+	Mesos  *ContainerInfo_MesosInfo  `protobuf:"bytes,5,opt,name=mesos" json:"mesos,omitempty"`
 	// A list of network requests. A framework can request multiple IP addresses
 	// for the container.
 	NetworkInfos []NetworkInfo `protobuf:"bytes,7,rep,name=network_infos,json=networkInfos" json:"network_infos"`

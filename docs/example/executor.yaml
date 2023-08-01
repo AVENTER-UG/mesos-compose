@@ -4,8 +4,8 @@ services:
     image: ubuntu:latest
     command: "sleep 1"
     environment:
-      - FIRECRACKER_WORKDIR=/tmp
-      - FIRECRACKER_AGENT_PORT=8080
+      FIRECRACKER_WORKDIR: /tmp
+      FIRECRACKER_AGENT_PORT: 8080
     cap_add:
       - SYS_ADMIN
       - NET_ADMIN

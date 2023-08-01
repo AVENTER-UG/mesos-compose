@@ -8,33 +8,34 @@ import (
 
 // Config is a struct of the framework configuration
 type Config struct {
-	Principal           string
-	LogLevel            string
-	MinVersion          string
-	AppName             string
-	EnableSyslog        bool
-	Hostname            string
-	Listen              string
-	Domain              string
-	Credentials         UserCredentials
-	PrefixHostname      string
-	PrefixTaskName      string
-	CPU                 float64
-	Memory              float64
-	Disk                float64
-	RedisServer         string
-	RedisPassword       string
-	RedisDB             int
-	SkipSSL             bool
-	SSLKey              string
-	SSLCrt              string
-	Suppress            bool
-	EventLoopTime       time.Duration
-	ReconcileLoopTime   time.Duration
-	VaultToken          string
-	VaultURL            string
-	VaultTimeout        time.Duration
-	DefaultVolumeDriver string
+	Principal                  string
+	LogLevel                   string
+	MinVersion                 string
+	AppName                    string
+	EnableSyslog               bool
+	Hostname                   string
+	Listen                     string
+	Domain                     string
+	Credentials                UserCredentials
+	PrefixHostname             string
+	PrefixTaskName             string
+	CPU                        float64
+	Memory                     float64
+	Disk                       float64
+	RedisServer                string
+	RedisPassword              string
+	RedisDB                    int
+	SkipSSL                    bool
+	SSLKey                     string
+	SSLCrt                     string
+	Suppress                   bool
+	EventLoopTime              time.Duration
+	ReconcileLoopTime          time.Duration
+	VaultToken                 string
+	VaultURL                   string
+	VaultTimeout               time.Duration
+	DefaultVolumeDriver        string
+	DiscoveryInfoNameDelimiter string
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework
@@ -58,7 +59,8 @@ type Service struct {
 	Build         string                  `yaml:"build"`
 	Restart       string                  `yaml:"restart" default:"unless-stopped"`
 	Volumes       []string                `yaml:"volumes"`
-	Environment   []string                `yaml:"environment"`
+	Environment   map[string]string       `yaml:"environment"`
+	Arguments     []string                `yaml:"arguments"`
 	DependsOn     []string                `yaml:"depends_on"`
 	Ports         []string                `yaml:"ports"`
 	Image         string                  `yaml:"image"`

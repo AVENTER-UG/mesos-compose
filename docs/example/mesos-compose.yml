@@ -5,12 +5,13 @@ version: '3.9'
 services:
   app:
     image: alpine:latest
-    command: "sleep 1000"
+    command: "sleep"
+    arguments: ["1000"]    
     restart: always
     volumes:
       - "12345test:/tmp"
     environment:
-      - MYSQL_HOST=test
+      MYSQL_HOST: test
     hostname: test
     container_name: test
     container_type: docker

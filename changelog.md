@@ -2,7 +2,8 @@
 
 ## master
 
-- CHANGE: !!!! Broken changes !!!! Change mesos-compose specific labels to yaml flags. For an example, see the docs.
+- CHANGE: !!!! Braking changes !!!! Change mesos-compose labels to yaml labels. For an example, please take a look into the docs.
+- CHANGE: !!!! Braking changes !!!! Change environment variables format. For an example, please take a look into the docs.
 - CHANGE: Move mesos specific functions into own module
 - ADD: Implicit reconcile to remove unknown Mesos Tasks
 - ADD: Default volume driver parameter `DEFAULT_VOLUME_DRIVER`
@@ -25,6 +26,9 @@
 - ADD: Scale up and down of mesos tasks
 - FIX: Increase TASK_ID during task_lost restart 
 - FIX: Exit startup if cannot connect redis
+- CHANGE: Change the discovery name format to fit the DNS RFC.
+- ADD: Better support for mesos containerizer (thanks to @harryzz)
+- ADD: Command Attributes (thanks to @harryzz)
 
 ## 0.4.2
 

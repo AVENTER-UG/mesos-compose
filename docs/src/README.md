@@ -9,29 +9,34 @@
 
 ## Example
 
-Compose file with all supportet parameters:
+Compose file with all supported parameters:
 
-```bash
+```yaml
 version: '3.9'
 
 services:
   app:
     image: alpine:latest
-    command: "sleep 1000"
+    command: "sleep"
+    arguments: ["1000"]        
     restart: always
     volumes:
       - "12345test:/tmp"
     environment:
-      - MYSQL_HOST=test
+      MYSQL_HOST: test
     hostname: test
     container_name: test
-    container_type: docker # or mesos
-    shell: false 
+    container_type: docker
+    shell: true
     mesos:
-      task_name: "mc:test:app1" # an alternative taskname
+      task_name: "mc:test:app1" # an alternative taskname      
       executer:
-        command: "./my-custom-executor"
-        uri: "http://localhost/my-custom-executor"
+        command: "/mnt/mesos/sandbox/my-custom-executor"
+      fetch:
+        - value: http://localhost/my-custom-executor
+          executable: true
+					extract:  false
+					cache: false
     labels:
       traefik.enable: "true"
       traefik.http.routers.test.entrypoints: "web"
@@ -43,8 +48,11 @@ services:
       - "9090"
       - "8081:81/tcp"
       - "8082:82/udp"
-    network:
-      - default
+      - "8082:82/http"
+      - "8082:82/https"  
+      - "8082:82/h2c"
+      - "8082:82/wss"       
+    network: default
     ulimits:
       memlock:
         soft: -1
@@ -61,18 +69,18 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: "0.01"
-          memory: "50"
+          cpus: 0.01
+          memory: 50
 
 networks:
   default:
     external: true
     name: weave
+    driver: bridge
 
 volumes:
   12345test:
     driver: local
-
 ```
 
 We can also use yaml anchors and more then one service in a compose file:
