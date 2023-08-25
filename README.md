@@ -109,8 +109,8 @@ services:
       fetch:
         - value: http://localhost/my-custom-executor
           executable: true
-					extract:  false
-					cache: false
+          extract:  false
+          cache: false
     labels:
       traefik.enable: "true"
       traefik.http.routers.test.entrypoints: "web"
