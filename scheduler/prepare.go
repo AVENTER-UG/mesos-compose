@@ -119,6 +119,10 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 				Environment: &cmd.Environment,
 			}
 		}
+
+		if len(cmd.Arguments) > 0 {
+			msg.Command.Arguments = cmd.Arguments
+		}
 	}
 
 	// force to pull the container image
@@ -132,14 +136,32 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 		msg.Container = &mesosproto.ContainerInfo{}
 		msg.Container.Type = contype
 		msg.Container.Volumes = cmd.Volumes
-		msg.Container.Docker = &mesosproto.ContainerInfo_DockerInfo{
-			Image:          cmd.ContainerImage,
-			Network:        networkMode,
-			PortMappings:   cmd.DockerPortMappings,
-			Privileged:     &cmd.Privileged,
-			Parameters:     cmd.DockerParameter,
-			ForcePullImage: func() *bool { x := forcePull; return &x }(),
+
+		if cmd.ContainerType == "docker" {
+			msg.Container.Docker = &mesosproto.ContainerInfo_DockerInfo{
+				Image:          cmd.ContainerImage,
+				Network:        networkMode,
+				PortMappings:   cmd.DockerPortMappings,
+				Privileged:     &cmd.Privileged,
+				Parameters:     cmd.DockerParameter,
+				ForcePullImage: func() *bool { x := forcePull; return &x }(),
+			}
 		}
+
+		if cmd.ContainerType == "mesos" {
+			var cachedImage bool = false
+			msg.Container.TTYInfo = &mesosproto.TTYInfo{}
+			msg.Container.TTYInfo.WindowSize = &mesosproto.TTYInfo_WindowSize{}
+			msg.Container.TTYInfo.WindowSize.Columns = 80
+			msg.Container.TTYInfo.WindowSize.Rows = 25
+			msg.Container.Mesos = &mesosproto.ContainerInfo_MesosInfo{}
+			msg.Container.Mesos.Image = &mesosproto.Image{}
+			msg.Container.Mesos.Image.Type = mesosproto.Image_DOCKER.Enum()
+			msg.Container.Mesos.Image.Cached = &cachedImage
+			msg.Container.Mesos.Image.Docker = &mesosproto.Image_Docker{}
+			msg.Container.Mesos.Image.Docker.Name = cmd.ContainerImage
+		}
+
 		msg.Container.NetworkInfos = cmd.NetworkInfo
 
 		if cmd.Hostname != "" {

@@ -62,12 +62,21 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Restart = e.getRestart()
 	cmd.Mesos = e.Service.Mesos
 	cmd.Uris = e.getURIs()
+	cmd.Arguments = e.getArguments()
 
 	// set the docker constraints
 	e.setConstraints(&cmd)
 
 	// store/update the mesos task in db
 	e.Redis.SaveTaskRedis(cmd)
+}
+
+// Get the Command value from the compose file, or generate one if it's unset
+func (e *API) getArguments() []string {
+	if len(e.Service.Arguments) != 0 {
+		return e.Service.Arguments
+	}
+	return []string{}
 }
 
 // Get the URIS to fetch
@@ -82,17 +91,12 @@ func (e *API) getURIs() []mesosproto.CommandInfo_URI {
 
 // Get the name of the task
 func (e *API) getTaskName(project, name string) string {
-	var taskName string
-
-	if e.Service.Mesos.TaskName != "" {
-		taskName = e.Service.Mesos.TaskName
-		// be sure the taskname is only running under the frameworks prefix
-		if strings.Split(taskName, ":")[0] != e.Config.PrefixTaskName {
-			return e.Config.PrefixTaskName + ":" + taskName
-		}
-		return taskName
+	taskName := e.Service.Mesos.TaskName
+	// be sure the taskname is only running under the frameworks prefix
+	if strings.Split(taskName, ":")[0] != e.Config.PrefixTaskName {
+		return e.Config.PrefixTaskName + ":" + project + ":" + name
 	}
-	return e.Config.PrefixTaskName + ":" + project + ":" + name
+	return taskName
 }
 
 // Get shell
@@ -279,9 +283,10 @@ func (e *API) getDiscoveryInfoPorts(cmd cfg.Command) []mesosproto.Port {
 }
 
 func (e *API) getDiscoveryInfo(cmd cfg.Command) mesosproto.DiscoveryInfo {
+	name := strings.ReplaceAll(cmd.TaskName, ":", e.Config.DiscoveryInfoNameDelimiter)
 	return mesosproto.DiscoveryInfo{
 		Visibility: 2,
-		Name:       &cmd.TaskName,
+		Name:       &name,
 		Ports: &mesosproto.Ports{
 			Ports: e.getDiscoveryInfoPorts(cmd),
 		},
@@ -291,18 +296,14 @@ func (e *API) getDiscoveryInfo(cmd cfg.Command) mesosproto.DiscoveryInfo {
 // Get the environment of the compose file
 func (e *API) getEnvironment() []mesosproto.Environment_Variable {
 	var env []mesosproto.Environment_Variable
-	for _, c := range e.Service.Environment {
+	for k, v := range e.Service.Environment {
 		var tmp mesosproto.Environment_Variable
-		p := strings.Split(c, "=")
-		if len(p) != 2 {
-			continue
-		}
-		tmp.Name = p[0]
+		tmp.Name = k //p[0]
 		// check if the value is a secret
-		if strings.Contains(p[1], "vault://") {
-			p[1] = e.Vault.GetKey(p[1])
+		if strings.Contains(v, "vault://") {
+			v = e.Vault.GetKey(v)
 		}
-		tmp.Value = func() *string { x := p[1]; return &x }()
+		tmp.Value = func() *string { x := v; return &x }()
 		env = append(env, tmp)
 	}
 	return env

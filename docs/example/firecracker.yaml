@@ -4,9 +4,9 @@ services:
     image: avhost/mesos-firecracker-executor:latest
     command: "sleep 1"
     environment:
-      - FIRECRACKER_PAYLOAD_FILE=/mnt/mesos/sandbox/payload.sh
-      - FIRECRACKER_WORKDIR=/mnt/mesos/sandbox
-      - FIRECRACKER_AGENT_PORT=8085
+      FIRECRACKER_PAYLOAD_FILE: /mnt/mesos/sandbox/payload.sh
+      FIRECRACKER_WORKDIR: /mnt/mesos/sandbox
+      FIRECRACKER_AGENT_PORT: 8085
     cap_add:
       - SYS_ADMIN
       - NET_ADMIN

@@ -1,9 +1,16 @@
 # mesos-compose
 
-[![Chat](https://img.shields.io/static/v1?label=Chat&message=Support&color=brightgreen)](https://matrix.to/#/#mesosk3s:matrix.aventer.biz?via=matrix.aventer.biz)
-[![Docs](https://img.shields.io/static/v1?label=Docs&message=Support&color=brightgreen)](https://aventer-ug.github.io/mesos-m3s/index.html)
+[![Docs](https://img.shields.io/static/v1?label=&message=Issues&color=brightgreen)](https://github.com/m3scluster/compose/issues)
+[![Chat](https://img.shields.io/static/v1?label=&message=Chat&color=brightgreen)](https://matrix.to/#/#mesosk3s:matrix.aventer.biz?via=matrix.aventer.biz)
+[![Docs](https://img.shields.io/static/v1?label=&message=Docs&color=brightgreen)](https://m3scluster.github.io/compose/)
+[![GoDoc](https://godoc.org/github.com/AVENTER-UG/mesos-compose?status.svg)](https://godoc.org/github.com/AVENTER-UG/mesos-compose) 
+[![Docker Pulls](https://img.shields.io/docker/pulls/avhost/mesos-compose)](https://hub.docker.com/repository/docker/avhost/mesos-compose/)
 
 Mesos Framework to use docker-compose based files.
+
+## Issues
+
+To open an issue, please use this place: https://github.com/m3scluster/compose/issues
 
 ## Requirements
 
@@ -78,31 +85,36 @@ export MESOS_CNI="weave"
 
 The compose file:
 
-```bash
+```yaml
 version: '3.9'
 
 services:
   app:
     image: alpine:latest
-    command: "sleep 1000"
+    command: "sleep"
+    arguments: ["1000"]        
     restart: always
     volumes:
       - "12345test:/tmp"
     environment:
-      - MYSQL_HOST=test
+      MYSQL_HOST: test
     hostname: test
     container_name: test
-    container_type: docker # or mesos
-    shell: false 
+    container_type: docker
+    shell: true
     mesos:
-      task_name: "mc:test:app1" # an alternative taskname
+      task_name: "mc:test:app1" # an alternative taskname      
       executer:
-        command: "./my-custom-executor"
-        uri: "http://localhost/my-custom-executor"
+        command: "/mnt/mesos/sandbox/my-custom-executor"
+      fetch:
+        - value: http://localhost/my-custom-executor
+          executable: true
+					extract:  false
+					cache: false
     labels:
       traefik.enable: "true"
       traefik.http.routers.test.entrypoints: "web"
-      traefik.http.routers.test.service: "mc_test_app_80"
+      traefik.http.routers.test.service: "mc:test:app1:80" # if an alternative taskname is set, we have to use it here to
       traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
     network_mode: "BRIDGE"
     ports:
@@ -110,8 +122,11 @@ services:
       - "9090"
       - "8081:81/tcp"
       - "8082:82/udp"
-    network:
-      - default
+      - "8082:82/http"
+      - "8082:82/https"  
+      - "8082:82/h2c"
+      - "8082:82/wss"       
+    network: default
     ulimits:
       memlock:
         soft: -1
@@ -123,21 +138,23 @@ services:
       placement:
         constraints:
           - "node.hostname==localhost"
+          - "node.platform.os==linux"
+          - "node.platform.arch==arm"
       replicas: 1
       resources:
         limits:
-          cpus: "0.01"
-          memory: "50"
+          cpus: 0.01
+          memory: 50
 
 networks:
   default:
     external: true
     name: weave
+    driver: bridge
 
 volumes:
   12345test:
     driver: local
-
 ```
 
 

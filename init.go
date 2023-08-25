@@ -17,7 +17,7 @@ var framework cfg.FrameworkConfig
 
 func init() {
 	framework.FrameworkUser = util.Getenv("FRAMEWORK_USER", "root")
-	framework.FrameworkName = "mc" + util.Getenv("FRAMEWORK_NAME", "")
+	framework.FrameworkName = util.Getenv("FRAMEWORK_NAME", "mc")
 	framework.FrameworkRole = util.Getenv("FRAMEWORK_ROLE", "mc")
 	framework.FrameworkPort = util.Getenv("FRAMEWORK_PORT", "10000")
 	framework.FrameworkHostname = util.Getenv("FRAMEWORK_HOSTNAME", fqdn.Get())
@@ -50,6 +50,7 @@ func init() {
 	config.VaultToken = util.Getenv("VAULT_TOKEN", "")
 	config.VaultURL = util.Getenv("VAULT_URL", "http://127.0.0.1:8200")
 	config.VaultTimeout, _ = time.ParseDuration(util.Getenv("VAULT_TIMEOUT", "10s"))
+	config.DiscoveryInfoNameDelimiter = util.Getenv("DISCOVERY_NAME_DELIMITER", ".")
 
 	// The comunication to the mesos server should be via ssl or not
 	if util.Getenv("MESOS_SSL", "false") == "true" {
