@@ -9,8 +9,8 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.test1.entrypoints: "web"
-      traefik.http.routers.test1.rule: "Host(`www.blub.com`)"
-      traefik.http.routers.test1.service: "mc:test:test1:8888"
+      traefik.http.routers.test1.rule: "Host(`your.example.com`)"
+      traefik.http.routers.test1.service: "mc_test_test1_8888"
       traefik.http.services.test1.loadBalancer.healthCheck.path: "/index.html"
       traefik.http.services.test1.loadBalancer.healthCheck.interval: "10s"
       traefik.http.services.test1.loadBalancer.healthCheck.timeout: "3s"

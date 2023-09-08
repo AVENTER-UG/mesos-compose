@@ -28,7 +28,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.test.entrypoints: "web"
-      traefik.http.routers.test.service: "mc:test:app1:80" # if an alternative taskname is set, we have to use it here to
+      traefik.http.routers.test.service: "mc_test_app1_80" # if an alternative taskname is set, we have to use it here to
       traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
     network_mode: "BRIDGE"
     ports:

@@ -267,7 +267,7 @@ func (e *API) getDiscoveryInfoPorts(cmd cfg.Command) []mesosproto.Port {
 	for i, c := range cmd.DockerPortMappings {
 		var tmpport mesosproto.Port
 		p := func() *string { x := cmd.TaskName + ":" + strconv.FormatUint(uint64(c.ContainerPort), 10); return &x }()
-		tmpport.Name = p
+		tmpport.Name = func() *string { x := strings.ReplaceAll(*p, ":", "_"); return &x }()
 		tmpport.Number = c.HostPort
 		tmpport.Protocol = c.Protocol
 

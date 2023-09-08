@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  test1:
+    image: avhost/docker-lighttpd
+    container_type: mesos
+
+networks:
+  default:
+    external: true
+    name: weave
+          

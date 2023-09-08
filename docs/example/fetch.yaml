@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  test1:
+    image: docker.io/avhost/docker-lighttpd
+    ports:
+      - "9999:8888/http"
+    network_mode: "bridge"
+    hostname: test.weave.local
+    network: default
+    restart: always
+    deploy:
+      replicas: 1
+    mesos:
+      fetch:
+        - value: https://downloads.mesosphere.com:8443/Dockerfile
+          executable: false
+
+networks:
+  default:
+    external: true
+    name: weave
+          
