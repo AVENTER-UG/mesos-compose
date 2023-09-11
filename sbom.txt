@@ -1,6 +1,6 @@
 NAME                                             VERSION                             TYPE      
 github.com/AVENTER-UG/go-logrus-formatter        v0.5.4                              go-module  
-github.com/AVENTER-UG/mesos-compose              v0.0.0-20220921211106-2d61100b24e5  go-module  
+github.com/AVENTER-UG/mesos-compose              v2022-10-27T22                      go-module  
 github.com/AVENTER-UG/mesos-util                 v0.0.39                             go-module  
 github.com/AVENTER-UG/util                       v0.5.2                              go-module  
 github.com/Showmax/go-fqdn                       v1.0.0                              go-module  
@@ -75,4 +75,4 @@ google.golang.org/grpc                           v1.50.1                        
 google.golang.org/protobuf                       v1.28.1                             go-module  
 gopkg.in/check.v1                                v1.0.0-20190902080502-41f04d3bba15  go-module  
 gopkg.in/square/go-jose.v2                       v2.6.0                              go-module  
-gopkg.in/yaml.v3                                 v3.0.1                              go-module  
+gopkg.in/yaml.v3                                 v3.0.1                              go-module

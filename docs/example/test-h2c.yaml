@@ -9,7 +9,7 @@ services:
       traefik.enable: "true"
       traefik.http.routers.test1.entrypoints: "web"
       traefik.http.routers.test1.rule: "Host(`www.example.com`)"
-      traefik.http.routers.test1.service: "mc:test:test1:8888"
+      traefik.http.routers.test1.service: "mc.test_test1:8888"
     network: default
     restart: always
 
