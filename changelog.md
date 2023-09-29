@@ -29,6 +29,7 @@
 - CHANGE: Change the discovery name format to fit the DNS RFC.
 - ADD: Better support for mesos containerizer (thanks to @harryzz)
 - ADD: Command Attributes (thanks to @harryzz)
+- FIX: Conflict between reconcile and heatbeat could end in a task restart loop
 
 ## 0.4.2
 
