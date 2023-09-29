@@ -31,14 +31,15 @@ func (e *Scheduler) Heartbeat() {
 			continue
 		}
 
-		// kill task and remove it from DB
+		// kill task
 		if task.State == "__KILL" {
 			// if agent is unset, the task is not running we can just delete the DB key
 			if task.Agent == "" {
 				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			} else {
+				task.Restart = "no"
+				e.Redis.SaveTaskRedis(task)
 				e.Mesos.Kill(task.TaskID, task.Agent)
-				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			}
 			continue
 		}
@@ -119,7 +120,7 @@ func (e *Scheduler) ReconcileLoop() {
 	ticker := time.NewTicker(e.Config.ReconcileLoopTime)
 	defer ticker.Stop()
 	for ; true; <-ticker.C {
-		go e.reconcile()
-		go e.implicitReconcile()
+		e.reconcile()
+		e.implicitReconcile()
 	}
 }

@@ -15,6 +15,8 @@ FROM alpine
 LABEL maintainer="Andreas Peters <support@aventer.biz>"
 
 RUN apk add --no-cache ca-certificates
+RUN apk update
+RUN apk upgrade
 RUN adduser -S -D -H -h /app appuser
 
 USER appuser
