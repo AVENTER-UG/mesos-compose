@@ -36,6 +36,7 @@ type Config struct {
 	VaultTimeout               time.Duration
 	DefaultVolumeDriver        string
 	DiscoveryInfoNameDelimiter string
+	DiscoveryPortNameDelimiter string
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework

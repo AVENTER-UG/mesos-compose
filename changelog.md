@@ -30,6 +30,9 @@
 - ADD: Better support for mesos containerizer (thanks to @harryzz)
 - ADD: Command Attributes (thanks to @harryzz)
 - FIX: Conflict between reconcile and heatbeat could end in a task restart loop
+- ADD: Parameter to configure the Mesos Task DiscoveryInfoName Delimiter `DISCOVERY_INFONAME_DELIMITER`. Default value is ".".
+- ADD: Parameter to configure the Mesos Task DiscoveryPortName Delimiter `DISCOVERY_PORTNAME_DELIMITER`. Default value is "_".
+- ADD: Constraint `unique` to run a only one instance of a task per node.
 
 ## 0.4.2
 
