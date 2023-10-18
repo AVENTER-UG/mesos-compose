@@ -50,7 +50,8 @@ func init() {
 	config.VaultToken = util.Getenv("VAULT_TOKEN", "")
 	config.VaultURL = util.Getenv("VAULT_URL", "http://127.0.0.1:8200")
 	config.VaultTimeout, _ = time.ParseDuration(util.Getenv("VAULT_TIMEOUT", "10s"))
-	config.DiscoveryInfoNameDelimiter = util.Getenv("DISCOVERY_NAME_DELIMITER", ".")
+	config.DiscoveryInfoNameDelimiter = util.Getenv("DISCOVERY_INFONAME_DELIMITER", ".")
+	config.DiscoveryPortNameDelimiter = util.Getenv("DISCOVERY_PORTNAME_DELIMITER", "_")
 
 	// The comunication to the mesos server should be via ssl or not
 	if util.Getenv("MESOS_SSL", "false") == "true" {

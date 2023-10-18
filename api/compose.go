@@ -267,7 +267,7 @@ func (e *API) getDiscoveryInfoPorts(cmd cfg.Command) []mesosproto.Port {
 	for i, c := range cmd.DockerPortMappings {
 		var tmpport mesosproto.Port
 		p := func() *string { x := cmd.TaskName + ":" + strconv.FormatUint(uint64(c.ContainerPort), 10); return &x }()
-		tmpport.Name = func() *string { x := strings.ReplaceAll(*p, ":", "_"); return &x }()
+		tmpport.Name = func() *string { x := strings.ReplaceAll(*p, ":", e.Config.DiscoveryPortNameDelimiter); return &x }()
 		tmpport.Number = c.HostPort
 		tmpport.Protocol = c.Protocol
 
@@ -332,23 +332,12 @@ func (e *API) getVolumes(containerType string) []mesosproto.Volume {
 			driver = e.Compose.Volumes[p[0]].Driver
 		}
 
-		switch containerType {
-		case "docker":
-			tmp.Source = &mesosproto.Volume_Source{
-				Type: mesosproto.Volume_Source_DOCKER_VOLUME,
-				DockerVolume: &mesosproto.Volume_Source_DockerVolume{
-					Name:   p[0],
-					Driver: func() *string { x := driver; return &x }(),
-				},
-			}
-		default:
-			tmp.Source = &mesosproto.Volume_Source{
-				Type: mesosproto.Volume_Source_DOCKER_VOLUME,
-				DockerVolume: &mesosproto.Volume_Source_DockerVolume{
-					Name:   p[0],
-					Driver: func() *string { x := driver; return &x }(),
-				},
-			}
+		tmp.Source = &mesosproto.Volume_Source{
+			Type: mesosproto.Volume_Source_DOCKER_VOLUME,
+			DockerVolume: &mesosproto.Volume_Source_DockerVolume{
+				Name:   p[0],
+				Driver: func() *string { x := driver; return &x }(),
+			},
 		}
 		volume = append(volume, tmp)
 	}
@@ -544,17 +533,23 @@ func (e *API) addDockerParameter(current []mesosproto.Parameter, newValues mesos
 func (e *API) setConstraints(cmd *cfg.Command) {
 	if len(e.Service.Deploy.Placement.Constraints) > 0 {
 		for _, constraint := range e.Service.Deploy.Placement.Constraints {
-			cons := strings.Split(constraint, "==")
-			if len(cons) >= 2 {
-				if cons[0] == "node.hostname" {
-					cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_hostname", Value: &cons[1]})
+			if strings.Contains(constraint, "==") {
+				cons := strings.Split(constraint, "==")
+				if len(cons) >= 2 {
+					if cons[0] == "node.hostname" {
+						cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_hostname", Value: &cons[1]})
+					}
+					if cons[0] == "node.platform.os" {
+						cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_platform_os", Value: &cons[1]})
+					}
+					if cons[0] == "node.platform.arch" {
+						cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_platform_arch", Value: &cons[1]})
+					}
 				}
-				if cons[0] == "node.platform.os" {
-					cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_platform_os", Value: &cons[1]})
-				}
-				if cons[0] == "node.platform.arch" {
-					cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_platform_arch", Value: &cons[1]})
-				}
+			}
+			if strings.ToLower(constraint) == "unique" {
+				val := func() *string { x := "unique"; return &x }()
+				cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement", Value: val})
 			}
 		}
 	}

@@ -111,7 +111,13 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (
 			if strings.ToLower(valHostname) == offer.GetHostname() {
 				logrus.WithField("func", "scheduler.getOffer").Debug("Set Server Hostname Constraint to:", offer.GetHostname())
 			} else {
-				logrus.WithField("func", "scheduler.getOffer").Debug("Could not found hostname, get next offer")
+				logrus.WithField("func", "scheduler.getOffer").Debug("Could not find hostname, get next offer")
+				continue
+			}
+		}
+
+		if e.getLabelValue("__mc_placement", cmd) == "unique" {
+			if e.alreadyRunningOnHostname(cmd, offer) {
 				continue
 			}
 		}
@@ -139,6 +145,31 @@ func (e *Scheduler) getAttributes(name string, offer mesosproto.Offer) string {
 		}
 	}
 	return ""
+}
+
+func (e *Scheduler) alreadyRunningOnHostname(cmd cfg.Command, offer mesosproto.Offer) bool {
+	keys := e.Redis.GetAllRedisKeys(cmd.TaskName + ":*")
+	for keys.Next(e.Redis.CTX) {
+		// continue if the key is not a mesos task
+		if e.Redis.CheckIfNotTask(keys) {
+			continue
+		}
+		// get the values of the current key
+		key := e.Redis.GetRedisKey(keys.Val())
+
+		task := e.Mesos.DecodeTask(key)
+
+		// continue if it's a unvalid task
+		if task.TaskID == "" {
+			continue
+		}
+
+		if task.MesosAgent.Hostname == cmd.MesosAgent.Hostname {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (e *Scheduler) isAttributeMachted(label, attribute string, cmd cfg.Command, offer mesosproto.Offer) bool {

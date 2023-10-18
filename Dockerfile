@@ -4,7 +4,7 @@ WORKDIR /build
 
 COPY . /build/
 
-RUN apk update && apk add git && \
+RUN apk update && apk upgrade && apk add git && \
     go get -d
 
 ARG TAG
