@@ -22,6 +22,7 @@ type Mesos struct {
 	Framework  *cfg.FrameworkConfig
 	IsSuppress bool
 	IsRevive   bool
+	CountAgent int
 }
 
 // Marshaler to serialize Protobuf Message to JSON
@@ -167,7 +168,7 @@ func (e *Mesos) Call(message *mesosproto.Call) error {
 		body, err := ioutil.ReadAll(res.Body)
 		if err != nil {
 			logrus.WithField("func", "mesos.Call").Error("Call Handling (could not read res.Body)")
-			return fmt.Errorf("Error %d", res.StatusCode)
+			return fmt.Errorf("error %d", res.StatusCode)
 		}
 
 		logrus.WithField("func", "mesos.Call").Error("Call Handling: ", string(body))
@@ -276,7 +277,7 @@ func (e *Mesos) GetAgentInfo(agentID string) cfg.MesosSlaves {
 	res, err := client.Do(req)
 
 	if err != nil {
-		logrus.WithField("func", "getAgentInfo").Error("Could not connect to agent: ", err.Error())
+		logrus.WithField("func", "mesos.getAgentInfo").Error("Could not connect to master: ", err.Error())
 		return cfg.MesosSlaves{}
 	}
 
@@ -294,6 +295,9 @@ func (e *Mesos) GetAgentInfo(agentID string) cfg.MesosSlaves {
 			}
 			return cfg.MesosSlaves{}
 		}
+
+		// save how many agents the cluster has
+		e.CountAgent = len(agent.Slaves)
 
 		// get the used agent info
 		for _, a := range agent.Slaves {

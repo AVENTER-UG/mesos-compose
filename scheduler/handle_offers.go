@@ -118,15 +118,18 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (
 
 		if e.getLabelValue("__mc_placement", cmd) == "unique" {
 			if e.alreadyRunningOnHostname(cmd, offer) {
+				logrus.WithField("func", "scheduler.getOffer").Debug("UNIQUE: Already running on node: ", offer.GetHostname())
 				continue
 			}
 		}
 
 		if !e.isAttributeMachted("__mc_placement_node_platform_os", "os", cmd, offer) {
+			logrus.WithField("func", "scheduler.getOffer").Debug("OS: Does not match Attribute")
 			continue
 		}
 
 		if !e.isAttributeMachted("__mc_placement_node_platform_arch", "arch", cmd, offer) {
+			logrus.WithField("func", "scheduler.getOffer").Debug("OS: Does not match Attribute")
 			continue
 		}
 
@@ -164,7 +167,7 @@ func (e *Scheduler) alreadyRunningOnHostname(cmd cfg.Command, offer mesosproto.O
 			continue
 		}
 
-		if task.MesosAgent.Hostname == cmd.MesosAgent.Hostname {
+		if task.MesosAgent.Hostname == cmd.MesosAgent.Hostname && task.TaskID != cmd.TaskID {
 			return true
 		}
 	}

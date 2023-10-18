@@ -18,9 +18,3 @@ services:
     restart: always
     deploy:
       replicas: 1
-
-networks:
-  default:
-    external: true
-    name: weave
-          
