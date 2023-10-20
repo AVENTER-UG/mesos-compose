@@ -1,6 +1,6 @@
 # Changelog
 
-## master
+## 1.0.0
 
 - CHANGE: !!!! Braking changes !!!! Change mesos-compose labels to yaml labels. For an example, please take a look into the docs.
 - CHANGE: !!!! Braking changes !!!! Change environment variables format. For an example, please take a look into the docs.
