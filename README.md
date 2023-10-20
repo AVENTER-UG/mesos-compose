@@ -140,6 +140,7 @@ services:
           - "node.hostname==localhost"
           - "node.platform.os==linux"
           - "node.platform.arch==arm"
+          - "unique"
       replicas: 1
       resources:
         limits:
