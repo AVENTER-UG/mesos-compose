@@ -3,18 +3,16 @@ The mesos-compose plugin.
 """
 
 import toml
-import cli
 import json
 
-from urllib.parse import urlencode
 import urllib3
 
-from cli.exceptions import CLIException
-from cli.plugins import PluginBase
-from cli.util import Table
-
-from cli.mesos import get_frameworks, get_framework_address
-from cli import http
+from avmesos import cli
+from avmesos.cli.exceptions import CLIException
+from avmesos.cli.plugins import PluginBase
+from avmesos.cli.util import Table
+from avmesos.cli.mesos import get_frameworks, get_framework_address
+from avmesos.cli import http
 
 
 PLUGIN_NAME = "compose"
@@ -23,6 +21,57 @@ PLUGIN_CLASS = "mesosCompose"
 VERSION = "0.1.0"
 
 SHORT_HELP = "Interacts with the Mesos-Compose Framework"
+
+class Config():
+
+    def __init__(self, main):
+        """
+        Get authentication header for the framework
+        """
+
+        self.main = main
+
+        try:
+            data = toml.load(self.main.config.path)
+        except Exception as exception:
+            raise CLIException(
+                "Error loading config file as TOML: {error}".format(
+                    error=exception)
+            ) from exception
+
+        self.data = data["compose"].get(self.main.framework_name)
+
+    def principal(self):
+        """
+        Return the principal in the configuration file
+        """
+        return self.data.get("principal")
+
+    def secret(self):
+        """
+        Return the secret in the configuration file
+        """
+
+        return self.data.get("secret")
+    
+    def ssl_verify(self, default=False):
+        """
+        Return if the ssl certificate should be verified
+        """
+        ssl_verify = self.data.get("ssl_verify", default)
+        if not isinstance(ssl_verify, bool):
+            raise CLIException("The 'ssl_verify' field must be True/False")
+
+        return ssl_verify
+
+    # pylint: disable=no-self-use
+    def agent_timeout(self, default=5):
+        """
+        Return the connection timeout of the agent
+        """
+
+        return default
+
 
 
 class mesosCompose(PluginBase):
@@ -88,10 +137,10 @@ class mesosCompose(PluginBase):
 
         try:
             master = self.config.master()
-            config = self.config
+            config = self.onfig
             # pylint: disable=attribute-defined-outside-init
-            self.mesos_config = self._get_config()
             self.framework_name = argv["<framework-name>"]
+            self.mesos_config = Config(self)
         except Exception as exception:
             raise CLIException(
                 "Unable to get leading master address: {error}".format(error=exception)
@@ -135,7 +184,8 @@ class mesosCompose(PluginBase):
             master = self.config.master()
             config = self.config
             # pylint: disable=attribute-defined-outside-init
-            self.mesos_config = self._get_config()
+            self.framework_name = argv["<framework-name>"]
+            self.mesos_config = Config(self)
         except Exception as exception:
             raise CLIException(
                 "Unable to get leading master address: {error}".format(error=exception)
@@ -181,7 +231,8 @@ class mesosCompose(PluginBase):
             master = self.config.master()
             config = self.config
             # pylint: disable=attribute-defined-outside-init
-            self.mesos_config = self._get_config()
+            self.framework_name = argv["<framework-name>"]
+            self.mesos_config = Config(self)
         except Exception as exception:
             raise CLIException(
                 "Unable to get leading master address: {error}".format(error=exception)
@@ -196,7 +247,7 @@ class mesosCompose(PluginBase):
             )
 
             message = json.loads(
-                http.read_endpoint(framework_address, "/api/compose/v0/tasks", self)
+                http.read_endpoint(framework_address, "/api/compose/v0/tasks", self.mesos_config)
             )
 
             try:
@@ -232,7 +283,8 @@ class mesosCompose(PluginBase):
             master = self.config.master()
             config = self.config
             # pylint: disable=attribute-defined-outside-init
-            self.mesos_config = self._get_config()
+            self.framework_name = argv["<framework-name>"]
+            self.mesos_config = Config(self)
         except Exception as exception:
             raise CLIException(
                 "Unable to get leading master address: {error}".format(error=exception)
@@ -256,7 +308,7 @@ class mesosCompose(PluginBase):
                 self.write_endpoint(
                     framework_address,
                     "/api/compose/v0/" + project,
-                    self,
+                    self.mesos_config,
                     "UPDATE",
                     filename,
                 )
@@ -279,8 +331,8 @@ class mesosCompose(PluginBase):
             master = self.config.master()
             config = self.config
             # pylint: disable=attribute-defined-outside-init
-            self.mesos_config = self._get_config()
             self.framework_name = argv["<framework-name>"]
+            self.mesos_config = Config(self)
         except Exception as exception:
             raise CLIException(
                 "Unable to get leading master address: {error}".format(error=exception)
@@ -290,7 +342,7 @@ class mesosCompose(PluginBase):
             self.get_framework_id(argv), master, config
         )
 
-        data = http.read_endpoint(framework_address, "/api/compose/versions", self)
+        data = http.read_endpoint(framework_address, "/api/compose/versions", self.mesos_config)
 
         print(data)
 
@@ -303,8 +355,8 @@ class mesosCompose(PluginBase):
             master = self.config.master()
             config = self.config
             # pylint: disable=attribute-defined-outside-init
-            self.mesos_config = self._get_config()
             self.framework_name = argv["<framework-name>"]
+            self.mesos_config = Config(self)
         except Exception as exception:
             raise CLIException(
                 "Unable to get leading master address: {error}".format(error=exception)
@@ -324,7 +376,7 @@ class mesosCompose(PluginBase):
         data = self.write_endpoint(
             framework_address,
             "/api/compose/v0/" + project + "/" + service,
-            self,
+            self.mesos_config,
             "DELETE",
         )
 
@@ -339,8 +391,8 @@ class mesosCompose(PluginBase):
             master = self.config.master()
             config = self.config
             # pylint: disable=attribute-defined-outside-init
-            self.mesos_config = self._get_config()
             self.framework_name = argv["<framework-name>"]
+            self.mesos_config = Config(self)
         except Exception as exception:
             raise CLIException(
                 "Unable to get leading master address: {error}".format(error=exception)
@@ -360,7 +412,7 @@ class mesosCompose(PluginBase):
         data = self.write_endpoint(
             framework_address,
             "/api/compose/v0/" + project + "/" + service + "/restart",
-            self,
+            self.mesos_config,
             "PUT",
         )
 
@@ -373,10 +425,9 @@ class mesosCompose(PluginBase):
 
         try:
             master = self.config.master()
-            config = self.config
             # pylint: disable=attribute-defined-outside-init
-            self.mesos_config = self._get_config()
             self.framework_name = argv["<framework-name>"]
+            self.mesos_config = Config(self)
         except Exception as exception:
             raise CLIException(
                 "Unable to get leading master address: {error}".format(error=exception)
@@ -406,41 +457,6 @@ class mesosCompose(PluginBase):
                 return framework["id"]
         return argv["<framework-name>"]
 
-    def principal(self):
-        """
-        Return the principal in the configuration file
-        """
-
-        return self.mesos_config["compose"].get(self.framework_name).get("principal")
-
-    def secret(self):
-        """
-        Return the secret in the configuration file
-        """
-
-        return self.mesos_config["compose"].get(self.framework_name).get("secret")
-
-    # pylint: disable=no-self-use
-    def agent_timeout(self, default=5):
-        """
-        Return the connection timeout of the agent
-        """
-
-        return default
-
-    def _get_config(self):
-        """
-        Get authentication header for the framework
-        """
-
-        try:
-            data = toml.load(self.config.path)
-        except Exception as exception:
-            raise CLIException(
-                "Error loading config file as TOML: {error}".format(error=exception)
-            ) from exception
-
-        return data
 
     def write_endpoint(self, addr, endpoint, config, method, filename=None):
         """
@@ -468,6 +484,10 @@ class mesosCompose(PluginBase):
             if filename is not None:
                 data = open(filename, "rb")
                 content = data.read()
+            if config.ssl_verify() is not True:
+                http = urllib3.PoolManager(cert_reqs='CERT_NONE')
+            else:
+                http = urllib3.PoolManager()                
             http_response = http.request(
                 method,
                 url,

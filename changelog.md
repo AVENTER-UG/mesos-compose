@@ -33,6 +33,7 @@
 - ADD: Parameter to configure the Mesos Task DiscoveryInfoName Delimiter `DISCOVERY_INFONAME_DELIMITER`. Default value is ".".
 - ADD: Parameter to configure the Mesos Task DiscoveryPortName Delimiter `DISCOVERY_PORTNAME_DELIMITER`. Default value is "_".
 - ADD: Constraint `unique` to run only one instance of a task per node.
+- UPDATE: mesos-cli to support the new avmesos-cli python modules.
 
 ## 0.4.2
 
