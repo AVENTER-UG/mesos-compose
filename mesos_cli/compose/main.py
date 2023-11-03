@@ -209,7 +209,7 @@ class mesosCompose(PluginBase):
                 self.write_endpoint(
                     framework_address,
                     "/api/compose/v0/" + project,
-                    self,
+                    self.mesos_config,
                     "PUT",
                     filename,
                 )
