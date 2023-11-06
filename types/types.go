@@ -164,7 +164,6 @@ type FrameworkConfig struct {
 	MesosMasterServer     string
 	MesosSSL              bool
 	MesosStreamID         string
-	MesosCNI              string
 	TaskID                string
 	SSL                   bool
 	State                 map[string]State

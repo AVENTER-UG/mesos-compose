@@ -25,7 +25,6 @@ func init() {
 	framework.Username = util.Getenv("MESOS_USERNAME", "")
 	framework.Password = util.Getenv("MESOS_PASSWORD", "")
 	framework.MesosMasterServer = util.Getenv("MESOS_MASTER", "localhost:5050")
-	framework.MesosCNI = util.Getenv("MESOS_CNI", "weave")
 	framework.PortRangeFrom, _ = strconv.Atoi(util.Getenv("PORTRANGE_FROM", "31000"))
 	framework.PortRangeTo, _ = strconv.Atoi(util.Getenv("PORTRANGE_TO", "32000"))
 	config.Principal = util.Getenv("MESOS_PRINCIPAL", "")

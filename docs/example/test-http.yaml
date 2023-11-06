@@ -4,8 +4,6 @@ services:
     image: docker.io/avhost/docker-lighttpd
     ports:
       - "9999:8888/http"
-    network_mode: "bridge"
-    hostname: test.weave.local
     labels:
       traefik.enable: "true"
       traefik.http.routers.test1.entrypoints: "web"
@@ -14,7 +12,13 @@ services:
       traefik.http.services.test1.loadBalancer.healthCheck.path: "/index.html"
       traefik.http.services.test1.loadBalancer.healthCheck.interval: "10s"
       traefik.http.services.test1.loadBalancer.healthCheck.timeout: "3s"
-    network: default
     restart: always
+    network_mode: "user"    
+    network: default
     deploy:
       replicas: 1
+
+networks:
+  default:
+    name: mesos-net
+    driver: mesos-net

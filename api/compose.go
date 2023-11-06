@@ -390,8 +390,11 @@ func (e *API) getNetworkMode() string {
 
 	if len(e.Compose.Networks) > 0 {
 		network := e.getNetworkName(0)
+		// if network driver is not set, use the network name
 		if e.Compose.Networks[network].Driver != "" {
 			mode = e.Compose.Networks[network].Driver
+		} else if e.Compose.Networks[network].Name != "" {
+			mode = e.Compose.Networks[network].Name
 		}
 	}
 
@@ -515,10 +518,6 @@ func (e *API) getNetAlias() string {
 		if len(e.Service.Networks[network].Aliases) > 0 {
 			return e.Service.Networks[network].Aliases[0]
 		}
-	}
-
-	if e.getNetworkMode() == "user" {
-		return e.getHostname()
 	}
 
 	return ""
