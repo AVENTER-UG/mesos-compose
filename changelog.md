@@ -1,5 +1,11 @@
 # Changelog
 
+## master
+
+- FIX: mesos cni and docker network alias handling
+- FIX: mesos task could be removed after it failed during restart
+- DEL: unneeded mesoscni env parameter.
+
 ## 1.0.0
 
 - CHANGE: !!!! Braking changes !!!! Change mesos-compose labels to yaml labels. For an example, please take a look into the docs.
