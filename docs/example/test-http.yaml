@@ -6,12 +6,12 @@ services:
       - "9999:8888/http"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.test1.entrypoints: "web"
-      traefik.http.routers.test1.rule: "Host(`your.example.com`)"
-      traefik.http.routers.test1.service: "mc_test_test1_8888"
-      traefik.http.services.test1.loadBalancer.healthCheck.path: "/index.html"
-      traefik.http.services.test1.loadBalancer.healthCheck.interval: "10s"
-      traefik.http.services.test1.loadBalancer.healthCheck.timeout: "3s"
+      traefik.http.routers.__mesos_taskid__.entrypoints: "web"
+      traefik.http.routers.__mesos_taskid__.rule: "Host(`your.example.com`)"
+      traefik.http.routers.__mesos_taskid__.service: "__mesos_portname__"
+      traefik.http.services.__mesos_taskid__.loadBalancer.healthCheck.path: "/index.html"
+      traefik.http.services.__mesos_taskid__.loadBalancer.healthCheck.interval: "10s"
+      traefik.http.services.__mesos_taskid__.loadBalancer.healthCheck.timeout: "3s"
     restart: always
     network_mode: "user"    
     network: default
