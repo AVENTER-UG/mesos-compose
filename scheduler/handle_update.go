@@ -33,7 +33,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 	task.State = update.Status.State.String()
 
 	switch *update.Status.State {
-	case mesosproto.TASK_FAILED, mesosproto.TASK_ERROR, mesosproto.TASK_FINISHED, mesosproto.TASK_KILLED, mesosproto.TASK_LOST:
+	case mesosproto.TASK_FAILED, mesosproto.TASK_ERROR, mesosproto.TASK_FINISHED, mesosproto.TASK_KILLED:
 		if task.TaskID == "" {
 			return e.Mesos.Call(msg)
 		}
@@ -62,6 +62,15 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 				return e.Mesos.Call(msg)
 			}
 		}
+		// all other cases, increase task count and restart task
+		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
+		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
+		task.State = ""
+	case mesosproto.TASK_LOST:
+		if task.TaskID == "" {
+			return e.Mesos.Call(msg)
+		}
+		logrus.WithField("func", "scheduler.HandleUpdate").Warn("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")
 		// all other cases, increase task count and restart task
 		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)

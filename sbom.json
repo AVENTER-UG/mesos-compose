@@ -31,7 +31,7 @@
    }
   },
   {
-   "id": "a2c152633a765dc9",
+   "id": "5a0f8c1f7db48f3a",
    "name": "github.com/AVENTER-UG/go-logrus-formatter",
    "version": "v0.5.4",
    "type": "go-module",
@@ -60,11 +60,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:pT//3WIdLWQYfUGuNdbz3cXQovUh6DDHoUCESxoG5uM=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "199768417b8337d4",
+   "id": "0a7242ba913ffb9c",
    "name": "github.com/AVENTER-UG/mesos-compose",
    "version": "v2022-10-27T22",
    "type": "go-module",
@@ -104,11 +107,14 @@
     },
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "ccaa043b375002c2",
+   "id": "e34ebebd573d6b31",
    "name": "github.com/AVENTER-UG/mesos-util",
    "version": "v0.0.39",
    "type": "go-module",
@@ -137,38 +143,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:uahoaXxmp8wRIzv8ppuUN6nuycerj4KFV5f6Qd0ueO0=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "72df1ba5c0ecf53d",
-   "name": "github.com/AVENTER-UG/util",
-   "version": "v0.5.2",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "/go.mod",
-     "annotations": {
-      "evidence": "primary"
-     }
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:AVENTER-UG:util:v0.5.2:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER_UG:util:v0.5.2:*:*:*:*:*:*:*",
-    "cpe:2.3:a:AVENTER:util:v0.5.2:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/AVENTER-UG/util@v0.5.2",
-   "metadataType": "GolangModMetadata",
-   "metadata": {
-    "h1Digest": "h1:zWIEa0T1Gp+bGs69OLOpIvNfQx1Dz1tCIxF+zxPmbj4="
-   }
-  },
-  {
-   "id": "c9856b2372be643f",
+   "id": "27fc8dcc91fbcc1d",
    "name": "github.com/AVENTER-UG/util",
    "version": "v0.5.2",
    "type": "go-module",
@@ -194,7 +176,37 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:zWIEa0T1Gp+bGs69OLOpIvNfQx1Dz1tCIxF+zxPmbj4=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
+   }
+  },
+  {
+   "id": "dad69535468deee3",
+   "name": "github.com/AVENTER-UG/util",
+   "version": "v0.5.4",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "/go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:AVENTER-UG:util:v0.5.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER_UG:util:v0.5.4:*:*:*:*:*:*:*",
+    "cpe:2.3:a:AVENTER:util:v0.5.4:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/github.com/AVENTER-UG/util@v0.5.4",
+   "metadataType": "GolangModMetadata",
+   "metadata": {
+    "h1Digest": "h1:h3y854TIzJdvjWatjar0ezAGjZ4dCFsJ+0BCZ4BsgYM="
    }
   },
   {
@@ -224,7 +236,7 @@
    }
   },
   {
-   "id": "b4fd723e436562f0",
+   "id": "39e0eabd2b94dbb8",
    "name": "github.com/Showmax/go-fqdn",
    "version": "v1.0.0",
    "type": "go-module",
@@ -249,11 +261,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:0rG5IbmVliNT5O19Mfuvna9LL7zlHyRfsSvBPZmF9tM=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "1b8a5c02360475dd",
+   "id": "a954f70fb2d1dc0e",
    "name": "github.com/armon/go-metrics",
    "version": "v0.4.1",
    "type": "go-module",
@@ -278,11 +293,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:hR91U9KYmb6bLBYLQjyM+3j+rcd/UhE+G78SFnF8gJA=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "8da163f0f1c10cbd",
+   "id": "029d9dee36083a82",
    "name": "github.com/armon/go-radix",
    "version": "v1.0.0",
    "type": "go-module",
@@ -307,7 +325,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:F4z6KzEeeQIMeLFa97iZU6vupzoecKdU5TX24SNppXI=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -336,7 +357,7 @@
    }
   },
   {
-   "id": "5798acc690b6890c",
+   "id": "20e26dc30541f647",
    "name": "github.com/cenkalti/backoff/v3",
    "version": "v3.2.2",
    "type": "go-module",
@@ -360,11 +381,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:cfUAAO3yvKMYKPrvhDuHSwQnhZNk/RMHKdZqKTxfm6M=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "449bbdfc5aac8a31",
+   "id": "1c41f59d0fedfbb8",
    "name": "github.com/cespare/xxhash/v2",
    "version": "v2.1.2",
    "type": "go-module",
@@ -388,7 +412,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:YRXhKfTDauu4ajMg1TPgFO5jnlC2HCbmLXMcTG5cbYE=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -443,7 +470,7 @@
    }
   },
   {
-   "id": "b85d5dff98a0cbfc",
+   "id": "d31d528644222da7",
    "name": "github.com/dgryski/go-rendezvous",
    "version": "v0.0.0-20200823014737-9f7001d12a5f",
    "type": "go-module",
@@ -468,11 +495,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:lO4WD4F/rVNCu3HqELle0jiPLLBs70cWOduZpkS1E78=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "a8560a362b449a3e",
+   "id": "ea3a178a94a90971",
    "name": "github.com/fatih/color",
    "version": "v1.13.0",
    "type": "go-module",
@@ -496,13 +526,16 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:8LOYc1KYPPmyKMuN8QV2DNRWNbLo6LZ0iLs8+mlH53w=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "31c83c31013e0c4a",
-   "name": "github.com/fatih/color",
-   "version": "v1.14.1",
+   "id": "abe6800d97deee5f",
+   "name": "github.com/go-jose/go-jose/v3",
+   "version": "v3.0.1",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -516,12 +549,17 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:fatih:color:v1.14.1:*:*:*:*:*:*:*"
+    "cpe:2.3:a:go-jose:go-jose\\/v3:v3.0.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:go-jose:go_jose\\/v3:v3.0.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:go_jose:go-jose\\/v3:v3.0.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:go_jose:go_jose\\/v3:v3.0.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:go:go-jose\\/v3:v3.0.1:*:*:*:*:*:*:*",
+    "cpe:2.3:a:go:go_jose\\/v3:v3.0.1:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/github.com/fatih/color@v1.14.1",
+   "purl": "pkg:golang/github.com/go-jose/go-jose/v3@v3.0.1",
    "metadataType": "GolangModMetadata",
    "metadata": {
-    "h1Digest": "h1:qfhVLaG5s+nCROl1zJsZRxFeYrHLqWroPOQ8BWiNb4w="
+    "h1Digest": "h1:pWmKFVtt+Jl0vBZTIpz/eAKwsm6LkIxDVVbFHKkchhA="
    }
   },
   {
@@ -552,7 +590,7 @@
    }
   },
   {
-   "id": "0f2c317caa38b06a",
+   "id": "8a7cc8654f8b4500",
    "name": "github.com/go-redis/redis/v8",
    "version": "v8.11.5",
    "type": "go-module",
@@ -578,7 +616,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:AcZZR7igkdvfVmQTPnu9WE37LRrO/YrBH5zWyjDC0oI=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -607,7 +648,7 @@
    }
   },
   {
-   "id": "fa069809c3f9b1b9",
+   "id": "17eff0c7c0448f20",
    "name": "github.com/gogo/protobuf",
    "version": "v1.3.2",
    "type": "go-module",
@@ -631,11 +672,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:Ov1cvc58UF3b5XjBnZv7+opcTcQFZebYjWzi34vdm4Q=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "cd81eeeff78b6cef",
+   "id": "a255b53b4b4306b4",
    "name": "github.com/golang/protobuf",
    "version": "v1.5.2",
    "type": "go-module",
@@ -659,11 +703,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:ROPKBNFfQgOUMifHyP+KYbvpjbdoFNs+aK7DXlji0Tw=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "30777e858ab8ebf2",
+   "id": "29ed66c2d47d5b11",
    "name": "github.com/golang/snappy",
    "version": "v0.0.4",
    "type": "go-module",
@@ -687,62 +734,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:yAGX7huGHXlcLOEtBnF4w7FQwA26wojNCwOYAEhLjQM=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "d47788ad30a6c9dc",
-   "name": "github.com/google/go-cmp",
-   "version": "v0.5.9",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "/go.mod",
-     "annotations": {
-      "evidence": "primary"
-     }
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:google:go-cmp:v0.5.9:*:*:*:*:*:*:*",
-    "cpe:2.3:a:google:go_cmp:v0.5.9:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/google/go-cmp@v0.5.9",
-   "metadataType": "GolangModMetadata",
-   "metadata": {
-    "h1Digest": "h1:O2Tfq5qg4qc4AmwVlvv0oLiVAGB7enBSJ2x2DqQFi38="
-   }
-  },
-  {
-   "id": "59a787053316854f",
-   "name": "github.com/gorilla/mux",
-   "version": "v1.8.0",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "/go.mod",
-     "annotations": {
-      "evidence": "primary"
-     }
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:gorilla:mux:v1.8.0:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/gorilla/mux@v1.8.0",
-   "metadataType": "GolangModMetadata",
-   "metadata": {
-    "h1Digest": "h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI="
-   }
-  },
-  {
-   "id": "ef5573890d26454e",
+   "id": "ed7a26b7b6cb0461",
    "name": "github.com/gorilla/mux",
    "version": "v1.8.0",
    "type": "go-module",
@@ -766,7 +765,35 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
+   }
+  },
+  {
+   "id": "2a73b29b3d99b794",
+   "name": "github.com/gorilla/mux",
+   "version": "v1.8.1",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "/go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:gorilla:mux:v1.8.1:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/github.com/gorilla/mux@v1.8.1",
+   "metadataType": "GolangModMetadata",
+   "metadata": {
+    "h1Digest": "h1:TuBL49tXwgrFYWhqrNgrUNEY92u81SPhu7sTdzQEiWY="
    }
   },
   {
@@ -795,7 +822,7 @@
    }
   },
   {
-   "id": "00a9522602b2dfce",
+   "id": "464be42c2396cc5e",
    "name": "github.com/hashicorp/errwrap",
    "version": "v1.1.0",
    "type": "go-module",
@@ -819,7 +846,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:OxrOeh75EUXMY8TBjag2fzXGZ40LB6IKw45YeGUDY2I=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -849,7 +879,7 @@
    }
   },
   {
-   "id": "156f6c3c44967c10",
+   "id": "e863f14f60da4192",
    "name": "github.com/hashicorp/go-cleanhttp",
    "version": "v0.5.2",
    "type": "go-module",
@@ -874,11 +904,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:035FKYIWjmULyFRBKPs8TBQoi0x6d9G4xc9neXJWAZQ=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "bc1102b271cc2462",
+   "id": "6857700d71569ffb",
    "name": "github.com/hashicorp/go-hclog",
    "version": "v1.3.1",
    "type": "go-module",
@@ -903,37 +936,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:vDwF1DFNZhntP4DAjuTpOw3uEgMUpXh1pB5fW9DqHpo=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "abcc830d18258522",
-   "name": "github.com/hashicorp/go-hclog",
-   "version": "v1.4.0",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "/go.mod",
-     "annotations": {
-      "evidence": "primary"
-     }
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:hashicorp:go-hclog:v1.4.0:*:*:*:*:*:*:*",
-    "cpe:2.3:a:hashicorp:go_hclog:v1.4.0:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/hashicorp/go-hclog@v1.4.0",
-   "metadataType": "GolangModMetadata",
-   "metadata": {
-    "h1Digest": "h1:ctuWFGrhFha8BnnzxqeRGidlEcQkDyL5u8J8t5eA11I="
-   }
-  },
-  {
-   "id": "e795e723d9bb03d8",
+   "id": "562c7cc4b3fe50b7",
    "name": "github.com/hashicorp/go-immutable-radix",
    "version": "v1.3.1",
    "type": "go-module",
@@ -958,7 +968,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:DKHmCUm2hRBK510BaiZlwvpD40f8bJFeZnpfm2KLowc=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -988,7 +1001,7 @@
    }
   },
   {
-   "id": "656f87e6cd56892a",
+   "id": "35af3b52f0af0b9f",
    "name": "github.com/hashicorp/go-multierror",
    "version": "v1.1.1",
    "type": "go-module",
@@ -1013,11 +1026,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:H5DkEtf6CXdFp0N0Em5UCwQpXMWke8IA0+lD48awMYo=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "8b3d3ad3c3b8fb4b",
+   "id": "0c650b7f33f6d9bd",
    "name": "github.com/hashicorp/go-plugin",
    "version": "v1.4.5",
    "type": "go-module",
@@ -1042,11 +1058,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:oTE/oQR4eghggRg8VY7PAz3dr++VwDNBGCcOfIvHpBo=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "d25d3c5829623cdc",
+   "id": "520e373a6403825a",
    "name": "github.com/hashicorp/go-retryablehttp",
    "version": "v0.7.1",
    "type": "go-module",
@@ -1071,13 +1090,16 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:sUiuQAnLlbvmExtFQs72iFW/HXeUn8Z1aJLQ4LJJbTQ=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "dc23decf0eb838f2",
+   "id": "05891a2794311e43",
    "name": "github.com/hashicorp/go-retryablehttp",
-   "version": "v0.7.2",
+   "version": "v0.7.5",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -1091,13 +1113,13 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:hashicorp:go-retryablehttp:v0.7.2:*:*:*:*:*:*:*",
-    "cpe:2.3:a:hashicorp:go_retryablehttp:v0.7.2:*:*:*:*:*:*:*"
+    "cpe:2.3:a:hashicorp:go-retryablehttp:v0.7.5:*:*:*:*:*:*:*",
+    "cpe:2.3:a:hashicorp:go_retryablehttp:v0.7.5:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/github.com/hashicorp/go-retryablehttp@v0.7.2",
+   "purl": "pkg:golang/github.com/hashicorp/go-retryablehttp@v0.7.5",
    "metadataType": "GolangModMetadata",
    "metadata": {
-    "h1Digest": "h1:AcYqCvkpalPnPF2pn0KamgwamS42TqUDDYFRKq/RAd0="
+    "h1Digest": "h1:bJj+Pj19UZMIweq/iie+1u5YCdGrnxCT9yvm0e+Nd5M="
    }
   },
   {
@@ -1127,7 +1149,7 @@
    }
   },
   {
-   "id": "0f12227b44b80f0a",
+   "id": "a07ee626c5d45db4",
    "name": "github.com/hashicorp/go-rootcerts",
    "version": "v1.0.2",
    "type": "go-module",
@@ -1152,11 +1174,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:jzhAVGtqPKbwpyCPELlgNWhE1znq+qwJtW5Oi2viEzc=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "36f443b4ecf2b6ce",
+   "id": "cd6facfa022a2121",
    "name": "github.com/hashicorp/go-secure-stdlib/mlock",
    "version": "v0.1.2",
    "type": "go-module",
@@ -1181,37 +1206,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:p4AKXPPS24tO8Wc8i1gLvSKdmkiSY5xuju57czJ/IJQ=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "c0f7ca9f6ca77d10",
-   "name": "github.com/hashicorp/go-secure-stdlib/parseutil",
-   "version": "v0.1.7",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "/go.mod",
-     "annotations": {
-      "evidence": "primary"
-     }
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:hashicorp:go-secure-stdlib\\/parseutil:v0.1.7:*:*:*:*:*:*:*",
-    "cpe:2.3:a:hashicorp:go_secure_stdlib\\/parseutil:v0.1.7:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/hashicorp/go-secure-stdlib/parseutil@v0.1.7",
-   "metadataType": "GolangModMetadata",
-   "metadata": {
-    "h1Digest": "h1:UpiO20jno/eV1eVZcxqWnUohyKRe1g8FPV/xH1s/2qs="
-   }
-  },
-  {
-   "id": "ca444e8ce17a33eb",
+   "id": "4482080246932a9a",
    "name": "github.com/hashicorp/go-secure-stdlib/parseutil",
    "version": "v0.1.7",
    "type": "go-module",
@@ -1236,7 +1238,36 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:UpiO20jno/eV1eVZcxqWnUohyKRe1g8FPV/xH1s/2qs=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
+   }
+  },
+  {
+   "id": "a76f526bb75e6326",
+   "name": "github.com/hashicorp/go-secure-stdlib/parseutil",
+   "version": "v0.1.8",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "/go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:hashicorp:go-secure-stdlib\\/parseutil:v0.1.8:*:*:*:*:*:*:*",
+    "cpe:2.3:a:hashicorp:go_secure_stdlib\\/parseutil:v0.1.8:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/github.com/hashicorp/go-secure-stdlib/parseutil@v0.1.8",
+   "metadataType": "GolangModMetadata",
+   "metadata": {
+    "h1Digest": "h1:iBt4Ew4XEGLfh6/bPk4rSYmuZJGizr6/x/AEizP0CQc="
    }
   },
   {
@@ -1266,7 +1297,7 @@
    }
   },
   {
-   "id": "6df0bc9a205ac61b",
+   "id": "20a8e4588b66e10c",
    "name": "github.com/hashicorp/go-secure-stdlib/strutil",
    "version": "v0.1.2",
    "type": "go-module",
@@ -1291,37 +1322,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:kes8mmyCpxJsI7FTwtzRqEy9CdjCtrXrXGuOpxEA7Ts=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "b2ec09cd899dc2b2",
-   "name": "github.com/hashicorp/go-sockaddr",
-   "version": "v1.0.2",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "/go.mod",
-     "annotations": {
-      "evidence": "primary"
-     }
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:hashicorp:go-sockaddr:v1.0.2:*:*:*:*:*:*:*",
-    "cpe:2.3:a:hashicorp:go_sockaddr:v1.0.2:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/hashicorp/go-sockaddr@v1.0.2",
-   "metadataType": "GolangModMetadata",
-   "metadata": {
-    "h1Digest": "h1:ztczhD1jLxIRjVejw8gFomI1BQZOe2WoVOu0SyteCQc="
-   }
-  },
-  {
-   "id": "610dcea2ddf004e2",
+   "id": "fba5847483abfd9a",
    "name": "github.com/hashicorp/go-sockaddr",
    "version": "v1.0.2",
    "type": "go-module",
@@ -1346,11 +1354,40 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:ztczhD1jLxIRjVejw8gFomI1BQZOe2WoVOu0SyteCQc=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "a6480160119ca709",
+   "id": "02bc0d2349442334",
+   "name": "github.com/hashicorp/go-sockaddr",
+   "version": "v1.0.6",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "/go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:hashicorp:go-sockaddr:v1.0.6:*:*:*:*:*:*:*",
+    "cpe:2.3:a:hashicorp:go_sockaddr:v1.0.6:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/github.com/hashicorp/go-sockaddr@v1.0.6",
+   "metadataType": "GolangModMetadata",
+   "metadata": {
+    "h1Digest": "h1:RSG8rKU28VTUTvEKghe5gIhIQpv8evvNpnDEyqO4u9I="
+   }
+  },
+  {
+   "id": "226a2094830076c6",
    "name": "github.com/hashicorp/go-uuid",
    "version": "v1.0.3",
    "type": "go-module",
@@ -1375,11 +1412,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:2gKiV6YVmrJ1i2CKKa9obLvRieoRGviZFL26PcT/Co8=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "8bdcd4ddef7dae69",
+   "id": "d0d89289a4d7dbd7",
    "name": "github.com/hashicorp/go-version",
    "version": "v1.6.0",
    "type": "go-module",
@@ -1404,11 +1444,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:feTTfFNnjP967rlCxM/I9g701jU+RN74YKx2mOkIeek=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "034c369d5cba7bd6",
+   "id": "bae77c76735708d4",
    "name": "github.com/hashicorp/golang-lru",
    "version": "v0.5.4",
    "type": "go-module",
@@ -1433,7 +1476,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:YDjusn29QI/Das2iO9M0BHnIbxPeyuCHsjMW+lJfyTc=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -1462,7 +1508,7 @@
    }
   },
   {
-   "id": "7715464d6efdca02",
+   "id": "5d86d09468bc4205",
    "name": "github.com/hashicorp/hcl",
    "version": "v1.0.0",
    "type": "go-module",
@@ -1486,11 +1532,39 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:0Anlzjpi4vEasTeNFn2mLJgTSwt0+6sfsiTG8qcWGx4=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "657bfa68c19d291a",
+   "id": "228fed91f3983edc",
+   "name": "github.com/hashicorp/vault/api",
+   "version": "v1.10.0",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "/go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:hashicorp:vault\\/api:v1.10.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/github.com/hashicorp/vault/api@v1.10.0",
+   "metadataType": "GolangModMetadata",
+   "metadata": {
+    "h1Digest": "h1:/US7sIjWN6Imp4o/Rj1Ce2Nr5bki/AXi9vAW3p2tOJQ="
+   }
+  },
+  {
+   "id": "91e76082620982b8",
    "name": "github.com/hashicorp/vault/api",
    "version": "v1.8.1",
    "type": "go-module",
@@ -1514,36 +1588,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:bMieWIe6dAlqAAPReZO/8zYtXaWUg/21umwqGZpEjCI=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "6bfbedcc3064e92c",
-   "name": "github.com/hashicorp/vault/api",
-   "version": "v1.9.0",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "/go.mod",
-     "annotations": {
-      "evidence": "primary"
-     }
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:hashicorp:vault\\/api:v1.9.0:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/hashicorp/vault/api@v1.9.0",
-   "metadataType": "GolangModMetadata",
-   "metadata": {
-    "h1Digest": "h1:ab7dI6W8DuCY7yCU8blo0UCYl2oHre/dloCmzMWg9w8="
-   }
-  },
-  {
-   "id": "884a74af4abd4d7f",
+   "id": "169cd4d950180229",
    "name": "github.com/hashicorp/vault/sdk",
    "version": "v0.6.0",
    "type": "go-module",
@@ -1567,11 +1619,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:6Z+In5DXHiUfZvIZdMx7e2loL1PPyDjA4bVh9ZTIAhs=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "fcf33c92b4e54706",
+   "id": "825674f4c346639c",
    "name": "github.com/hashicorp/yamux",
    "version": "v0.1.1",
    "type": "go-module",
@@ -1595,7 +1650,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:yrQxtgseBDrq9Y652vSRDvsKCJKOUD+GzTS4Y0Y8pvE=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -1675,7 +1733,7 @@
    }
   },
   {
-   "id": "566dbbf748d84c05",
+   "id": "8c9aebbc9b72f366",
    "name": "github.com/mattn/go-colorable",
    "version": "v0.1.13",
    "type": "go-module",
@@ -1700,11 +1758,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:fFA4WZxdEF4tXPZVKMLwD8oUnCTTo08duU7wxecdEvA=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "2c064e6050082a23",
+   "id": "196e67b7dcc006da",
    "name": "github.com/mattn/go-isatty",
    "version": "v0.0.16",
    "type": "go-module",
@@ -1729,13 +1790,16 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:bq3VjFmv/sOjHtdEhmkEV4x1AJtvUvOJ2PFAZ5+peKQ=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "38d925dd0bfa6301",
+   "id": "08367e9cced4dcd8",
    "name": "github.com/mattn/go-isatty",
-   "version": "v0.0.17",
+   "version": "v0.0.20",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -1749,13 +1813,13 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:mattn:go-isatty:v0.0.17:*:*:*:*:*:*:*",
-    "cpe:2.3:a:mattn:go_isatty:v0.0.17:*:*:*:*:*:*:*"
+    "cpe:2.3:a:mattn:go-isatty:v0.0.20:*:*:*:*:*:*:*",
+    "cpe:2.3:a:mattn:go_isatty:v0.0.20:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/github.com/mattn/go-isatty@v0.0.17",
+   "purl": "pkg:golang/github.com/mattn/go-isatty@v0.0.20",
    "metadataType": "GolangModMetadata",
    "metadata": {
-    "h1Digest": "h1:BTarxUcIeDqL27Mc+vyvdWYSL28zpIhv3RoTdsLMPng="
+    "h1Digest": "h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY="
    }
   },
   {
@@ -1784,7 +1848,7 @@
    }
   },
   {
-   "id": "ac11506beccda9a3",
+   "id": "de59ceb26c747e9b",
    "name": "github.com/mgutz/ansi",
    "version": "v0.0.0-20200706080929-d51e80ef957d",
    "type": "go-module",
@@ -1808,11 +1872,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:5PJl274Y63IEHC+7izoQE9x6ikvDFZS2mDVS3drnohI=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "521ca20cf65ad9bb",
+   "id": "8a03d062eaec7775",
    "name": "github.com/mitchellh/copystructure",
    "version": "v1.2.0",
    "type": "go-module",
@@ -1836,7 +1903,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:vpKXTN4ewci03Vljg/q9QvCGUDttBOGBIa15WveJJGw=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -1866,7 +1936,7 @@
    }
   },
   {
-   "id": "100f979445c02a86",
+   "id": "21a2691776499799",
    "name": "github.com/mitchellh/go-testing-interface",
    "version": "v1.14.1",
    "type": "go-module",
@@ -1891,7 +1961,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:jrgshOhYAUVNMAJiKbEu7EqAwgJJ2JqpQmpLJOu07cU=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -1920,7 +1993,7 @@
    }
   },
   {
-   "id": "e453ffa63c09d0da",
+   "id": "2b7e90244df14dff",
    "name": "github.com/mitchellh/mapstructure",
    "version": "v1.5.0",
    "type": "go-module",
@@ -1944,11 +2017,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyuac5Z2hdY=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "af746cd19080274e",
+   "id": "536c931be93fc93a",
    "name": "github.com/mitchellh/reflectwalk",
    "version": "v1.0.2",
    "type": "go-module",
@@ -1972,11 +2048,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:G2LzWKi524PWgd3mLHV8Y5k7s6XUvT0Gef6zxSIeXaQ=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "ed098a2594da44c5",
+   "id": "bef4d44cb82d60e5",
    "name": "github.com/oklog/run",
    "version": "v1.1.0",
    "type": "go-module",
@@ -2000,11 +2079,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:GEenZ1cK0+q0+wsJew9qUg/DyD8k3JzYsZAi5gYi2mA=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "74c97d7b3f1250ba",
+   "id": "38b5c7d89367d09a",
    "name": "github.com/pierrec/lz4",
    "version": "v2.6.1+incompatible",
    "type": "go-module",
@@ -2028,7 +2110,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:9UY3+iC23yxF0UfGaYrGplQ+79Rg+h/q9FV9ix19jjM=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -2057,7 +2142,7 @@
    }
   },
   {
-   "id": "05d5ae79bb87255e",
+   "id": "04faa41de924493c",
    "name": "github.com/russross/blackfriday",
    "version": "v1.6.0",
    "type": "go-module",
@@ -2081,7 +2166,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:KqfZb0pUVN2lYqZUYRddxF4OR8ZMURnJIG5Y3VRLtww=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -2111,7 +2199,7 @@
    }
   },
   {
-   "id": "b5c6b69f247fe095",
+   "id": "69da24115303566f",
    "name": "github.com/ryanuber/go-glob",
    "version": "v1.0.0",
    "type": "go-module",
@@ -2136,36 +2224,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:iQh3xXAumdQ+4Ufa5b25cRpC5TYKlno6hsv6Cb3pkBk=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "c8dabe744c4eab66",
-   "name": "github.com/sirupsen/logrus",
-   "version": "v1.9.0",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "/go.mod",
-     "annotations": {
-      "evidence": "primary"
-     }
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:sirupsen:logrus:v1.9.0:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/github.com/sirupsen/logrus@v1.9.0",
-   "metadataType": "GolangModMetadata",
-   "metadata": {
-    "h1Digest": "h1:trlNQbNUG3OdDrDil03MCb1H2o9nJ1x4/5LYw7byDE0="
-   }
-  },
-  {
-   "id": "1c0c4da0b562b862",
+   "id": "b1563db6a4817d98",
    "name": "github.com/sirupsen/logrus",
    "version": "v1.9.0",
    "type": "go-module",
@@ -2189,13 +2255,16 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:trlNQbNUG3OdDrDil03MCb1H2o9nJ1x4/5LYw7byDE0=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "4662ab7f54c8ea88",
-   "name": "github.com/stretchr/testify",
-   "version": "v1.7.2",
+   "id": "040c343d18505f47",
+   "name": "github.com/sirupsen/logrus",
+   "version": "v1.9.3",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -2209,16 +2278,16 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:stretchr:testify:v1.7.2:*:*:*:*:*:*:*"
+    "cpe:2.3:a:sirupsen:logrus:v1.9.3:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/github.com/stretchr/testify@v1.7.2",
+   "purl": "pkg:golang/github.com/sirupsen/logrus@v1.9.3",
    "metadataType": "GolangModMetadata",
    "metadata": {
-    "h1Digest": "h1:4jaiDzPyXQvSd7D0EjG45355tLlV3VOECpq10pLC+8s="
+    "h1Digest": "h1:dueUQJ1C2q9oE3F7wvmSGAaVtTmUizReu6fjN8uqzbQ="
    }
   },
   {
-   "id": "d64ee76df49a6ced",
+   "id": "f682fc023477224f",
    "name": "go.uber.org/atomic",
    "version": "v1.10.0",
    "type": "go-module",
@@ -2240,11 +2309,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:9qC72Qh0+3MqyJbAn8YU5xVq1frD8bn3JtD2oXtafVQ=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "7296186780fbb2e1",
+   "id": "f536427e1bfb0c61",
    "name": "golang.org/x/crypto",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2268,13 +2340,16 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:MDRAIl0xIo9Io2xV565hzXHw3zVseKrJKodhohM5CjU=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "7d67272dbc0b55e9",
+   "id": "600f871aa9301457",
    "name": "golang.org/x/crypto",
-   "version": "v0.6.0",
+   "version": "v0.15.0",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -2288,16 +2363,16 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:golang:x\\/crypto:v0.6.0:*:*:*:*:*:*:*"
+    "cpe:2.3:a:golang:x\\/crypto:v0.15.0:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/golang.org/x/crypto@v0.6.0",
+   "purl": "pkg:golang/golang.org/x/crypto@v0.15.0",
    "metadataType": "GolangModMetadata",
    "metadata": {
-    "h1Digest": "h1:qfktjS5LUO+fFKeJXZ+ikTRijMmljikvG68fpMMruSc="
+    "h1Digest": "h1:frVn1TEaCEaZcn3Tmd7Y2b5KKPaZ+I32Q2OA3kYp5TA="
    }
   },
   {
-   "id": "6ebc3b309ff845f5",
+   "id": "8a0ae06890300aaa",
    "name": "golang.org/x/net",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2321,13 +2396,16 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:hZ/3BUoy5aId7sCpA/Tc5lt8DkFgdVS2onTpJsZ/fl0=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "8064b67996ac5024",
+   "id": "d7ce19cbfb62033e",
    "name": "golang.org/x/net",
-   "version": "v0.7.0",
+   "version": "v0.18.0",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -2341,16 +2419,16 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:golang:x\\/net:v0.7.0:*:*:*:*:*:*:*"
+    "cpe:2.3:a:golang:x\\/net:v0.18.0:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/golang.org/x/net@v0.7.0",
+   "purl": "pkg:golang/golang.org/x/net@v0.18.0",
    "metadataType": "GolangModMetadata",
    "metadata": {
-    "h1Digest": "h1:rJrUqqhjsgNp7KqAIc25s9pZnjU7TUcSY7HcVZjdn1g="
+    "h1Digest": "h1:mIYleuAkSbHh0tCv7RvjL3F6ZVbLjq4+R7zbOn3Kokg="
    }
   },
   {
-   "id": "8260e3a2f2de213e",
+   "id": "dad13aca31580ad5",
    "name": "golang.org/x/sys",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2374,13 +2452,16 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:kunALQeHf1/185U1i0GOB/fy1IPRDDpuoOOqRReG57U=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "0c04f968223b3b60",
+   "id": "32964e4750c47782",
    "name": "golang.org/x/sys",
-   "version": "v0.5.0",
+   "version": "v0.14.0",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -2394,16 +2475,16 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:golang:x\\/sys:v0.5.0:*:*:*:*:*:*:*"
+    "cpe:2.3:a:golang:x\\/sys:v0.14.0:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/golang.org/x/sys@v0.5.0",
+   "purl": "pkg:golang/golang.org/x/sys@v0.14.0",
    "metadataType": "GolangModMetadata",
    "metadata": {
-    "h1Digest": "h1:MUK/U/4lj1t1oPg0HfuXDN/Z1wv31ZJ/YcPiGccS4DU="
+    "h1Digest": "h1:Vz7Qs629MkJkGyHxUlRHizWJRG2j8fbQKjELVSNhy7Q="
    }
   },
   {
-   "id": "be490adfc60bb9c1",
+   "id": "e434e606943e940c",
    "name": "golang.org/x/term",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2427,13 +2508,16 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:g6Z6vPFA9dYBAF7DWcH6sCcOntplXsDKcliusYijMlw=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "d09cb9ea90d56e4e",
+   "id": "bbb5c22925f34c29",
    "name": "golang.org/x/term",
-   "version": "v0.5.0",
+   "version": "v0.14.0",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -2447,16 +2531,41 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:golang:x\\/term:v0.5.0:*:*:*:*:*:*:*"
+    "cpe:2.3:a:golang:x\\/term:v0.14.0:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/golang.org/x/term@v0.5.0",
+   "purl": "pkg:golang/golang.org/x/term@v0.14.0",
    "metadataType": "GolangModMetadata",
    "metadata": {
-    "h1Digest": "h1:n2a8QNdAb0sZNpU9R1ALUXBbY+w51fCQDN+7EdxNBsY="
+    "h1Digest": "h1:LGK9IlZ8T9jvdy6cTdfKUCltatMFOehAQo9SRC46UQ8="
    }
   },
   {
-   "id": "c9b3ec74ddc219c9",
+   "id": "eb215ad696310295",
+   "name": "golang.org/x/text",
+   "version": "v0.14.0",
+   "type": "go-module",
+   "foundBy": "go-mod-file-cataloger",
+   "locations": [
+    {
+     "path": "/go.mod",
+     "annotations": {
+      "evidence": "primary"
+     }
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:golang:x\\/text:v0.14.0:*:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/golang.org/x/text@v0.14.0",
+   "metadataType": "GolangModMetadata",
+   "metadata": {
+    "h1Digest": "h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ="
+   }
+  },
+  {
+   "id": "65e78dc4d2c1a7f4",
    "name": "golang.org/x/text",
    "version": "v0.4.0",
    "type": "go-module",
@@ -2480,36 +2589,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:BrVqGRd7+k1DiOgtnFvAkoQEWQvBc25ouMJM6429SFg=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "89b11486364a2c22",
-   "name": "golang.org/x/text",
-   "version": "v0.7.0",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "/go.mod",
-     "annotations": {
-      "evidence": "primary"
-     }
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [
-    "cpe:2.3:a:golang:x\\/text:v0.7.0:*:*:*:*:*:*:*"
-   ],
-   "purl": "pkg:golang/golang.org/x/text@v0.7.0",
-   "metadataType": "GolangModMetadata",
-   "metadata": {
-    "h1Digest": "h1:4BRB4x83lYWy72KwLD/qYDuTu7q9PjSagHvijDw7cLo="
-   }
-  },
-  {
-   "id": "82326814edfe1525",
+   "id": "a32fb85636a5b052",
    "name": "golang.org/x/time",
    "version": "v0.1.0",
    "type": "go-module",
@@ -2533,13 +2620,16 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:xYY+Bajn2a7VBmTM5GikTmnK8ZuX8YgnQCqZpbBNtmA=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "2f371535c09057c6",
+   "id": "43b94565fb985bf1",
    "name": "golang.org/x/time",
-   "version": "v0.3.0",
+   "version": "v0.4.0",
    "type": "go-module",
    "foundBy": "go-mod-file-cataloger",
    "locations": [
@@ -2553,16 +2643,16 @@
    "licenses": [],
    "language": "go",
    "cpes": [
-    "cpe:2.3:a:golang:x\\/time:v0.3.0:*:*:*:*:*:*:*"
+    "cpe:2.3:a:golang:x\\/time:v0.4.0:*:*:*:*:*:*:*"
    ],
-   "purl": "pkg:golang/golang.org/x/time@v0.3.0",
+   "purl": "pkg:golang/golang.org/x/time@v0.4.0",
    "metadataType": "GolangModMetadata",
    "metadata": {
-    "h1Digest": "h1:rg5rLMjNzMS1RkNLzCG38eapWhnYLFYXDXj2gOlr8j4="
+    "h1Digest": "h1:Z81tqI5ddIoXDPvVQ7/7CC9TnLM7ubaFG2qXYd5BbYY="
    }
   },
   {
-   "id": "ce2fe1432f296033",
+   "id": "33e10d9e36c1a1c7",
    "name": "google.golang.org/genproto",
    "version": "v0.0.0-20221027153422-115e99e71e1c",
    "type": "go-module",
@@ -2586,11 +2676,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:QgY/XxIAIeccR+Ca/rDdKubLIU9rcJ3xfy1DC/Wd2Oo=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "56e936617f50d272",
+   "id": "c3d8e944ccae4adf",
    "name": "google.golang.org/grpc",
    "version": "v1.50.1",
    "type": "go-module",
@@ -2614,11 +2707,14 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:DS/BukOZWp8s6p4Dt/tOaJaTQyPyOoCcrjroHuCeLzY=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
-   "id": "04c8c43a905cd7b1",
+   "id": "1174c44e8d72381d",
    "name": "google.golang.org/protobuf",
    "version": "v1.28.1",
    "type": "go-module",
@@ -2642,7 +2738,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:d0NfwRgPtno5B1Wa6L2DAG+KivqkdutMf1UhdNx175w=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -2669,30 +2768,7 @@
    }
   },
   {
-   "id": "558ac7c2eadf1f6b",
-   "name": "gopkg.in/square/go-jose.v2",
-   "version": "v2.6.0",
-   "type": "go-module",
-   "foundBy": "go-mod-file-cataloger",
-   "locations": [
-    {
-     "path": "/go.mod",
-     "annotations": {
-      "evidence": "primary"
-     }
-    }
-   ],
-   "licenses": [],
-   "language": "go",
-   "cpes": [],
-   "purl": "pkg:golang/gopkg.in/square/go-jose.v2@v2.6.0",
-   "metadataType": "GolangModMetadata",
-   "metadata": {
-    "h1Digest": "h1:NGk74WTnPKBNUhNzQX7PYcTLUjoq7mzKk2OKbvwk2iI="
-   }
-  },
-  {
-   "id": "2040dd48bafca3e2",
+   "id": "19abb1a173edca6e",
    "name": "gopkg.in/square/go-jose.v2",
    "version": "v2.6.0",
    "type": "go-module",
@@ -2714,7 +2790,10 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:NGk74WTnPKBNUhNzQX7PYcTLUjoq7mzKk2OKbvwk2iI=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
    }
   },
   {
@@ -2741,7 +2820,7 @@
    }
   },
   {
-   "id": "069acd970401b3c4",
+   "id": "82d966240630e283",
    "name": "gopkg.in/yaml.v3",
    "version": "v3.0.1",
    "type": "go-module",
@@ -2763,73 +2842,107 @@
     "goCompiledVersion": "go1.19.2",
     "architecture": "amd64",
     "h1Digest": "h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=",
-    "mainModule": "github.com/AVENTER-UG/mesos-compose"
+    "mainModule": "github.com/AVENTER-UG/mesos-compose",
+    "goCryptoSettings": [
+     "standard-crypto"
+    ]
+   }
+  },
+  {
+   "id": "797bc8fae49d7c82",
+   "name": "stdlib",
+   "version": "go1.19.2",
+   "type": "go-module",
+   "foundBy": "",
+   "locations": [
+    {
+     "path": "/mesos-compose",
+     "annotations": {
+      "evidence": "primary"
+     }
+    }
+   ],
+   "licenses": [],
+   "language": "go",
+   "cpes": [
+    "cpe:2.3:a:golang:go:1.19.2:-:*:*:*:*:*:*"
+   ],
+   "purl": "pkg:golang/stdlib@1.19.2",
+   "metadataType": "GolangBinMetadata",
+   "metadata": {
+    "goCompiledVersion": "go1.19.2",
+    "architecture": ""
    }
   }
  ],
  "artifactRelationships": [
   {
-   "parent": "00a9522602b2dfce",
+   "parent": "029d9dee36083a82",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "034c369d5cba7bd6",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "04c8c43a905cd7b1",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "05d5ae79bb87255e",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "069acd970401b3c4",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "0c04f968223b3b60",
+   "parent": "02bc0d2349442334",
    "child": "3fc5a8d3d86e9790",
    "type": "evident-by"
   },
   {
-   "parent": "0f12227b44b80f0a",
+   "parent": "040c343d18505f47",
+   "child": "3fc5a8d3d86e9790",
+   "type": "evident-by"
+  },
+  {
+   "parent": "04faa41de924493c",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "0f2c317caa38b06a",
+   "parent": "05891a2794311e43",
+   "child": "3fc5a8d3d86e9790",
+   "type": "evident-by"
+  },
+  {
+   "parent": "08367e9cced4dcd8",
+   "child": "3fc5a8d3d86e9790",
+   "type": "evident-by"
+  },
+  {
+   "parent": "0a7242ba913ffb9c",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "100f979445c02a86",
+   "parent": "0c650b7f33f6d9bd",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "156f6c3c44967c10",
+   "parent": "1174c44e8d72381d",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "199768417b8337d4",
+   "parent": "169cd4d950180229",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "1b8a5c02360475dd",
+   "parent": "17eff0c7c0448f20",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "1c0c4da0b562b862",
+   "parent": "196e67b7dcc006da",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "19abb1a173edca6e",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "1c41f59d0fedfbb8",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
@@ -2839,8 +2952,28 @@
    "type": "evident-by"
   },
   {
-   "parent": "2040dd48bafca3e2",
+   "parent": "20a8e4588b66e10c",
    "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "20e26dc30541f647",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "21a2691776499799",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "226a2094830076c6",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "228fed91f3983edc",
+   "child": "3fc5a8d3d86e9790",
    "type": "evident-by"
   },
   {
@@ -2849,23 +2982,38 @@
    "type": "evident-by"
   },
   {
-   "parent": "2c064e6050082a23",
+   "parent": "27fc8dcc91fbcc1d",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "2f371535c09057c6",
-   "child": "3fc5a8d3d86e9790",
-   "type": "evident-by"
-  },
-  {
-   "parent": "30777e858ab8ebf2",
+   "parent": "29ed66c2d47d5b11",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "31c83c31013e0c4a",
+   "parent": "2a73b29b3d99b794",
    "child": "3fc5a8d3d86e9790",
+   "type": "evident-by"
+  },
+  {
+   "parent": "2b7e90244df14dff",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "32964e4750c47782",
+   "child": "3fc5a8d3d86e9790",
+   "type": "evident-by"
+  },
+  {
+   "parent": "33e10d9e36c1a1c7",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "35af3b52f0af0b9f",
+   "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
@@ -2874,23 +3022,28 @@
    "type": "evident-by"
   },
   {
-   "parent": "36f443b4ecf2b6ce",
+   "parent": "38b5c7d89367d09a",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "38d925dd0bfa6301",
-   "child": "3fc5a8d3d86e9790",
-   "type": "evident-by"
-  },
-  {
-   "parent": "449bbdfc5aac8a31",
+   "parent": "39e0eabd2b94dbb8",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "4662ab7f54c8ea88",
+   "parent": "43b94565fb985bf1",
    "child": "3fc5a8d3d86e9790",
+   "type": "evident-by"
+  },
+  {
+   "parent": "4482080246932a9a",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "464be42c2396cc5e",
+   "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
@@ -2904,7 +3057,7 @@
    "type": "evident-by"
   },
   {
-   "parent": "521ca20cf65ad9bb",
+   "parent": "520e373a6403825a",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
@@ -2914,47 +3067,42 @@
    "type": "evident-by"
   },
   {
+   "parent": "536c931be93fc93a",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
    "parent": "555fb8af9e4f507c",
    "child": "3fc5a8d3d86e9790",
    "type": "evident-by"
   },
   {
-   "parent": "558ac7c2eadf1f6b",
+   "parent": "562c7cc4b3fe50b7",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "5a0f8c1f7db48f3a",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "5d86d09468bc4205",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "600f871aa9301457",
    "child": "3fc5a8d3d86e9790",
    "type": "evident-by"
   },
   {
-   "parent": "566dbbf748d84c05",
+   "parent": "65e78dc4d2c1a7f4",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "56e936617f50d272",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "5798acc690b6890c",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "59a787053316854f",
-   "child": "3fc5a8d3d86e9790",
-   "type": "evident-by"
-  },
-  {
-   "parent": "610dcea2ddf004e2",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "656f87e6cd56892a",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "657bfa68c19d291a",
+   "parent": "6857700d71569ffb",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
@@ -2964,57 +3112,22 @@
    "type": "evident-by"
   },
   {
-   "parent": "6bfbedcc3064e92c",
-   "child": "3fc5a8d3d86e9790",
-   "type": "evident-by"
-  },
-  {
-   "parent": "6df0bc9a205ac61b",
+   "parent": "69da24115303566f",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "6ebc3b309ff845f5",
+   "parent": "797bc8fae49d7c82",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "7296186780fbb2e1",
+   "parent": "825674f4c346639c",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "72df1ba5c0ecf53d",
-   "child": "3fc5a8d3d86e9790",
-   "type": "evident-by"
-  },
-  {
-   "parent": "74c97d7b3f1250ba",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "7715464d6efdca02",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "7d67272dbc0b55e9",
-   "child": "3fc5a8d3d86e9790",
-   "type": "evident-by"
-  },
-  {
-   "parent": "8064b67996ac5024",
-   "child": "3fc5a8d3d86e9790",
-   "type": "evident-by"
-  },
-  {
-   "parent": "82326814edfe1525",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "8260e3a2f2de213e",
+   "parent": "82d966240630e283",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
@@ -3024,22 +3137,17 @@
    "type": "evident-by"
   },
   {
-   "parent": "884a74af4abd4d7f",
+   "parent": "8a03d062eaec7775",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "89b11486364a2c22",
-   "child": "3fc5a8d3d86e9790",
-   "type": "evident-by"
-  },
-  {
-   "parent": "8b3d3ad3c3b8fb4b",
+   "parent": "8a0ae06890300aaa",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "8bdcd4ddef7dae69",
+   "parent": "8a7cc8654f8b4500",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
@@ -3049,13 +3157,18 @@
    "type": "evident-by"
   },
   {
-   "parent": "8da163f0f1c10cbd",
+   "parent": "8c9aebbc9b72f366",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
    "parent": "8e87e7c04965ff67",
    "child": "3fc5a8d3d86e9790",
+   "type": "evident-by"
+  },
+  {
+   "parent": "91e76082620982b8",
+   "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
@@ -3069,52 +3182,37 @@
    "type": "evident-by"
   },
   {
-   "parent": "a2c152633a765dc9",
+   "parent": "a07ee626c5d45db4",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "a6480160119ca709",
+   "parent": "a255b53b4b4306b4",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "a8560a362b449a3e",
+   "parent": "a32fb85636a5b052",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "abcc830d18258522",
+   "parent": "a76f526bb75e6326",
    "child": "3fc5a8d3d86e9790",
    "type": "evident-by"
   },
   {
-   "parent": "ac11506beccda9a3",
+   "parent": "a954f70fb2d1dc0e",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "af746cd19080274e",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "b2ec09cd899dc2b2",
+   "parent": "abe6800d97deee5f",
    "child": "3fc5a8d3d86e9790",
    "type": "evident-by"
   },
   {
-   "parent": "b4fd723e436562f0",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "b5c6b69f247fe095",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "b85d5dff98a0cbfc",
+   "parent": "b1563db6a4817d98",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
@@ -3124,113 +3222,98 @@
    "type": "evident-by"
   },
   {
-   "parent": "bc1102b271cc2462",
+   "parent": "bae77c76735708d4",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "be490adfc60bb9c1",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "c0f7ca9f6ca77d10",
+   "parent": "bbb5c22925f34c29",
    "child": "3fc5a8d3d86e9790",
    "type": "evident-by"
   },
   {
-   "parent": "c8dabe744c4eab66",
-   "child": "3fc5a8d3d86e9790",
-   "type": "evident-by"
-  },
-  {
-   "parent": "c9856b2372be643f",
+   "parent": "bef4d44cb82d60e5",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "c9b3ec74ddc219c9",
+   "parent": "c3d8e944ccae4adf",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "ca444e8ce17a33eb",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "ccaa043b375002c2",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
-   "parent": "cd81eeeff78b6cef",
+   "parent": "cd6facfa022a2121",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "00a9522602b2dfce",
+   "child": "029d9dee36083a82",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "034c369d5cba7bd6",
+   "child": "02bc0d2349442334",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "04c8c43a905cd7b1",
+   "child": "040c343d18505f47",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "05d5ae79bb87255e",
+   "child": "04faa41de924493c",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "069acd970401b3c4",
+   "child": "05891a2794311e43",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "0c04f968223b3b60",
+   "child": "08367e9cced4dcd8",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "0f12227b44b80f0a",
+   "child": "0a7242ba913ffb9c",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "0f2c317caa38b06a",
+   "child": "0c650b7f33f6d9bd",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "100f979445c02a86",
+   "child": "1174c44e8d72381d",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "156f6c3c44967c10",
+   "child": "169cd4d950180229",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "199768417b8337d4",
+   "child": "17eff0c7c0448f20",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "1b8a5c02360475dd",
+   "child": "196e67b7dcc006da",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "1c0c4da0b562b862",
+   "child": "19abb1a173edca6e",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "1c41f59d0fedfbb8",
    "type": "contains"
   },
   {
@@ -3240,7 +3323,27 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "2040dd48bafca3e2",
+   "child": "20a8e4588b66e10c",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "20e26dc30541f647",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "21a2691776499799",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "226a2094830076c6",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "228fed91f3983edc",
    "type": "contains"
   },
   {
@@ -3250,22 +3353,37 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "2c064e6050082a23",
+   "child": "27fc8dcc91fbcc1d",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "2f371535c09057c6",
+   "child": "29ed66c2d47d5b11",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "30777e858ab8ebf2",
+   "child": "2a73b29b3d99b794",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "31c83c31013e0c4a",
+   "child": "2b7e90244df14dff",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "32964e4750c47782",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "33e10d9e36c1a1c7",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "35af3b52f0af0b9f",
    "type": "contains"
   },
   {
@@ -3275,22 +3393,27 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "36f443b4ecf2b6ce",
+   "child": "38b5c7d89367d09a",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "38d925dd0bfa6301",
+   "child": "39e0eabd2b94dbb8",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "449bbdfc5aac8a31",
+   "child": "43b94565fb985bf1",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "4662ab7f54c8ea88",
+   "child": "4482080246932a9a",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "464be42c2396cc5e",
    "type": "contains"
   },
   {
@@ -3305,7 +3428,7 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "521ca20cf65ad9bb",
+   "child": "520e373a6403825a",
    "type": "contains"
   },
   {
@@ -3315,47 +3438,42 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "536c931be93fc93a",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
    "child": "555fb8af9e4f507c",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "558ac7c2eadf1f6b",
+   "child": "562c7cc4b3fe50b7",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "566dbbf748d84c05",
+   "child": "5a0f8c1f7db48f3a",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "56e936617f50d272",
+   "child": "5d86d09468bc4205",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "5798acc690b6890c",
+   "child": "600f871aa9301457",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "59a787053316854f",
+   "child": "65e78dc4d2c1a7f4",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "610dcea2ddf004e2",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "656f87e6cd56892a",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "657bfa68c19d291a",
+   "child": "6857700d71569ffb",
    "type": "contains"
   },
   {
@@ -3365,57 +3483,22 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "6bfbedcc3064e92c",
+   "child": "69da24115303566f",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "6df0bc9a205ac61b",
+   "child": "797bc8fae49d7c82",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "6ebc3b309ff845f5",
+   "child": "825674f4c346639c",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "7296186780fbb2e1",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "72df1ba5c0ecf53d",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "74c97d7b3f1250ba",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "7715464d6efdca02",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "7d67272dbc0b55e9",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "8064b67996ac5024",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "82326814edfe1525",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "8260e3a2f2de213e",
+   "child": "82d966240630e283",
    "type": "contains"
   },
   {
@@ -3425,22 +3508,17 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "884a74af4abd4d7f",
+   "child": "8a03d062eaec7775",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "89b11486364a2c22",
+   "child": "8a0ae06890300aaa",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "8b3d3ad3c3b8fb4b",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "8bdcd4ddef7dae69",
+   "child": "8a7cc8654f8b4500",
    "type": "contains"
   },
   {
@@ -3450,12 +3528,17 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "8da163f0f1c10cbd",
+   "child": "8c9aebbc9b72f366",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
    "child": "8e87e7c04965ff67",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "91e76082620982b8",
    "type": "contains"
   },
   {
@@ -3470,52 +3553,37 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "a2c152633a765dc9",
+   "child": "a07ee626c5d45db4",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "a6480160119ca709",
+   "child": "a255b53b4b4306b4",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "a8560a362b449a3e",
+   "child": "a32fb85636a5b052",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "abcc830d18258522",
+   "child": "a76f526bb75e6326",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "ac11506beccda9a3",
+   "child": "a954f70fb2d1dc0e",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "af746cd19080274e",
+   "child": "abe6800d97deee5f",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "b2ec09cd899dc2b2",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "b4fd723e436562f0",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "b5c6b69f247fe095",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "b85d5dff98a0cbfc",
+   "child": "b1563db6a4817d98",
    "type": "contains"
   },
   {
@@ -3525,47 +3593,27 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "bc1102b271cc2462",
+   "child": "bae77c76735708d4",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "be490adfc60bb9c1",
+   "child": "bbb5c22925f34c29",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "c0f7ca9f6ca77d10",
+   "child": "bef4d44cb82d60e5",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "c8dabe744c4eab66",
+   "child": "c3d8e944ccae4adf",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "c9856b2372be643f",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "c9b3ec74ddc219c9",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "ca444e8ce17a33eb",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "ccaa043b375002c2",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "cd81eeeff78b6cef",
+   "child": "cd6facfa022a2121",
    "type": "contains"
   },
   {
@@ -3575,32 +3623,17 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "ce2fe1432f296033",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
    "child": "ceb52d86c55dd680",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "d09cb9ea90d56e4e",
+   "child": "d0d89289a4d7dbd7",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "d25d3c5829623cdc",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "d47788ad30a6c9dc",
-   "type": "contains"
-  },
-  {
-   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "d64ee76df49a6ced",
+   "child": "d31d528644222da7",
    "type": "contains"
   },
   {
@@ -3615,7 +3648,22 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "d7ce19cbfb62033e",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
    "child": "da44c67796807d93",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "dad13aca31580ad5",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "dad69535468deee3",
    "type": "contains"
   },
   {
@@ -3625,7 +3673,7 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "dc23decf0eb838f2",
+   "child": "de59ceb26c747e9b",
    "type": "contains"
   },
   {
@@ -3635,7 +3683,12 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "e453ffa63c09d0da",
+   "child": "e34ebebd573d6b31",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "e434e606943e940c",
    "type": "contains"
   },
   {
@@ -3645,27 +3698,37 @@
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "e795e723d9bb03d8",
+   "child": "e863f14f60da4192",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "ed098a2594da44c5",
+   "child": "ea3a178a94a90971",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "ef5573890d26454e",
+   "child": "eb215ad696310295",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "fa069809c3f9b1b9",
+   "child": "ed7a26b7b6cb0461",
    "type": "contains"
   },
   {
    "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
-   "child": "fcf33c92b4e54706",
+   "child": "f536427e1bfb0c61",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "f682fc023477224f",
+   "type": "contains"
+  },
+  {
+   "parent": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+   "child": "fba5847483abfd9a",
    "type": "contains"
   },
   {
@@ -3679,32 +3742,17 @@
    "type": "evident-by"
   },
   {
-   "parent": "ce2fe1432f296033",
-   "child": "ea63e4e0d2c24264",
-   "type": "evident-by"
-  },
-  {
    "parent": "ceb52d86c55dd680",
    "child": "3fc5a8d3d86e9790",
    "type": "evident-by"
   },
   {
-   "parent": "d09cb9ea90d56e4e",
-   "child": "3fc5a8d3d86e9790",
-   "type": "evident-by"
-  },
-  {
-   "parent": "d25d3c5829623cdc",
+   "parent": "d0d89289a4d7dbd7",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "d47788ad30a6c9dc",
-   "child": "3fc5a8d3d86e9790",
-   "type": "evident-by"
-  },
-  {
-   "parent": "d64ee76df49a6ced",
+   "parent": "d31d528644222da7",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
@@ -3719,7 +3767,22 @@
    "type": "evident-by"
   },
   {
+   "parent": "d7ce19cbfb62033e",
+   "child": "3fc5a8d3d86e9790",
+   "type": "evident-by"
+  },
+  {
    "parent": "da44c67796807d93",
+   "child": "3fc5a8d3d86e9790",
+   "type": "evident-by"
+  },
+  {
+   "parent": "dad13aca31580ad5",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "dad69535468deee3",
    "child": "3fc5a8d3d86e9790",
    "type": "evident-by"
   },
@@ -3729,8 +3792,8 @@
    "type": "evident-by"
   },
   {
-   "parent": "dc23decf0eb838f2",
-   "child": "3fc5a8d3d86e9790",
+   "parent": "de59ceb26c747e9b",
+   "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
@@ -3739,7 +3802,12 @@
    "type": "evident-by"
   },
   {
-   "parent": "e453ffa63c09d0da",
+   "parent": "e34ebebd573d6b31",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "e434e606943e940c",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
@@ -3749,27 +3817,37 @@
    "type": "evident-by"
   },
   {
-   "parent": "e795e723d9bb03d8",
+   "parent": "e863f14f60da4192",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "ed098a2594da44c5",
+   "parent": "ea3a178a94a90971",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "ef5573890d26454e",
+   "parent": "eb215ad696310295",
+   "child": "3fc5a8d3d86e9790",
+   "type": "evident-by"
+  },
+  {
+   "parent": "ed7a26b7b6cb0461",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "fa069809c3f9b1b9",
+   "parent": "f536427e1bfb0c61",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
   {
-   "parent": "fcf33c92b4e54706",
+   "parent": "f682fc023477224f",
+   "child": "ea63e4e0d2c24264",
+   "type": "evident-by"
+  },
+  {
+   "parent": "fba5847483abfd9a",
    "child": "ea63e4e0d2c24264",
    "type": "evident-by"
   },
@@ -3807,24 +3885,6 @@
   "name": "syft",
   "version": "[not provided]",
   "configuration": {
-   "configPath": "",
-   "verbosity": 0,
-   "quiet": false,
-   "output": [
-    "json"
-   ],
-   "output-template-path": "",
-   "file": "",
-   "check-for-app-update": true,
-   "dev": {
-    "profile-cpu": false,
-    "profile-mem": false
-   },
-   "log": {
-    "structured": false,
-    "level": "warn",
-    "file-location": ""
-   },
    "catalogers": null,
    "package": {
     "cataloger": {
@@ -3844,7 +3904,9 @@
    "linux-kernel": {
     "catalog-modules": true
    },
-   "attest": {},
+   "python": {
+    "guess-unpinned-requirements": false
+   },
    "file-metadata": {
     "cataloger": {
      "enabled": false,
@@ -3866,22 +3928,23 @@
      "scope": "Squashed"
     },
     "skip-files-above-size": 1048576,
-    "globs": []
+    "globs": null
    },
    "secrets": {
     "cataloger": {
      "enabled": false,
      "scope": "AllLayers"
     },
-    "additional-patterns": {},
-    "exclude-pattern-names": [],
+    "additional-patterns": null,
+    "exclude-pattern-names": null,
     "reveal-values": false,
     "skip-files-above-size": 1048576
    },
    "registry": {
     "insecure-skip-tls-verify": false,
     "insecure-use-http": false,
-    "auth": []
+    "auth": null,
+    "ca-cert": ""
    },
    "exclude": [],
    "platform": "",
@@ -3897,11 +3960,12 @@
    },
    "parallelism": 1,
    "default-image-pull-source": "",
-   "base-path": ""
+   "base-path": "",
+   "exclude-binary-overlap-by-ownership": true
   }
  },
  "schema": {
-  "version": "9.0.0",
-  "url": "https://raw.githubusercontent.com/anchore/syft/main/schema/json/schema-9.0.0.json"
+  "version": "11.0.1",
+  "url": "https://raw.githubusercontent.com/anchore/syft/main/schema/json/schema-11.0.1.json"
  }
 }
