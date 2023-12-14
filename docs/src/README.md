@@ -60,6 +60,21 @@ services:
       nofile:
         soft: 65536 
         hard: 65536
+    healthcheck:
+      delay_seconds: 15
+      interval_seconds: 10
+      timeout_seconds: 20
+      consecutive_failures: 3
+      grace_period_seconds: 10
+      command:
+        value: "mysqladmin ping -h localhost"
+      http:
+        scheme: 
+        port:
+        path: 
+        statuses:
+      tcp:
+        port:        
     deploy:
       placement:
         constraints:
