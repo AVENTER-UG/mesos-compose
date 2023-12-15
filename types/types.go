@@ -79,6 +79,7 @@ type Service struct {
 	PullPolicy    string                  `yaml:"pull_policy" default:"always"`
 	Ulimits       Ulimits                 `yaml:"ulimits"`
 	Mesos         Mesos                   `yaml:"mesos"`
+	HealthCheck   mesosproto.HealthCheck  `yaml:"healthcheck"`
 }
 
 // Mesos custom mesos task configuration
@@ -203,6 +204,8 @@ type Command struct {
 	Instances          int
 	LinuxInfo          mesosproto.LinuxInfo `protobuf:"bytes,11,opt,name=linux_info,json=linuxInfo" json:"linux_info,omitempty"`
 	PullPolicy         string
+	EnableHealthCheck  bool
+	Health             mesosproto.HealthCheck
 	MesosAgent         MesosSlaves
 }
 

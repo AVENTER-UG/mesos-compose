@@ -64,11 +64,24 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Uris = e.getURIs()
 	cmd.Arguments = e.getArguments()
 
+	// set healthcheck if it's configured
+	e.setHealthCheck(&cmd)
+
 	// set the docker constraints
 	e.setConstraints(&cmd)
 
 	// store/update the mesos task in db
 	e.Redis.SaveTaskRedis(cmd)
+}
+
+// Set the healtchek configuration
+func (e *API) setHealthCheck(cmd *cfg.Command) {
+	if (e.Service.HealthCheck != mesosproto.HealthCheck{}) {
+		cmd.EnableHealthCheck = true
+		cmd.Health = e.Service.HealthCheck
+		return
+	}
+	cmd.EnableHealthCheck = false
 }
 
 // Get the Command value from the compose file, or generate one if it's unset

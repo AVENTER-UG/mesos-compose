@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+  test1:
+    image: docker.io/mariadb:10.8.3
+    restart: always
+    network_mode: bridge
+    ports:
+      - 5432:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    healthcheck:
+      command:
+        value: "mysqladmin ping -h localhost"
+    deploy:
+      resources:
+        limits:
+          memory: 200
+      replicas: 1
+

@@ -199,6 +199,10 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 		}
 	}
 
+	if cmd.EnableHealthCheck {
+		msg.HealthCheck = &cmd.Health
+	}
+
 	d, _ = json.Marshal(&msg)
 	logrus.WithField("func", "scheduler.PrepareTaskInfoExecuteContainer").Trace("HandleOffers msg: ", util.PrettyJSON(d))
 
