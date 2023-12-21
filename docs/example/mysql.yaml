@@ -5,7 +5,7 @@ services:
     restart: always
     network_mode: bridge
     ports:
-      - 5432:3306
+      - 31022:3306
     environment:
       MYSQL_ROOT_PASSWORD: password
     healthcheck:

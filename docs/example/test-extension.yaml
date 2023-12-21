@@ -13,8 +13,8 @@ services:
       traefik.http.services.test1.loadBalancer.healthCheck.timeout: "3s"
     network: default
     ports:
-      - 8880:8080
-      - 2222:8081
+      - 0:8080
+      - 0:8081
     deploy:
       resources:
         limits:

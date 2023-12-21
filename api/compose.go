@@ -8,7 +8,6 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	"time"
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
@@ -192,7 +191,6 @@ func (e *API) getCommand() string {
 
 // GetRandomHostPort Get random hostportnumber
 func (e *API) GetRandomHostPort() uint32 {
-	rand.Seed(time.Now().UnixNano())
 	// #nosec G404
 	v := uint32(rand.Intn(e.Framework.PortRangeTo-e.Framework.PortRangeFrom) + e.Framework.PortRangeFrom)
 
@@ -231,6 +229,7 @@ func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping
 	for _, c := range e.Service.Ports {
 		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
 		var port int
+		hostport := 0
 		// "<hostport>:<containerport>"
 		// "<hostip>:<hostport>:<containerport>"
 		count := strings.Count(c, ":")
@@ -239,6 +238,7 @@ func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping
 		var proto []string
 		if count > 0 {
 			p = strings.Split(c, ":")
+			hostport, _ = strconv.Atoi(p[0])
 			port, _ = strconv.Atoi(p[count])
 			proto = strings.Split(p[count], "/")
 		} else {
@@ -268,7 +268,7 @@ func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping
 		}
 
 		tmp.ContainerPort = uint32(port)
-		tmp.HostPort = 0 // the port will be generatet during the schedule
+		tmp.HostPort = uint32(hostport)
 		ports = append(ports, tmp)
 	}
 	return ports

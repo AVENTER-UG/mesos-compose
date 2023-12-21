@@ -3,7 +3,7 @@ services:
   test1:
     image: docker.io/avhost/docker-lighttpd
     ports:
-      - "9999:8888/h2c"
+      - "0:8888/h2c"
     network_mode: "bridge"    
     labels:
       traefik.enable: "true"

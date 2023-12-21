@@ -32,14 +32,14 @@ services:
       traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
     network_mode: "BRIDGE"
     ports:
-      - "8080:80"
+      - "31022:80"
       - "9090"
-      - "8081:81/tcp"
-      - "8082:82/udp"
-      - "8082:82/http"
-      - "8082:82/https"  
-      - "8082:82/h2c"
-      - "8082:82/wss"       
+      - "0:81/tcp"
+      - "0:82/udp"
+      - "0:82/http"
+      - "0:82/https"  
+      - "0:82/h2c"
+      - "0:82/wss"       
     network: default
     ulimits:
       memlock:

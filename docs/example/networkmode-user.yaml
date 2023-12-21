@@ -3,7 +3,7 @@ services:
   redis-user:
     image: redis:latest
     ports:
-      - "9401:6379"
+      - "0:6379"
     network_mode: "user"
     network: default
 

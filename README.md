@@ -118,14 +118,15 @@ services:
       traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
     network_mode: "BRIDGE"
     ports:
+      - "0:80"
       - "8080:80"
       - "9090"
-      - "8081:81/tcp"
-      - "8082:82/udp"
-      - "8082:82/http"
-      - "8082:82/https"  
-      - "8082:82/h2c"
-      - "8082:82/wss"       
+      - "0:81/tcp"
+      - "0:82/udp"
+      - "0:82/http"
+      - "0:82/https"  
+      - "0:82/h2c"
+      - "0:82/wss"       
     network: default
     ulimits:
       memlock:
@@ -184,3 +185,28 @@ curl -X PUT http://localhost:10000/api/compose/v0/<PROJECTNAME> --data-binary @d
 ![image_2021-11-08-11-33-09](vx_images/image_2021-11-08-11-33-09.png)
 
 ![image_2021-11-08-11-33-47](vx_images/image_2021-11-08-11-33-47.png)
+
+### Port definition
+
+All the following examples will create random hostports:
+
+```yaml
+    ports:
+      - "0:80"
+      - "9090"
+      - "0:81/tcp"
+      - "0:82/udp"
+      - "0:82/http"
+      - "0:82/https"  
+      - "0:82/h2c"
+      - "0:82/wss"       
+```
+If you want to set a hostport, then is has to be like that:
+
+
+```yaml
+    ports:
+      - "32111:80"
+```
+
+Keep in mind, that Apache Mesos/ClusterD does not accept ports outside of it's port range.

@@ -2,15 +2,17 @@
 
 ## master
 
+- CHANGE: !!!! Port definition changed. !!!! Please take a look into the README.md.
 - FIX: mesos cni and docker network alias handling
 - FIX: mesos task could be removed after it failed during restart
 - DEL: unneeded mesoscni env parameter.
-- ADD: Mesos Healthcheck integration. 
+- ADD: Mesos Healthcheck integration. For details, please take a look into the docs/examples directory. 
+- ADD: support for static ports. For details, please read the README.md.
 
 ## 1.0.0
 
-- CHANGE: !!!! Braking changes !!!! Change mesos-compose labels to yaml labels. For an example, please take a look into the docs.
-- CHANGE: !!!! Braking changes !!!! Change environment variables format. For an example, please take a look into the docs.
+- CHANGE: !!!! Breaking changes !!!! Change mesos-compose labels to yaml labels. For an example, please take a look into the docs.
+- CHANGE: !!!! Breaking changes !!!! Change environment variables format. For an example, please take a look into the docs.
 - CHANGE: Move mesos specific functions into own module
 - ADD: Implicit reconcile to remove unknown Mesos Tasks
 - ADD: Default volume driver parameter `DEFAULT_VOLUME_DRIVER`

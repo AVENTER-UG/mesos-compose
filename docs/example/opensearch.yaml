@@ -20,8 +20,8 @@ services:
         soft: 65536 # maximum number of open files for the OpenSearch user, set to at least 65536 on modern systems
         hard: 65536
     ports:
-      - 9200:9200
-      - 9600:9600 # required for Performance Analyzer
+      - 0:9200
+      - 0:9600 # required for Performance Analyzer
     network: opensearch-net
     deploy:
       replicas: 1
@@ -50,8 +50,8 @@ services:
         soft: 65536 # maximum number of open files for the OpenSearch user, set to at least 65536 on modern systems
         hard: 65536
     ports:
-      - 9200:9200
-      - 9600:9600 # required for Performance Analyzer
+      - 0:9200
+      - 0:9600 # required for Performance Analyzer
     network: opensearch-net
     deploy:
       replicas: 1
@@ -64,7 +64,7 @@ services:
     image: opensearchproject/opensearch-dashboards:2.0.1
     container_name: opensearch-dashboards.mini
     ports:
-      - 5601:5601
+      - 0:5601
     expose:
       - "5601"
     environment:

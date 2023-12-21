@@ -40,7 +40,7 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logrus.WithField("func", "api.V0ComposeRestartService").Info("Restart Task" + e.Config.PrefixTaskName + ":" + project + ":" + servicename)
+	logrus.WithField("func", "api.V0ComposeRestartService").Info("Restart Task " + e.Config.PrefixTaskName + ":" + project + ":" + servicename)
 
 	for keys.Next(e.Redis.CTX) {
 		key := e.Redis.GetRedisKey(keys.Val())

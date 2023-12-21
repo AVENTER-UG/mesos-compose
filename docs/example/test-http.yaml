@@ -3,7 +3,7 @@ services:
   test1:
     image: docker.io/avhost/docker-lighttpd
     ports:
-      - "9999:8888/http"
+      - "0:8888/http"
     labels:
       traefik.enable: "true"
       traefik.http.routers.__mesos_taskid__.entrypoints: "web"

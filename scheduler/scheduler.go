@@ -102,7 +102,10 @@ func (e *Scheduler) EventLoop() {
 func (e *Scheduler) changeDockerPorts(cmd cfg.Command) []mesosproto.ContainerInfo_DockerInfo_PortMapping {
 	var ret []mesosproto.ContainerInfo_DockerInfo_PortMapping
 	for _, port := range cmd.DockerPortMappings {
-		port.HostPort = e.API.GetRandomHostPort()
+		// only search random host port if the hostport is meant to be random
+		if port.HostPort == 0 {
+			port.HostPort = e.API.GetRandomHostPort()
+		}
 		ret = append(ret, port)
 	}
 	return ret
