@@ -52,6 +52,10 @@ update-gomod:
 	go get -u
 	go mod tidy
 
+plugin: 
+	@echo ">>> Build plugins"
+	cd plugins; $(MAKE)
+
 docs:
 	@echo ">>>> Build docs"
 	$(MAKE) -C $@

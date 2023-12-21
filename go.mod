@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/AVENTER-UG/util v0.5.4
 	github.com/Showmax/go-fqdn v1.0.0
+	github.com/confluentinc/confluent-kafka-go v1.9.2
 	github.com/go-redis/redis/v9 v9.0.0-rc.2
 	github.com/gogo/protobuf v1.3.2
 	github.com/gorilla/mux v1.8.1
@@ -28,7 +29,7 @@ require (
 	github.com/hashicorp/go-sockaddr v1.0.6 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/vault/api v1.10.0 // indirect
-	github.com/kr/pretty v0.1.0 // indirect
+	github.com/kr/pretty v0.3.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect

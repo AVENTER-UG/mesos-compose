@@ -110,6 +110,8 @@ func main() {
 		}
 	}()
 
+	go loadPlugins(r)
+
 	//	this loop is for resubscribtion purpose
 	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()

@@ -3,12 +3,17 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"plugin"
 	"strconv"
+	"strings"
 	"time"
 
 	util "github.com/AVENTER-UG/util/util"
 	"github.com/Showmax/go-fqdn"
+	"github.com/sirupsen/logrus"
 
+	"github.com/AVENTER-UG/mesos-compose/redis"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 )
 
@@ -52,6 +57,13 @@ func init() {
 	config.DiscoveryInfoNameDelimiter = util.Getenv("DISCOVERY_INFONAME_DELIMITER", ".")
 	config.DiscoveryPortNameDelimiter = util.Getenv("DISCOVERY_PORTNAME_DELIMITER", "_")
 
+	// Enable plugins
+	if strings.Compare(util.Getenv("COMPOSE_PLUGINS_ENABLE", "false"), "false") == 0 {
+		config.PluginsEnable = false
+	} else {
+		config.PluginsEnable = true
+	}
+
 	// The comunication to the mesos server should be via ssl or not
 	if util.Getenv("MESOS_SSL", "false") == "true" {
 		framework.MesosSSL = true
@@ -94,4 +106,40 @@ func init() {
 	framework.FrameworkInfo.Checkpoint = &checkpoint
 	framework.FrameworkInfo.Principal = &config.Principal
 	framework.FrameworkInfo.Role = &framework.FrameworkRole
+}
+
+func loadPlugins(r *redis.Redis) {
+	if config.PluginsEnable {
+		config.Plugins = map[string]*plugin.Plugin{}
+
+		plugins, err := filepath.Glob("plugins/*.so")
+		if err != nil {
+			logrus.WithField("func", "main.loadPlugins").Info("No Plugins found")
+			return
+		}
+
+		for _, filename := range plugins {
+			p, err := plugin.Open(filename)
+			if err != nil {
+				logrus.WithField("func", "main.initPlugins").Error("Error during loading plugin: ", err.Error())
+				continue
+			}
+
+			symbol, err := p.Lookup("Init")
+			if err != nil {
+				logrus.WithField("func", "main.initPlugins").Error("Error lookup init plugin: ", err.Error())
+				continue
+			}
+
+			initPluginFunc, ok := symbol.(func(*redis.Redis) string)
+
+			if !ok {
+				logrus.WithField("func", "main.initPlugins").Error("Error plugin does not have init function")
+				continue
+			}
+
+			name := initPluginFunc(r)
+			config.Plugins[name] = p
+		}
+	}
 }

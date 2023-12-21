@@ -6,6 +6,8 @@
 - FIX: mesos task could be removed after it failed during restart
 - DEL: unneeded mesoscni env parameter.
 - ADD: Mesos Healthcheck integration. 
+- ADD: Posibility to add plugins. For an example, take a look into the plugins directory.
+- ADD: Kafka Plugin to forware mesos event messages to kafka
 
 ## 1.0.0
 
