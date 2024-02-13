@@ -32,6 +32,7 @@ ifneq ($(shell echo $(LASTCOMMIT) | grep -E '^v([0-9]+\.){0,2}(\*|[0-9]+)'),)
 else
 	BRANCH=latest
 endif
+BRANCH=v1.0.1
 
 build:
 	@echo ">>>> Build Docker: latest"
