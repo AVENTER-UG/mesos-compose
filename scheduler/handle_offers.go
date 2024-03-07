@@ -12,6 +12,7 @@ import (
 
 // HandleOffers will handle the offers event of mesos
 func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
+	var offerIds []mesosproto.OfferID
 	select {
 	case cmd := <-e.Framework.CommandChan:
 		// if no taskid or taskname is given, it's a wrong task.
@@ -19,13 +20,12 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			return nil
 		}
 
-		takeOffer, offerIds := e.getOffer(offers, cmd)
+		var takeOffer mesosproto.Offer
+		takeOffer, offerIds = e.getOffer(offers, cmd)
 		if takeOffer.GetHostname() == "" {
 			cmd.State = ""
 			e.Redis.SaveTaskRedis(cmd)
 			logrus.WithField("func", "mesos.HandleOffers").Debug("No matched offer found.")
-			logrus.WithField("func", "mesos.HandleOffers").Debug("Decline unneeded offer: ", offerIds)
-			go e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 			return nil
 		}
 		logrus.WithField("func", "scheduler.HandleOffers").Info("Take Offer from " + takeOffer.GetHostname() + " for task " + cmd.TaskID + " (" + cmd.TaskName + ")")
@@ -70,13 +70,10 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			go e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 		}
 	default:
-		// decline unneeded offer
-		_, offerIds := e.Mesos.GetOffer(offers, cfg.Command{})
-		logrus.WithField("func", "scheduler.HandleOffer").Debug("Decline unneeded offer: ", offerIds)
-		go e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
-
+		offerIds = e.getAllOfferIDs(offers)
 	}
 
+	e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 	return nil
 }
 
@@ -90,20 +87,23 @@ func (e *Scheduler) getLabelValue(label string, cmd cfg.Command) string {
 	return ""
 }
 
-func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (mesosproto.Offer, []mesosproto.OfferID) {
+func (e *Scheduler) getAllOfferIDs(offers *mesosproto.Event_Offers) []mesosproto.OfferID {
 	var offerIds []mesosproto.OfferID
+	for _, offer := range offers.Offers {
+		offerIds = append(offerIds, offer.ID)
+	}
+
+	return offerIds
+}
+
+func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (mesosproto.Offer, []mesosproto.OfferID) {
 	var offerret mesosproto.Offer
 
+	offerIds := e.getAllOfferIDs(offers)
+
+	// check all offers
 	for _, offer := range offers.Offers {
 		logrus.WithField("func", "scheduler.getOffer").Debug("Got Offer From:", offer.GetHostname())
-		offerIds = append(offerIds, offer.ID)
-
-		// if the ressources of this offer does not matched what the command need, the skip
-		if !e.Mesos.IsRessourceMatched(offer.Resources, cmd) {
-			logrus.WithField("func", "scheduler.getOffer").Debug("Could not found any matched ressources, get next offer")
-			e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
-			continue
-		}
 
 		// if contraint_hostname is set, only accept offer with the same hostname
 		valHostname := e.getLabelValue("__mc_placement_node_hostname", cmd)
@@ -129,14 +129,24 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (
 		}
 
 		if !e.isAttributeMachted("__mc_placement_node_platform_arch", "arch", cmd, offer) {
-			logrus.WithField("func", "scheduler.getOffer").Debug("OS: Does not match Attribute")
+			logrus.WithField("func", "scheduler.getOffer").Debug("ARCH: Does not match Attribute")
+			continue
+		}
+
+		// if the ressources of this offer does not matched what the command need, the skip
+		if !e.Mesos.IsRessourceMatched(offer.Resources, cmd) {
+			logrus.WithField("func", "scheduler.getOffer").Debug("Could not found any matched ressources, get next offer")
 			continue
 		}
 
 		offerret = offer
+		break
 	}
 	// remove the offer we took
-	offerIds = e.removeOffer(offerIds, offerret.ID.Value)
+	if offerret.GetHostname() != "" {
+		offerIds = e.removeOffer(offerIds, offerret.ID.Value)
+	}
+	e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 	return offerret, offerIds
 }
 

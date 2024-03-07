@@ -17,11 +17,11 @@ services:
       executor:
         command: "/usr/bin/mesos-firecracker-executor"
       fetch:
-        - value: http://192.168.150.6:8881/vmlinux
+        - value: http://192.168.150.30:8881/vmlinux
           executable: true
-        - value: http://192.168.150.6:8881/rootfs.ext4
+        - value: http://192.168.150.30:8881/rootfs.ext4
           executable: true
-        - value: http://192.168.150.6:8881/payload.sh
+        - value: http://192.168.150.30:8881/payload.sh
           executable: true
 
       
