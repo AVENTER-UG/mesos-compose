@@ -12,3 +12,4 @@ mesos-compose
 .dccache
 mesos_cli/compose/__pycache__/**/**
 .vscode
+plugins/*.so

@@ -1,6 +1,7 @@
 package types
 
 import (
+	"plugin"
 	"time"
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
@@ -37,6 +38,8 @@ type Config struct {
 	DefaultVolumeDriver        string
 	DiscoveryInfoNameDelimiter string
 	DiscoveryPortNameDelimiter string
+	Plugins                    map[string]*plugin.Plugin
+	PluginsEnable              bool
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework

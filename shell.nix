@@ -5,5 +5,7 @@ with pkgs;
 mkShell {
   buildInputs = [
     go
+    syft
+    grype
   ];
 }
