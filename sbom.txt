@@ -1,5 +1,8 @@
 NAME                                             VERSION                             TYPE      
+command-line-arguments                           (devel)                             go-module  
+command-line-arguments                           0.10.0                              go-module  
 github.com/AVENTER-UG/go-logrus-formatter        v0.5.4                              go-module  
+github.com/AVENTER-UG/mesos-compose              (devel)                             go-module  
 github.com/AVENTER-UG/mesos-compose              v2022-10-27T22                      go-module  
 github.com/AVENTER-UG/mesos-util                 v0.0.39                             go-module  
 github.com/AVENTER-UG/util                       v0.5.2                              go-module  
@@ -10,6 +13,7 @@ github.com/armon/go-radix                        v1.0.0                         
 github.com/cenkalti/backoff/v3                   v3.2.2                              go-module  
 github.com/cespare/xxhash/v2                     v2.1.2                              go-module  
 github.com/cespare/xxhash/v2                     v2.2.0                              go-module  
+github.com/confluentinc/confluent-kafka-go       v1.9.2                              go-module  
 github.com/dgryski/go-rendezvous                 v0.0.0-20200823014737-9f7001d12a5f  go-module  
 github.com/fatih/color                           v1.13.0                             go-module  
 github.com/go-jose/go-jose/v3                    v3.0.1                              go-module  
@@ -43,8 +47,6 @@ github.com/hashicorp/vault/api                   v1.12.0                        
 github.com/hashicorp/vault/api                   v1.8.1                              go-module  
 github.com/hashicorp/vault/sdk                   v0.6.0                              go-module  
 github.com/hashicorp/yamux                       v0.1.1                              go-module  
-github.com/kr/pretty                             v0.1.0                              go-module  
-github.com/kr/text                               v0.2.0                              go-module  
 github.com/mattn/go-colorable                    v0.1.13                             go-module  
 github.com/mattn/go-isatty                       v0.0.16                             go-module  
 github.com/mattn/go-isatty                       v0.0.20                             go-module  
@@ -76,7 +78,7 @@ golang.org/x/time                                v0.5.0                         
 google.golang.org/genproto                       v0.0.0-20221027153422-115e99e71e1c  go-module  
 google.golang.org/grpc                           v1.50.1                             go-module  
 google.golang.org/protobuf                       v1.28.1                             go-module  
-gopkg.in/check.v1                                v1.0.0-20190902080502-41f04d3bba15  go-module  
 gopkg.in/square/go-jose.v2                       v2.6.0                              go-module  
 gopkg.in/yaml.v3                                 v3.0.1                              go-module  
-stdlib                                           go1.19.2                            go-module
+stdlib                                           go1.19.2                            go-module  
+stdlib                                           go1.21.7                            go-module

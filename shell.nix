@@ -7,5 +7,7 @@ mkShell {
     go
     syft
     grype
+    docker
+    trivy
   ];
 }
