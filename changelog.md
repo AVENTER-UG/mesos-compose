@@ -6,6 +6,11 @@
 - FIX: mesos task could be removed after it failed during restart
 - DEL: unneeded mesoscni env parameter.
 - ADD: Mesos Healthcheck integration. 
+- CHANGE: optimise offer handling
+
+## 1.0.1
+
+- FIX-SECURITY: https://github.com/AVENTER-UG/mesos-compose/security/dependabot/1
 
 ## 1.0.0
 
