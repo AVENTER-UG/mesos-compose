@@ -10,6 +10,10 @@
 - ADD: Posibility to add plugins. For an example, take a look into the plugins directory.
 - ADD: Kafka Plugin to forware mesos event messages to kafka
 
+## 1.0.2
+
+- FIX-SECURITY: https://github.com/AVENTER-UG/mesos-compose/security/dependabot/2
+
 ## 1.0.1
 
 - FIX-SECURITY: https://github.com/AVENTER-UG/mesos-compose/security/dependabot/1
