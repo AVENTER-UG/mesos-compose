@@ -11,6 +11,7 @@ require (
 	github.com/go-redis/redis/v9 v9.0.0-rc.2
 	github.com/gogo/protobuf v1.3.2
 	github.com/gorilla/mux v1.8.1
+	github.com/redis/go-redis/v9 v9.5.1
 	github.com/sirupsen/logrus v1.9.3
 	gopkg.in/yaml.v3 v3.0.1
 )

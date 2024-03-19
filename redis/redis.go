@@ -7,7 +7,7 @@ import (
 	"github.com/AVENTER-UG/mesos-compose/mesos"
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
-	goredis "github.com/go-redis/redis/v9"
+	goredis "github.com/redis/go-redis/v9"
 
 	"github.com/sirupsen/logrus"
 )
