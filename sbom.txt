@@ -1,12 +1,12 @@
 NAME                                             VERSION                             TYPE      
 command-line-arguments                           (devel)                             go-module  
-command-line-arguments                           0.10.0                              go-module  
 github.com/AVENTER-UG/go-logrus-formatter        v0.5.4                              go-module  
 github.com/AVENTER-UG/mesos-compose              (devel)                             go-module  
 github.com/AVENTER-UG/mesos-compose              v2022-10-27T22                      go-module  
 github.com/AVENTER-UG/mesos-util                 v0.0.39                             go-module  
 github.com/AVENTER-UG/util                       v0.5.2                              go-module  
 github.com/AVENTER-UG/util                       v0.5.6                              go-module  
+github.com/AVENTER-UG/util                       v0.5.7                              go-module  
 github.com/Showmax/go-fqdn                       v1.0.0                              go-module  
 github.com/armon/go-metrics                      v0.4.1                              go-module  
 github.com/armon/go-radix                        v1.0.0                              go-module  
@@ -17,6 +17,7 @@ github.com/confluentinc/confluent-kafka-go       v1.9.2                         
 github.com/dgryski/go-rendezvous                 v0.0.0-20200823014737-9f7001d12a5f  go-module  
 github.com/fatih/color                           v1.13.0                             go-module  
 github.com/go-jose/go-jose/v3                    v3.0.1                              go-module  
+github.com/go-jose/go-jose/v3                    v3.0.3                              go-module  
 github.com/go-redis/redis/v8                     v8.11.5                             go-module  
 github.com/go-redis/redis/v9                     v9.0.0-rc.2                         go-module  
 github.com/gogo/protobuf                         v1.3.2                              go-module  
@@ -44,6 +45,7 @@ github.com/hashicorp/go-version                  v1.6.0                         
 github.com/hashicorp/golang-lru                  v0.5.4                              go-module  
 github.com/hashicorp/hcl                         v1.0.0                              go-module  
 github.com/hashicorp/vault/api                   v1.12.0                             go-module  
+github.com/hashicorp/vault/api                   v1.12.2                             go-module  
 github.com/hashicorp/vault/api                   v1.8.1                              go-module  
 github.com/hashicorp/vault/sdk                   v0.6.0                              go-module  
 github.com/hashicorp/yamux                       v0.1.1                              go-module  
@@ -58,6 +60,7 @@ github.com/mitchellh/mapstructure                v1.5.0                         
 github.com/mitchellh/reflectwalk                 v1.0.2                              go-module  
 github.com/oklog/run                             v1.1.0                              go-module  
 github.com/pierrec/lz4                           v2.6.1+incompatible                 go-module  
+github.com/redis/go-redis/v9                     v9.5.1                              go-module  
 github.com/russross/blackfriday                  v1.6.0                              go-module  
 github.com/ryanuber/go-glob                      v1.0.0                              go-module  
 github.com/sirupsen/logrus                       v1.9.0                              go-module  
@@ -65,12 +68,16 @@ github.com/sirupsen/logrus                       v1.9.3                         
 go.uber.org/atomic                               v1.10.0                             go-module  
 golang.org/x/crypto                              v0.1.0                              go-module  
 golang.org/x/crypto                              v0.19.0                             go-module  
+golang.org/x/crypto                              v0.21.0                             go-module  
 golang.org/x/net                                 v0.1.0                              go-module  
 golang.org/x/net                                 v0.21.0                             go-module  
+golang.org/x/net                                 v0.22.0                             go-module  
 golang.org/x/sys                                 v0.1.0                              go-module  
 golang.org/x/sys                                 v0.17.0                             go-module  
+golang.org/x/sys                                 v0.18.0                             go-module  
 golang.org/x/term                                v0.1.0                              go-module  
 golang.org/x/term                                v0.17.0                             go-module  
+golang.org/x/term                                v0.18.0                             go-module  
 golang.org/x/text                                v0.14.0                             go-module  
 golang.org/x/text                                v0.4.0                              go-module  
 golang.org/x/time                                v0.1.0                              go-module  

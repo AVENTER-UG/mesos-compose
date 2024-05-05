@@ -29,8 +29,10 @@ endif
 
 ifneq ($(shell echo $(LASTCOMMIT) | grep -E '^v([0-9]+\.){0,2}(\*|[0-9]+)'),)
 	BRANCH=${LASTCOMMIT}
-else
-	BRANCH=latest
+else ifdef VERSION
+	BRANCH = $(shell echo ${VERSION} | tr -d " ")
+else 
+	BRANCH = latest
 endif
 
 build:
