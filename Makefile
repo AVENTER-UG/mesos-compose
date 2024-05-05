@@ -35,6 +35,8 @@ else
 	BRANCH = latest
 endif
 
+BRANCH=v1.0.3
+
 build:
 	@echo ">>>> Build Docker: latest"
 	@docker build --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:latest .
