@@ -4,7 +4,7 @@ IMAGENAME=mesos-compose
 REPO=avhost
 TAG=$(shell git describe --tags --abbrev=0)
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
-BUILDDATE=$(shell date -u +%Y-%m-%dT%H:%M:%SZ)
+BUILDDATE=$(shell date -u +%Y%m%d)
 IMAGEFULLNAME=${REPO}/${IMAGENAME}
 LASTCOMMIT=$(shell git log -1 --pretty=short | tail -n 1 | tr -d " " | tr -d "UPDATE:")
 
@@ -46,10 +46,11 @@ build-bin:
 	@CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags "-X main.BuildVersion=${BUILDDATE} -X main.GitVersion=${TAG} -extldflags \"-static\"" .
 
 push:
-	@echo ">>>> Publish docker image: " ${BRANCH}
+	@echo ">>>> Publish docker image: " ${BRANCH}_${BUILDDATE}
 	@docker buildx create --use --name buildkit
-	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:latest .
+	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH}_${BUILDDATE} .
 	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} .
+	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:latest .
 	@docker buildx rm buildkit
 
 update-gomod:
