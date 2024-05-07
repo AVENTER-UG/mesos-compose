@@ -48,9 +48,9 @@ build-bin:
 push:
 	@echo ">>>> Publish docker image: " ${BRANCH}_${BUILDDATE}
 	@docker buildx create --use --name buildkit
-	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH}_${BUILDDATE} .
-	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} .
-	@docker buildx build --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:latest .
+	@docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH}_${BUILDDATE} .
+	@docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:${BRANCH} .
+	@docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --push --build-arg TAG=${TAG} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:latest .
 	@docker buildx rm buildkit
 
 update-gomod:
