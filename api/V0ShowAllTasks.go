@@ -27,7 +27,7 @@ func (e *API) V0ShowAllTasks(w http.ResponseWriter, r *http.Request) {
 
 	keys := e.Redis.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 
-	var list []cfg.Command
+	var list []*cfg.Command
 
 	for keys.Next(e.Redis.CTX) {
 		// ignore redis keys if they are not mesos tasks
@@ -38,7 +38,7 @@ func (e *API) V0ShowAllTasks(w http.ResponseWriter, r *http.Request) {
 		key := e.Redis.GetRedisKey(keys.Val())
 		task := e.Mesos.DecodeTask(key)
 
-		task.Environment = mesosproto.Environment{}
+		task.Environment = &mesosproto.Environment{}
 
 		list = append(list, task)
 	}

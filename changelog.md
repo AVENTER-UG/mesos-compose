@@ -9,6 +9,7 @@
 - CHANGE: optimise offer handling
 - ADD: Posibility to add plugins. For an example, take a look into the plugins directory.
 - ADD: Kafka Plugin to forware mesos event messages to kafka
+- CHANGE: Migrate to google protobuf
 
 ## 1.0.3
 

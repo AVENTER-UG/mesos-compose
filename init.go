@@ -99,13 +99,13 @@ func init() {
 
 	framework.State = map[string]cfg.State{}
 
-	framework.FrameworkInfo.User = framework.FrameworkUser
-	framework.FrameworkInfo.Name = framework.FrameworkName
-	framework.FrameworkInfo.WebUiURL = &webuiurl
+	framework.FrameworkInfo.User = util.StringToPointer(framework.FrameworkUser)
+	framework.FrameworkInfo.Name = util.StringToPointer(framework.FrameworkName)
+	framework.FrameworkInfo.WebuiUrl = &webuiurl
 	framework.FrameworkInfo.FailoverTimeout = &failoverTimeout
 	framework.FrameworkInfo.Checkpoint = &checkpoint
 	framework.FrameworkInfo.Principal = &config.Principal
-	framework.FrameworkInfo.Role = &framework.FrameworkRole
+	framework.FrameworkInfo.Role = util.StringToPointer(framework.FrameworkRole)
 }
 
 func loadPlugins(r *redis.Redis) {

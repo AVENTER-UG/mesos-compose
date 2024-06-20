@@ -10,7 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (e *Scheduler) defaultResources(cmd cfg.Command) []mesosproto.Resource {
+func (e *Scheduler) defaultResources(cmd *cfg.Command) []*mesosproto.Resource {
 	PORT := "ports"
 	CPU := "cpus"
 	MEM := "mem"
@@ -26,39 +26,39 @@ func (e *Scheduler) defaultResources(cmd cfg.Command) []mesosproto.Resource {
 		disk = e.Config.Disk
 	}
 
-	res := []mesosproto.Resource{
+	res := []*mesosproto.Resource{
 		{
-			Name:   CPU,
-			Type:   mesosproto.SCALAR.Enum(),
-			Scalar: &mesosproto.Value_Scalar{Value: cpu},
+			Name:   &CPU,
+			Type:   mesosproto.Value_SCALAR.Enum(),
+			Scalar: &mesosproto.Value_Scalar{Value: &cpu},
 		},
 		{
-			Name:   MEM,
-			Type:   mesosproto.SCALAR.Enum(),
-			Scalar: &mesosproto.Value_Scalar{Value: mem},
+			Name:   &MEM,
+			Type:   mesosproto.Value_SCALAR.Enum(),
+			Scalar: &mesosproto.Value_Scalar{Value: &mem},
 		},
 		{
-			Name:   DISK,
-			Type:   mesosproto.SCALAR.Enum(),
-			Scalar: &mesosproto.Value_Scalar{Value: disk},
+			Name:   &DISK,
+			Type:   mesosproto.Value_SCALAR.Enum(),
+			Scalar: &mesosproto.Value_Scalar{Value: &disk},
 		},
 	}
 
 	if cmd.DockerPortMappings != nil {
 		for _, p := range cmd.DockerPortMappings {
 			port := mesosproto.Resource{
-				Name: PORT,
-				Type: mesosproto.RANGES.Enum(),
+				Name: &PORT,
+				Type: mesosproto.Value_RANGES.Enum(),
 				Ranges: &mesosproto.Value_Ranges{
-					Range: []mesosproto.Value_Range{
+					Range: []*mesosproto.Value_Range{
 						{
-							Begin: uint64(p.HostPort),
-							End:   uint64(p.HostPort),
+							Begin: util.Uint64ToPointer(uint64(*p.HostPort)),
+							End:   util.Uint64ToPointer(uint64(*p.HostPort)),
 						},
 					},
 				},
 			}
-			res = append(res, port)
+			res = append(res, &port)
 		}
 	}
 
@@ -67,7 +67,7 @@ func (e *Scheduler) defaultResources(cmd cfg.Command) []mesosproto.Resource {
 
 // PrepareTaskInfoExecuteContainer will create the TaskInfo Protobuf for Mesos
 // nolint: gocyclo
-func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cmd cfg.Command) ([]mesosproto.TaskInfo, error) {
+func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent *mesosproto.AgentID, cmd *cfg.Command) []*mesosproto.TaskInfo {
 	d, _ := json.Marshal(&cmd)
 	logrus.WithField("func", "scheduler.PrepareTaskInfoExecuteContainer").Trace("HandleOffers cmd: ", util.PrettyJSON(d))
 
@@ -97,26 +97,26 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 
 	var msg mesosproto.TaskInfo
 
-	msg.Name = cmd.TaskName
-	msg.TaskID = mesosproto.TaskID{
-		Value: cmd.TaskID,
+	msg.Name = &cmd.TaskName
+	msg.TaskId = &mesosproto.TaskID{
+		Value: &cmd.TaskID,
 	}
-	msg.AgentID = agent
+	msg.AgentId = agent
 	msg.Resources = e.defaultResources(cmd)
 	// Do not set the cmd.Command if the mesos task is an executor.
 	if cmd.Mesos.Executor.Command == "" {
 		if cmd.Command == "" {
 			msg.Command = &mesosproto.CommandInfo{
 				Shell:       &cmd.Shell,
-				URIs:        cmd.Uris,
-				Environment: &cmd.Environment,
+				Uris:        cmd.Uris,
+				Environment: cmd.Environment,
 			}
 		} else {
 			msg.Command = &mesosproto.CommandInfo{
 				Shell:       &cmd.Shell,
 				Value:       &cmd.Command,
-				URIs:        cmd.Uris,
-				Environment: &cmd.Environment,
+				Uris:        cmd.Uris,
+				Environment: cmd.Environment,
 			}
 		}
 
@@ -139,7 +139,7 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 
 		if cmd.ContainerType == "docker" {
 			msg.Container.Docker = &mesosproto.ContainerInfo_DockerInfo{
-				Image:          cmd.ContainerImage,
+				Image:          util.StringToPointer(cmd.ContainerImage),
 				Network:        networkMode,
 				PortMappings:   cmd.DockerPortMappings,
 				Privileged:     &cmd.Privileged,
@@ -150,16 +150,16 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 
 		if cmd.ContainerType == "mesos" {
 			var cachedImage bool = false
-			msg.Container.TTYInfo = &mesosproto.TTYInfo{}
-			msg.Container.TTYInfo.WindowSize = &mesosproto.TTYInfo_WindowSize{}
-			msg.Container.TTYInfo.WindowSize.Columns = 80
-			msg.Container.TTYInfo.WindowSize.Rows = 25
+			msg.Container.TtyInfo = &mesosproto.TTYInfo{}
+			msg.Container.TtyInfo.WindowSize = &mesosproto.TTYInfo_WindowSize{}
+			msg.Container.TtyInfo.WindowSize.Columns = util.Uint32ToPointer(80)
+			msg.Container.TtyInfo.WindowSize.Rows = util.Uint32ToPointer(25)
 			msg.Container.Mesos = &mesosproto.ContainerInfo_MesosInfo{}
 			msg.Container.Mesos.Image = &mesosproto.Image{}
 			msg.Container.Mesos.Image.Type = mesosproto.Image_DOCKER.Enum()
 			msg.Container.Mesos.Image.Cached = &cachedImage
 			msg.Container.Mesos.Image.Docker = &mesosproto.Image_Docker{}
-			msg.Container.Mesos.Image.Docker.Name = cmd.ContainerImage
+			msg.Container.Mesos.Image.Docker.Name = util.StringToPointer(cmd.ContainerImage)
 		}
 
 		msg.Container.NetworkInfos = cmd.NetworkInfo
@@ -168,11 +168,11 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 			msg.Container.Hostname = &cmd.Hostname
 		}
 
-		msg.Container.LinuxInfo = &cmd.LinuxInfo
+		msg.Container.LinuxInfo = cmd.LinuxInfo
 	}
 
-	if cmd.Discovery != (mesosproto.DiscoveryInfo{}) {
-		msg.Discovery = &cmd.Discovery
+	if cmd.Discovery != (&mesosproto.DiscoveryInfo{}) {
+		msg.Discovery = cmd.Discovery
 	}
 
 	if cmd.Labels != nil {
@@ -184,13 +184,13 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 	if cmd.Mesos.Executor.Command != "" {
 		// FIX: https://github.com/AVENTER-UG/mesos-compose/issues/7
 		cmd.Executor.Resources = e.defaultResources(cmd)
-		msg.Executor = &cmd.Executor
+		msg.Executor = cmd.Executor
 		if cmd.ContainerType != "" {
 			msg.Executor.Container = &mesosproto.ContainerInfo{}
 			msg.Executor.Container.Type = contype
 			msg.Executor.Container.Volumes = cmd.Volumes
 			msg.Executor.Container.Docker = &mesosproto.ContainerInfo_DockerInfo{
-				Image:          cmd.ContainerImage,
+				Image:          util.StringToPointer(cmd.ContainerImage),
 				Network:        mesosproto.ContainerInfo_DockerInfo_HOST.Enum(),
 				PortMappings:   cmd.DockerPortMappings,
 				Privileged:     &cmd.Privileged,
@@ -200,11 +200,11 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent mesosproto.AgentID, cm
 	}
 
 	if cmd.EnableHealthCheck {
-		msg.HealthCheck = &cmd.Health
+		msg.HealthCheck = cmd.Health
 	}
 
 	d, _ = json.Marshal(&msg)
 	logrus.WithField("func", "scheduler.PrepareTaskInfoExecuteContainer").Trace("HandleOffers msg: ", util.PrettyJSON(d))
 
-	return []mesosproto.TaskInfo{msg}, nil
+	return []*mesosproto.TaskInfo{&msg}
 }

@@ -8,7 +8,6 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	"time"
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
@@ -17,8 +16,8 @@ import (
 )
 
 // Map the compose parameters into a mesos task
-func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, task cfg.Command) {
-	var cmd cfg.Command
+func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, task *cfg.Command) {
+	cmd := new(cfg.Command)
 
 	e.Service = e.Compose.Services[name]
 
@@ -36,6 +35,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 		cmd.Agent = task.Agent
 	}
 
+	cmd.TaskID = newTaskID
 	cmd.TaskName = e.getTaskName(vars["project"], name)
 	cmd.CPU = e.getCPU()
 	cmd.Memory = e.getMemory()
@@ -44,15 +44,15 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.ContainerImage = e.Service.Image
 	cmd.NetworkInfo = e.getNetworkInfo()
 	cmd.NetworkMode = e.getNetworkMode()
-	cmd.TaskID = newTaskID
 	cmd.Privileged = e.Service.Privileged
 	cmd.Hostname = e.getHostname()
 	cmd.Command = e.getCommand()
 	cmd.Labels = e.getLabels()
 	cmd.Executor = e.getExecutor()
 	cmd.DockerPortMappings = e.getDockerPorts()
+	cmd.Environment = new(mesosproto.Environment)
 	cmd.Environment.Variables = e.getEnvironment()
-	cmd.Volumes = e.getVolumes(cmd.ContainerType)
+	cmd.Volumes = e.getVolumes()
 	cmd.Instances = e.getReplicas()
 	cmd.Discovery = e.getDiscoveryInfo(cmd)
 	cmd.Shell = e.getShell()
@@ -65,10 +65,10 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Arguments = e.getArguments()
 
 	// set healthcheck if it's configured
-	e.setHealthCheck(&cmd)
+	e.setHealthCheck(cmd)
 
 	// set the docker constraints
-	e.setConstraints(&cmd)
+	e.setConstraints(cmd)
 
 	// store/update the mesos task in db
 	e.Redis.SaveTaskRedis(cmd)
@@ -76,7 +76,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 
 // Set the healtchek configuration
 func (e *API) setHealthCheck(cmd *cfg.Command) {
-	if (e.Service.HealthCheck != mesosproto.HealthCheck{}) {
+	if (e.Service.HealthCheck != &mesosproto.HealthCheck{}) {
 		cmd.EnableHealthCheck = true
 		cmd.Health = e.Service.HealthCheck
 		return
@@ -93,12 +93,12 @@ func (e *API) getArguments() []string {
 }
 
 // Get the URIS to fetch
-func (e *API) getURIs() []mesosproto.CommandInfo_URI {
+func (e *API) getURIs() []*mesosproto.CommandInfo_URI {
 	if len(e.Service.Mesos.Fetch) > 0 {
 		return e.Service.Mesos.Fetch
 	}
 
-	var res []mesosproto.CommandInfo_URI
+	var res []*mesosproto.CommandInfo_URI
 	return res
 }
 
@@ -114,10 +114,7 @@ func (e *API) getTaskName(project, name string) string {
 
 // Get shell
 func (e *API) getShell() bool {
-	if e.Service.Shell {
-		if e.Service.Command == "" {
-			return false
-		}
+	if e.Service.Shell && e.Service.Command != "" {
 		return true
 	}
 	return false
@@ -191,28 +188,27 @@ func (e *API) getCommand() string {
 }
 
 // GetRandomHostPort Get random hostportnumber
-func (e *API) GetRandomHostPort() uint32 {
-	rand.Seed(time.Now().UnixNano())
+func (e *API) GetRandomHostPort() *uint32 {
 	// #nosec G404
-	v := uint32(rand.Intn(e.Framework.PortRangeTo-e.Framework.PortRangeFrom) + e.Framework.PortRangeFrom)
+	v := util.Uint32ToPointer(uint32(rand.Intn(e.Framework.PortRangeTo-e.Framework.PortRangeFrom) + e.Framework.PortRangeFrom))
 
-	if v > uint32(e.Framework.PortRangeTo) {
+	if *v > uint32(e.Framework.PortRangeTo) {
 		v = e.GetRandomHostPort()
-	} else if v < uint32(e.Framework.PortRangeFrom) {
+	} else if *v < uint32(e.Framework.PortRangeFrom) {
 		v = e.GetRandomHostPort()
 	}
 	return v
 }
 
 // Get the labels of the compose file
-func (e *API) getLabels() []mesosproto.Label {
-	var label []mesosproto.Label
+func (e *API) getLabels() []*mesosproto.Label {
+	var label []*mesosproto.Label
 
 	for k, v := range e.Service.Labels {
 		var tmp mesosproto.Label
-		tmp.Key = k
+		tmp.Key = util.StringToPointer(k)
 		tmp.Value = func() *string { x := fmt.Sprint(v); return &x }()
-		label = append(label, tmp)
+		label = append(label, &tmp)
 	}
 	return label
 }
@@ -223,13 +219,13 @@ func (e *API) getPullPolicy() string {
 }
 
 // GetDockerPorts Get the ports of the compose file
-func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping {
+func (e *API) getDockerPorts() []*mesosproto.ContainerInfo_DockerInfo_PortMapping {
 	if e.getNetworkMode() == "host" {
 		return nil
 	}
-	var ports []mesosproto.ContainerInfo_DockerInfo_PortMapping
+	ports := make([]*mesosproto.ContainerInfo_DockerInfo_PortMapping, 0)
 	for _, c := range e.Service.Ports {
-		var tmp mesosproto.ContainerInfo_DockerInfo_PortMapping
+		tmp := new(mesosproto.ContainerInfo_DockerInfo_PortMapping)
 		var port int
 		// "<hostport>:<containerport>"
 		// "<hostip>:<hostport>:<containerport>"
@@ -247,39 +243,39 @@ func (e *API) getDockerPorts() []mesosproto.ContainerInfo_DockerInfo_PortMapping
 		}
 
 		// set protocol. default is tcp.
-		tmp.Protocol = func() *string { x := "tcp"; return &x }()
+		tmp.Protocol = util.StringToPointer("tcp")
 		if len(proto) > 1 {
 			port, _ = strconv.Atoi(proto[0])
 			if strings.ToLower(proto[1]) == "udp" {
-				tmp.Protocol = func() *string { x := "udp"; return &x }()
+				tmp.Protocol = util.StringToPointer("udp")
 			}
 			if strings.ToLower(proto[1]) == "wss" {
-				tmp.Protocol = func() *string { x := "wss"; return &x }()
+				tmp.Protocol = util.StringToPointer("wss")
 			}
 			if strings.ToLower(proto[1]) == "http" {
-				tmp.Protocol = func() *string { x := "http"; return &x }()
+				tmp.Protocol = util.StringToPointer("http")
 			}
 			if strings.ToLower(proto[1]) == "https" {
-				tmp.Protocol = func() *string { x := "https"; return &x }()
+				tmp.Protocol = util.StringToPointer("https")
 			}
 			if strings.ToLower(proto[1]) == "h2c" {
-				tmp.Protocol = func() *string { x := "h2c"; return &x }()
+				tmp.Protocol = util.StringToPointer("h2c")
 			}
 		}
 
-		tmp.ContainerPort = uint32(port)
-		tmp.HostPort = 0 // the port will be generatet during the schedule
+		tmp.ContainerPort = util.Uint32ToPointer(uint32(port))
+		tmp.HostPort = util.Uint32ToPointer(0) // the port will be generatet during the schedule
 		ports = append(ports, tmp)
 	}
 	return ports
 }
 
 // Get the discoveryinfo ports of the compose file
-func (e *API) getDiscoveryInfoPorts(cmd cfg.Command) []mesosproto.Port {
-	var disport []mesosproto.Port
+func (e *API) getDiscoveryInfoPorts(cmd *cfg.Command) []*mesosproto.Port {
+	disport := make([]*mesosproto.Port, 0)
 	for i, c := range cmd.DockerPortMappings {
-		var tmpport mesosproto.Port
-		p := func() *string { x := cmd.TaskName + ":" + strconv.FormatUint(uint64(c.ContainerPort), 10); return &x }()
+		tmpport := new(mesosproto.Port)
+		p := util.StringToPointer(cmd.TaskName + ":" + strconv.FormatUint(uint64(*c.ContainerPort), 10))
 		tmpport.Name = func() *string { x := strings.ReplaceAll(*p, ":", e.Config.DiscoveryPortNameDelimiter); return &x }()
 		tmpport.Number = c.HostPort
 		tmpport.Protocol = c.Protocol
@@ -295,10 +291,10 @@ func (e *API) getDiscoveryInfoPorts(cmd cfg.Command) []mesosproto.Port {
 	return disport
 }
 
-func (e *API) getDiscoveryInfo(cmd cfg.Command) mesosproto.DiscoveryInfo {
+func (e *API) getDiscoveryInfo(cmd *cfg.Command) *mesosproto.DiscoveryInfo {
 	name := strings.ReplaceAll(cmd.TaskName, ":", e.Config.DiscoveryInfoNameDelimiter)
-	return mesosproto.DiscoveryInfo{
-		Visibility: 2,
+	return &mesosproto.DiscoveryInfo{
+		Visibility: mesosproto.DiscoveryInfo_EXTERNAL.Enum(),
 		Name:       &name,
 		Ports: &mesosproto.Ports{
 			Ports: e.getDiscoveryInfoPorts(cmd),
@@ -307,36 +303,36 @@ func (e *API) getDiscoveryInfo(cmd cfg.Command) mesosproto.DiscoveryInfo {
 }
 
 // Get the environment of the compose file
-func (e *API) getEnvironment() []mesosproto.Environment_Variable {
-	var env []mesosproto.Environment_Variable
+func (e *API) getEnvironment() []*mesosproto.Environment_Variable {
+	env := make([]*mesosproto.Environment_Variable, 0)
 	for k, v := range e.Service.Environment {
-		var tmp mesosproto.Environment_Variable
-		tmp.Name = k //p[0]
+		tmp := new(mesosproto.Environment_Variable)
+		tmp.Name = util.StringToPointer(k) //p[0]
 		// check if the value is a secret
 		if strings.Contains(v, "vault://") {
 			v = e.Vault.GetKey(v)
 		}
-		tmp.Value = func() *string { x := v; return &x }()
+		tmp.Value = util.StringToPointer(v)
 		env = append(env, tmp)
 	}
 	return env
 }
 
 // Get the environment of the compose file
-func (e *API) getVolumes(containerType string) []mesosproto.Volume {
-	var volume []mesosproto.Volume
+func (e *API) getVolumes() []*mesosproto.Volume {
+	volume := make([]*mesosproto.Volume, 0)
 
 	for _, c := range e.Service.Volumes {
-		var tmp mesosproto.Volume
+		tmp := new(mesosproto.Volume)
 		p := strings.Split(c, ":")
 		if len(p) < 2 {
 			continue
 		}
-		tmp.ContainerPath = p[1]
-		tmp.Mode = mesosproto.RW.Enum()
+		tmp.ContainerPath = util.StringToPointer(p[1])
+		tmp.Mode = mesosproto.Volume_RW.Enum()
 		if len(p) == 3 {
 			if strings.ToLower(p[2]) == "ro" {
-				tmp.Mode = mesosproto.RO.Enum()
+				tmp.Mode = mesosproto.Volume_RO.Enum()
 			}
 		}
 
@@ -346,10 +342,10 @@ func (e *API) getVolumes(containerType string) []mesosproto.Volume {
 		}
 
 		tmp.Source = &mesosproto.Volume_Source{
-			Type: mesosproto.Volume_Source_DOCKER_VOLUME,
+			Type: mesosproto.Volume_Source_DOCKER_VOLUME.Enum(),
 			DockerVolume: &mesosproto.Volume_Source_DockerVolume{
-				Name:   p[0],
-				Driver: func() *string { x := driver; return &x }(),
+				Name:   util.StringToPointer(p[0]),
+				Driver: util.StringToPointer(driver),
 			},
 		}
 		volume = append(volume, tmp)
@@ -359,8 +355,8 @@ func (e *API) getVolumes(containerType string) []mesosproto.Volume {
 }
 
 // Get custome executer
-func (e *API) getExecutor() mesosproto.ExecutorInfo {
-	var executorInfo mesosproto.ExecutorInfo
+func (e *API) getExecutor() *mesosproto.ExecutorInfo {
+	var executorInfo *mesosproto.ExecutorInfo
 	var command string
 
 	if (e.Service.Mesos.Executor != cfg.Executor{}) {
@@ -373,13 +369,13 @@ func (e *API) getExecutor() mesosproto.ExecutorInfo {
 		command = "exec '" + command + "' " + e.getCommand()
 		executorID, _ := util.GenUUID()
 		environment := e.getEnvironment()
-		executorInfo = mesosproto.ExecutorInfo{
+		executorInfo = &mesosproto.ExecutorInfo{
 			Name: func() *string { x := path.Base(command); return &x }(),
-			Type: *mesosproto.ExecutorInfo_CUSTOM.Enum(),
-			ExecutorID: &mesosproto.ExecutorID{
-				Value: executorID,
+			Type: mesosproto.ExecutorInfo_CUSTOM.Enum(),
+			ExecutorId: &mesosproto.ExecutorID{
+				Value: util.StringToPointer(executorID),
 			},
-			FrameworkID: e.Framework.FrameworkInfo.ID,
+			FrameworkId: e.Framework.FrameworkInfo.Id,
 			Command: &mesosproto.CommandInfo{
 				Value: func() *string { x := command; return &x }(),
 				Environment: &mesosproto.Environment{
@@ -387,7 +383,7 @@ func (e *API) getExecutor() mesosproto.ExecutorInfo {
 				},
 			},
 		}
-		executorInfo.Command.URIs = e.getURIs()
+		executorInfo.Command.Uris = e.getURIs()
 	}
 	return executorInfo
 }
@@ -415,7 +411,7 @@ func (e *API) getNetworkMode() string {
 }
 
 // get the NetworkInfo Name
-func (e *API) getNetworkInfo() []mesosproto.NetworkInfo {
+func (e *API) getNetworkInfo() []*mesosproto.NetworkInfo {
 	// get network name
 	name := e.getNetworkName(0)
 
@@ -423,8 +419,8 @@ func (e *API) getNetworkInfo() []mesosproto.NetworkInfo {
 		name = e.Compose.Networks[name].Name
 	}
 
-	return []mesosproto.NetworkInfo{{
-		Name: func() *string { x := name; return &x }(),
+	return []*mesosproto.NetworkInfo{{
+		Name: util.StringToPointer(name),
 	}}
 }
 
@@ -444,8 +440,8 @@ func (e *API) getNetworkName(val int) string {
 }
 
 // get linux info like capabilities
-func (e *API) getLinuxInfo() mesosproto.LinuxInfo {
-	linuxInfo := mesosproto.LinuxInfo{}
+func (e *API) getLinuxInfo() *mesosproto.LinuxInfo {
+	linuxInfo := &mesosproto.LinuxInfo{}
 
 	if len(e.Service.CapAdd) > 0 {
 		linuxInfo.EffectiveCapabilities = e.getCapabilities(e.Service.CapAdd)
@@ -490,21 +486,21 @@ func (e *API) getContainerType() string {
 	return conType
 }
 
-func (e *API) getDockerParameter(cmd cfg.Command) []mesosproto.Parameter {
+func (e *API) getDockerParameter(cmd *cfg.Command) []*mesosproto.Parameter {
 	param := cmd.DockerParameter
 	if len(param) == 0 {
-		param = make([]mesosproto.Parameter, 0)
+		param = make([]*mesosproto.Parameter, 0)
 	}
 
 	if e.getContainerType() == "docker" {
 		// set net-alias if its defined
 		alias := e.getNetAlias()
 		if alias != "" {
-			param = e.addDockerParameter(param, mesosproto.Parameter{Key: "net-alias", Value: alias})
+			param = e.addDockerParameter(param, "net-alias", alias)
 		}
 		// add default volume driver if there is no defined volume
 		if len(e.Service.Volumes) == 0 {
-			param = e.addDockerParameter(param, mesosproto.Parameter{Key: "volume-driver", Value: e.Config.DefaultVolumeDriver})
+			param = e.addDockerParameter(param, "volume-driver", e.Config.DefaultVolumeDriver)
 		}
 		// configure ulimits
 		param = e.getUlimit(param)
@@ -513,13 +509,13 @@ func (e *API) getDockerParameter(cmd cfg.Command) []mesosproto.Parameter {
 	return param
 }
 
-func (e *API) getUlimit(param []mesosproto.Parameter) []mesosproto.Parameter {
+func (e *API) getUlimit(param []*mesosproto.Parameter) []*mesosproto.Parameter {
 	if e.Service.Ulimits.Memlock.Hard != 0 {
-		param = e.addDockerParameter(param, mesosproto.Parameter{Key: "ulimit", Value: "memlock=" + strconv.Itoa(e.Service.Ulimits.Memlock.Hard) + ":" + strconv.Itoa(e.Service.Ulimits.Memlock.Soft)})
+		param = e.addDockerParameter(param, "ulimit", "memlock="+strconv.Itoa(e.Service.Ulimits.Memlock.Hard)+":"+strconv.Itoa(e.Service.Ulimits.Memlock.Soft))
 	}
 
 	if e.Service.Ulimits.Nofile.Hard != 0 {
-		param = e.addDockerParameter(param, mesosproto.Parameter{Key: "ulimit", Value: "nofile=" + strconv.Itoa(e.Service.Ulimits.Nofile.Hard) + ":" + strconv.Itoa(e.Service.Ulimits.Nofile.Soft)})
+		param = e.addDockerParameter(param, "ulimit", "nofile="+strconv.Itoa(e.Service.Ulimits.Nofile.Hard)+":"+strconv.Itoa(e.Service.Ulimits.Nofile.Soft))
 	}
 
 	return param
@@ -536,8 +532,12 @@ func (e *API) getNetAlias() string {
 	return ""
 }
 
-// Append parameter to the list
-func (e *API) addDockerParameter(current []mesosproto.Parameter, newValues mesosproto.Parameter) []mesosproto.Parameter {
+func (e *API) addDockerParameter(current []*mesosproto.Parameter, key string, values string) []*mesosproto.Parameter {
+	newValues := &mesosproto.Parameter{
+		Key:   func() *string { x := key; return &x }(),
+		Value: func() *string { x := values; return &x }(),
+	}
+
 	return append(current, newValues)
 }
 
@@ -549,19 +549,19 @@ func (e *API) setConstraints(cmd *cfg.Command) {
 				cons := strings.Split(constraint, "==")
 				if len(cons) >= 2 {
 					if cons[0] == "node.hostname" {
-						cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_hostname", Value: &cons[1]})
+						cmd.Labels = append(cmd.Labels, &mesosproto.Label{Key: util.StringToPointer("__mc_placement_node_hostname"), Value: &cons[1]})
 					}
 					if cons[0] == "node.platform.os" {
-						cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_platform_os", Value: &cons[1]})
+						cmd.Labels = append(cmd.Labels, &mesosproto.Label{Key: util.StringToPointer("__mc_placement_node_platform_os"), Value: &cons[1]})
 					}
 					if cons[0] == "node.platform.arch" {
-						cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement_node_platform_arch", Value: &cons[1]})
+						cmd.Labels = append(cmd.Labels, &mesosproto.Label{Key: util.StringToPointer("__mc_placement_node_platform_arch"), Value: &cons[1]})
 					}
 				}
 			}
 			if strings.ToLower(constraint) == "unique" {
 				val := func() *string { x := "unique"; return &x }()
-				cmd.Labels = append(cmd.Labels, mesosproto.Label{Key: "__mc_placement", Value: val})
+				cmd.Labels = append(cmd.Labels, &mesosproto.Label{Key: util.StringToPointer("__mc_placement"), Value: val})
 			}
 		}
 	}

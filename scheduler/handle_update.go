@@ -6,15 +6,15 @@ import (
 )
 
 // HandleUpdate will handle the offers event of mesos
-func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
+func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 	update := event.Update
 
 	msg := &mesosproto.Call{
-		Type: mesosproto.Call_ACKNOWLEDGE,
+		Type: mesosproto.Call_ACKNOWLEDGE.Enum(),
 		Acknowledge: &mesosproto.Call_Acknowledge{
-			AgentID: *update.Status.AgentID,
-			TaskID:  update.Status.TaskID,
-			UUID:    update.Status.UUID,
+			AgentId: update.Status.GetAgentId(),
+			TaskId:  update.Status.GetTaskId(),
+			Uuid:    update.Status.GetUuid(),
 		},
 	}
 
@@ -23,19 +23,20 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 
 	// if these object have not TaskID it's currently unknown by these framework.
 	if task.TaskID == "" {
-		logrus.WithField("func", "scheduler.HandleUpdate").Debug("Could not found Task in Redis: ", update.Status.TaskID.Value)
+		logrus.WithField("func", "scheduler.HandleUpdate").Debug("Could not found Task in Redis: ", update.Status.GetTaskId())
 
-		if *update.Status.State != mesosproto.TASK_LOST {
-			e.Mesos.Kill(update.Status.TaskID.Value, update.Status.AgentID.Value)
+		if *update.Status.State != mesosproto.TaskState_TASK_LOST {
+			e.Mesos.Kill(*update.Status.GetTaskId().Value, *update.Status.GetAgentId().Value)
 		}
 	}
 
 	task.State = update.Status.State.String()
 
 	switch *update.Status.State {
-	case mesosproto.TASK_FAILED, mesosproto.TASK_ERROR, mesosproto.TASK_FINISHED, mesosproto.TASK_KILLED:
+	case mesosproto.TaskState_TASK_FAILED, mesosproto.TaskState_TASK_KILLED, mesosproto.TaskState_TASK_ERROR, mesosproto.TaskState_TASK_FINISHED:
 		if task.TaskID == "" {
-			return e.Mesos.Call(msg)
+			e.Mesos.Call(msg)
+			return
 		}
 		logrus.WithField("func", "scheduler.HandleUpdate").Warn("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")
 
@@ -45,44 +46,48 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 		case "no":
 			e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			e.Mesos.ForceSuppressFramework()
-			return e.Mesos.Call(msg)
+			e.Mesos.Call(msg)
+			return
 		// only restart the task if it stopped by a failure
 		case "on-failure":
-			if update.Status.State.String() == mesosproto.TASK_FAILED.String() {
+			if update.Status.State.String() == mesosproto.TaskState_TASK_FAILED.String() {
 				break
 			}
 			e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			e.Mesos.ForceSuppressFramework()
-			return e.Mesos.Call(msg)
+			e.Mesos.Call(msg)
+			return
 		// only restart the tasks if it does not stopped
 		case "unless-stopped":
-			if update.Status.State.String() == mesosproto.TASK_FINISHED.String() {
+			if update.Status.State.String() == mesosproto.TaskState_TASK_FINISHED.String() {
 				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 				e.Mesos.ForceSuppressFramework()
-				return e.Mesos.Call(msg)
+				e.Mesos.Call(msg)
+				return
 			}
 		}
 		// all other cases, increase task count and restart task
 		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
 		task.State = ""
-	case mesosproto.TASK_LOST:
+	case mesosproto.TaskState_TASK_LOST:
 		if task.TaskID == "" {
-			return e.Mesos.Call(msg)
+			e.Mesos.Call(msg)
+			return
 		}
 		logrus.WithField("func", "scheduler.HandleUpdate").Warn("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")
 		// all other cases, increase task count and restart task
 		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
 		task.State = ""
-	case mesosproto.TASK_RUNNING:
+	case mesosproto.TaskState_TASK_RUNNING:
 		if !e.Mesos.IsSuppress {
 			logrus.WithField("func", "scheduler.HandleUpdate").Info("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")
 		}
 
-		task.MesosAgent = e.Mesos.GetAgentInfo(update.Status.GetAgentID().Value)
+		task.MesosAgent = e.Mesos.GetAgentInfo(update.Status.GetAgentId().GetValue())
 		task.NetworkInfo = e.Mesos.GetNetworkInfo(task.TaskID)
-		task.Agent = update.Status.GetAgentID().Value
+		task.Agent = update.Status.GetAgentId().GetValue()
 
 		e.Mesos.SuppressFramework()
 	}
@@ -90,5 +95,5 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) error {
 	// save the new state
 	e.Redis.SaveTaskRedis(task)
 
-	return e.Mesos.Call(msg)
+	e.Mesos.Call(msg)
 }

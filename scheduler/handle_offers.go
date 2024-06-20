@@ -12,7 +12,7 @@ import (
 
 // HandleOffers will handle the offers event of mesos
 func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
-	var offerIds []mesosproto.OfferID
+	var offerIds []*mesosproto.OfferID
 	select {
 	case cmd := <-e.Framework.CommandChan:
 		// if no taskid or taskname is given, it's a wrong task.
@@ -20,43 +20,40 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			return nil
 		}
 
-		var takeOffer mesosproto.Offer
-		takeOffer, offerIds = e.getOffer(offers, cmd)
+		var takeOffer *mesosproto.Offer
+		takeOffer, offerIds = e.getOffer(offers, &cmd)
 		if takeOffer.GetHostname() == "" {
 			cmd.State = ""
-			e.Redis.SaveTaskRedis(cmd)
+			e.Redis.SaveTaskRedis(&cmd)
 			logrus.WithField("func", "mesos.HandleOffers").Debug("No matched offer found.")
 			return nil
 		}
 		logrus.WithField("func", "scheduler.HandleOffers").Info("Take Offer from " + takeOffer.GetHostname() + " for task " + cmd.TaskID + " (" + cmd.TaskName + ")")
 
-		var taskInfo []mesosproto.TaskInfo
+		var taskInfo []*mesosproto.TaskInfo
 		RefuseSeconds := 5.0
 
-		taskInfo, _ = e.PrepareTaskInfoExecuteContainer(takeOffer.AgentID, cmd)
+		taskInfo = e.PrepareTaskInfoExecuteContainer(takeOffer.GetAgentId(), &cmd)
 
+		// build mesos call object
 		accept := &mesosproto.Call{
-			Type: mesosproto.Call_ACCEPT,
+			Type: mesosproto.Call_ACCEPT.Enum(),
 			Accept: &mesosproto.Call_Accept{
-				OfferIDs: []mesosproto.OfferID{{
-					Value: takeOffer.ID.Value,
+				OfferIds: []*mesosproto.OfferID{{
+					Value: takeOffer.Id.Value,
 				}},
 				Filters: &mesosproto.Filters{
 					RefuseSeconds: &RefuseSeconds,
 				},
-			},
-		}
+				Operations: []*mesosproto.Offer_Operation{{
+					Type: mesosproto.Offer_Operation_LAUNCH.Enum(),
+					Launch: &mesosproto.Offer_Operation_Launch{
+						TaskInfos: taskInfo,
+					}}}}}
 
-		accept.Accept.Operations = []mesosproto.Offer_Operation{{
-			Type: mesosproto.Offer_Operation_LAUNCH,
-			Launch: &mesosproto.Offer_Operation_Launch{
-				TaskInfos: taskInfo,
-			},
-		}}
+		e.Redis.SaveTaskRedis(&cmd)
 
-		e.Redis.SaveTaskRedis(cmd)
-
-		logrus.WithField("func", "scheduler.HandleOffers").Debug("Offer Accept: ", takeOffer.GetID(), " On Node: ", takeOffer.GetHostname())
+		logrus.WithField("func", "scheduler.HandleOffers").Debug("Offer Accept: ", takeOffer.GetId(), " On Node: ", takeOffer.GetHostname())
 
 		err := e.Mesos.Call(accept)
 		if err != nil {
@@ -78,26 +75,26 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 }
 
 // get the value of a label from the command
-func (e *Scheduler) getLabelValue(label string, cmd cfg.Command) string {
+func (e *Scheduler) getLabelValue(label string, cmd *cfg.Command) string {
 	for _, v := range cmd.Labels {
-		if label == v.Key {
+		if label == *v.Key {
 			return fmt.Sprint(v.GetValue())
 		}
 	}
 	return ""
 }
 
-func (e *Scheduler) getAllOfferIDs(offers *mesosproto.Event_Offers) []mesosproto.OfferID {
-	var offerIds []mesosproto.OfferID
+func (e *Scheduler) getAllOfferIDs(offers *mesosproto.Event_Offers) []*mesosproto.OfferID {
+	var offerIds []*mesosproto.OfferID
 	for _, offer := range offers.Offers {
-		offerIds = append(offerIds, offer.ID)
+		offerIds = append(offerIds, offer.Id)
 	}
 
 	return offerIds
 }
 
-func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (mesosproto.Offer, []mesosproto.OfferID) {
-	var offerret mesosproto.Offer
+func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd *cfg.Command) (*mesosproto.Offer, []*mesosproto.OfferID) {
+	var offerret *mesosproto.Offer
 
 	offerIds := e.getAllOfferIDs(offers)
 
@@ -117,7 +114,7 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (
 		}
 
 		if e.getLabelValue("__mc_placement", cmd) == "unique" {
-			if e.alreadyRunningOnHostname(cmd, offer) {
+			if e.alreadyRunningOnHostname(cmd) {
 				logrus.WithField("func", "scheduler.getOffer").Debug("UNIQUE: Already running on node: ", offer.GetHostname())
 				continue
 			}
@@ -144,23 +141,23 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (
 	}
 	// remove the offer we took
 	if offerret.GetHostname() != "" {
-		offerIds = e.removeOffer(offerIds, offerret.ID.Value)
+		offerIds = e.removeOffer(offerIds, offerret.GetId().GetValue())
 	}
 	e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 	return offerret, offerIds
 }
 
 // search matched mesos attributes
-func (e *Scheduler) getAttributes(name string, offer mesosproto.Offer) string {
+func (e *Scheduler) getAttributes(name string, offer *mesosproto.Offer) string {
 	for _, attribute := range offer.Attributes {
-		if strings.EqualFold(attribute.Name, name) {
-			return attribute.GetText().Value
+		if strings.EqualFold(*attribute.Name, name) {
+			return attribute.GetText().GetValue()
 		}
 	}
 	return ""
 }
 
-func (e *Scheduler) alreadyRunningOnHostname(cmd cfg.Command, offer mesosproto.Offer) bool {
+func (e *Scheduler) alreadyRunningOnHostname(cmd *cfg.Command) bool {
 	keys := e.Redis.GetAllRedisKeys(cmd.TaskName + ":*")
 	for keys.Next(e.Redis.CTX) {
 		// continue if the key is not a mesos task
@@ -185,7 +182,7 @@ func (e *Scheduler) alreadyRunningOnHostname(cmd cfg.Command, offer mesosproto.O
 	return false
 }
 
-func (e *Scheduler) isAttributeMachted(label, attribute string, cmd cfg.Command, offer mesosproto.Offer) bool {
+func (e *Scheduler) isAttributeMachted(label, attribute string, cmd *cfg.Command, offer *mesosproto.Offer) bool {
 	valOS := e.getLabelValue(label, cmd)
 	if valOS != "" {
 		if strings.ToLower(valOS) == e.getAttributes(attribute, offer) {
@@ -199,10 +196,10 @@ func (e *Scheduler) isAttributeMachted(label, attribute string, cmd cfg.Command,
 }
 
 // remove the offer we took from the list
-func (e *Scheduler) removeOffer(offers []mesosproto.OfferID, clean string) []mesosproto.OfferID {
-	var offerIds []mesosproto.OfferID
+func (e *Scheduler) removeOffer(offers []*mesosproto.OfferID, clean string) []*mesosproto.OfferID {
+	var offerIds []*mesosproto.OfferID
 	for _, offer := range offers {
-		if offer.Value != clean {
+		if *offer.Value != clean {
 			offerIds = append(offerIds, offer)
 		}
 	}

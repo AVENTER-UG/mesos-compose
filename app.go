@@ -68,7 +68,7 @@ func main() {
 	if key != "" {
 		json.Unmarshal([]byte(key), &oldFramework)
 
-		framework.FrameworkInfo.ID = oldFramework.FrameworkInfo.ID
+		framework.FrameworkInfo.Id = oldFramework.FrameworkInfo.Id
 		framework.MesosStreamID = oldFramework.MesosStreamID
 	}
 
@@ -76,7 +76,7 @@ func main() {
 	framework.FrameworkInfo.Hostname = &framework.FrameworkHostname
 
 	r.SaveConfig(config)
-	r.SaveFrameworkRedis(framework)
+	r.SaveFrameworkRedis(&framework)
 
 	server := &http.Server{
 		Addr:              config.Listen,
@@ -119,7 +119,7 @@ func main() {
 	for {
 		select {
 		case <-ticker.C:
-			e := scheduler.New(&config, &framework)
+			e := scheduler.Subscribe(&config, &framework)
 			e.API = a
 			e.Vault = v
 			e.Redis = r

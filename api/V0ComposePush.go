@@ -51,7 +51,7 @@ func (e *API) V0ComposePush(w http.ResponseWriter, r *http.Request) {
 		Instances := e.getReplicas()
 		if e.Redis.CountRedisKey(taskName+":*", "") < Instances {
 			e.Compose = data
-			e.mapComposeServiceToMesosTask(vars, service, cfg.Command{})
+			e.mapComposeServiceToMesosTask(vars, service, &cfg.Command{})
 		}
 	}
 

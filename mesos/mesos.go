@@ -6,14 +6,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
-	"github.com/gogo/protobuf/jsonpb"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // Mesos include all the current vars and global config
@@ -26,10 +25,10 @@ type Mesos struct {
 }
 
 // Marshaler to serialize Protobuf Message to JSON
-var marshaller = jsonpb.Marshaler{
-	EnumsAsInts: false,
-	Indent:      " ",
-	OrigName:    true,
+var marshaller = protojson.MarshalOptions{
+	UseEnumNumbers: false,
+	Indent:         " ",
+	UseProtoNames:  true,
 }
 
 // New will create a new API object
@@ -44,36 +43,6 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Mesos {
 	return e
 }
 
-// Subscribe to the mesos backend
-func (e *Mesos) Subscribe() (*http.Client, *http.Request) {
-	subscribeCall := &mesosproto.Call{
-		FrameworkID: e.Framework.FrameworkInfo.ID,
-		Type:        mesosproto.Call_SUBSCRIBE,
-		Subscribe: &mesosproto.Call_Subscribe{
-			FrameworkInfo: &e.Framework.FrameworkInfo,
-		},
-	}
-
-	logrus.WithField("func", "mesos.Subscribe").Debug(subscribeCall)
-	body, _ := marshaller.MarshalToString(subscribeCall)
-	client := &http.Client{}
-	client.Transport = &http.Transport{
-		// #nosec G402
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: e.Config.SkipSSL},
-	}
-
-	protocol := "https"
-	if !e.Framework.MesosSSL {
-		protocol = "http"
-	}
-	req, _ := http.NewRequest("POST", protocol+"://"+e.Framework.MesosMasterServer+"/api/v1/scheduler", bytes.NewBuffer([]byte(body)))
-	req.Close = true
-	req.SetBasicAuth(e.Framework.Username, e.Framework.Password)
-	req.Header.Set("Content-Type", "application/json")
-
-	return client, req
-}
-
 // Revive will revive the mesos tasks to clean up
 func (e *Mesos) Revive() {
 	if !e.IsRevive {
@@ -81,7 +50,7 @@ func (e *Mesos) Revive() {
 		e.IsSuppress = false
 		e.IsRevive = true
 		revive := &mesosproto.Call{
-			Type: mesosproto.Call_REVIVE,
+			Type: mesosproto.Call_REVIVE.Enum(),
 		}
 		err := e.Call(revive)
 		if err != nil {
@@ -103,7 +72,7 @@ func (e *Mesos) SuppressFramework() {
 		e.IsSuppress = true
 		e.IsRevive = false
 		suppress := &mesosproto.Call{
-			Type: mesosproto.Call_SUPPRESS,
+			Type: mesosproto.Call_SUPPRESS.Enum(),
 		}
 		err := e.Call(suppress)
 		if err != nil {
@@ -117,13 +86,13 @@ func (e *Mesos) Kill(taskID string, agentID string) error {
 	logrus.WithField("func", "mesos.Kill").Info("Kill task ", taskID)
 	// tell mesos to shutdonw the given task
 	err := e.Call(&mesosproto.Call{
-		Type: mesosproto.Call_KILL,
+		Type: mesosproto.Call_KILL.Enum(),
 		Kill: &mesosproto.Call_Kill{
-			TaskID: mesosproto.TaskID{
-				Value: taskID,
+			TaskId: &mesosproto.TaskID{
+				Value: &taskID,
 			},
-			AgentID: &mesosproto.AgentID{
-				Value: agentID,
+			AgentId: &mesosproto.AgentID{
+				Value: &agentID,
 			},
 		},
 	})
@@ -133,10 +102,18 @@ func (e *Mesos) Kill(taskID string, agentID string) error {
 
 // Call will send messages to mesos
 func (e *Mesos) Call(message *mesosproto.Call) error {
-	message.FrameworkID = e.Framework.FrameworkInfo.ID
+	message.FrameworkId = e.Framework.FrameworkInfo.Id
 
-	body, err := marshaller.MarshalToString(message)
+	if message.GetType() == mesosproto.Call_ACKNOWLEDGE {
+		if message.Acknowledge.GetUuid() == nil {
+			return nil
+		}
+	}
+
+	body, err := marshaller.Marshal(message)
+
 	if err != nil {
+		logrus.WithField("func", "mesos.Call").Debug("Could not Marshal message:", err.Error())
 		return err
 	}
 
@@ -165,7 +142,7 @@ func (e *Mesos) Call(message *mesosproto.Call) error {
 	defer res.Body.Close()
 
 	if res.StatusCode != 202 {
-		body, err := ioutil.ReadAll(res.Body)
+		body, err := io.ReadAll(res.Body)
 		if err != nil {
 			logrus.WithField("func", "mesos.Call").Error("Call Handling (could not read res.Body)")
 			return fmt.Errorf("error %d", res.StatusCode)
@@ -178,24 +155,27 @@ func (e *Mesos) Call(message *mesosproto.Call) error {
 }
 
 // DecodeTask will decode the key into an mesos command struct
-func (e *Mesos) DecodeTask(key string) cfg.Command {
-	var task cfg.Command
-	err := json.NewDecoder(strings.NewReader(key)).Decode(&task)
-	if err != nil {
-		logrus.WithField("func", "DecodeTask").Error("Could not decode task: ", err.Error())
-		return cfg.Command{}
+func (e *Mesos) DecodeTask(key string) *cfg.Command {
+	var task *cfg.Command
+	if key != "" {
+		err := json.NewDecoder(strings.NewReader(key)).Decode(&task)
+		if err != nil {
+			logrus.WithField("func", "scheduler.DecodeTask").Error("Could not decode task: ", err.Error())
+			return &cfg.Command{}
+		}
+		return task
 	}
-	return task
+	return &cfg.Command{}
 }
 
 // GetOffer get out the offer for the mesos task
-func (e *Mesos) GetOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (mesosproto.Offer, []mesosproto.OfferID) {
-	var offerIds []mesosproto.OfferID
-	var offerret mesosproto.Offer
+func (e *Mesos) GetOffer(offers *mesosproto.Event_Offers, cmd *cfg.Command) (*mesosproto.Offer, []*mesosproto.OfferID) {
+	var offerIds []*mesosproto.OfferID
+	var offerret *mesosproto.Offer
 
 	for n, offer := range offers.Offers {
 		logrus.Debug("Got Offer From:", offer.GetHostname())
-		offerIds = append(offerIds, offer.ID)
+		offerIds = append(offerIds, offer.Id)
 
 		if cmd.TaskName == "" {
 			continue
@@ -213,17 +193,25 @@ func (e *Mesos) GetOffer(offers *mesosproto.Event_Offers, cmd cfg.Command) (meso
 }
 
 // DeclineOffer will decline the given offers
-func (e *Mesos) DeclineOffer(offerIds []mesosproto.OfferID) *mesosproto.Call {
+func (e *Mesos) DeclineOffer(offerIds []*mesosproto.OfferID) *mesosproto.Call {
+
+	logrus.WithField("func", "scheduler.HandleOffers").Debug("Offer Decline: ", offerIds)
+
+	refuseSeconds := 120.0
+
 	decline := &mesosproto.Call{
-		Type:    mesosproto.Call_DECLINE,
-		Decline: &mesosproto.Call_Decline{OfferIDs: offerIds},
+		Type: mesosproto.Call_DECLINE.Enum(),
+		Decline: &mesosproto.Call_Decline{OfferIds: offerIds, Filters: &mesosproto.Filters{
+			RefuseSeconds: &refuseSeconds,
+		},
+		},
 	}
 	return decline
 }
 
 // IsRessourceMatched - check if the ressources of the offer are matching the needs of the cmd
 // nolint:gocyclo
-func (e *Mesos) IsRessourceMatched(ressource []mesosproto.Resource, cmd cfg.Command) bool {
+func (e *Mesos) IsRessourceMatched(ressource []*mesosproto.Resource, cmd *cfg.Command) bool {
 	mem := false
 	cpu := false
 	ports := true
@@ -241,8 +229,10 @@ func (e *Mesos) IsRessourceMatched(ressource []mesosproto.Resource, cmd cfg.Comm
 			if v.GetName() == "ports" {
 				for _, taskPort := range cmd.DockerPortMappings {
 					for _, portRange := range v.GetRanges().Range {
-						if taskPort.HostPort >= uint32(portRange.Begin) && taskPort.HostPort <= uint32(portRange.End) {
-							logrus.WithField("func", "mesos.IsRessourceMatched").Debug("Matched Offer TaskPort: ", taskPort.HostPort)
+						portBegin := uint32(portRange.GetBegin())
+						portEnd := uint32(portRange.GetEnd())
+						if *taskPort.HostPort >= portBegin && *taskPort.HostPort <= portEnd {
+							logrus.WithField("func", "mesos.IsRessourceMatched").Debug("Matched Offer TaskPort: ", taskPort.GetHostPort())
 							logrus.WithField("func", "mesos.IsRessourceMatched").Debug("Matched Offer RangePort: ", portRange)
 							ports = ports || true
 							break
@@ -310,20 +300,19 @@ func (e *Mesos) GetAgentInfo(agentID string) cfg.MesosSlaves {
 	return cfg.MesosSlaves{}
 }
 
-// GetNetworkInfo get network info of task
-func (e *Mesos) GetNetworkInfo(taskID string) []mesosproto.NetworkInfo {
+func (e *Mesos) GetNetworkInfo(taskID string) []*mesosproto.NetworkInfo {
 	task := e.GetTaskInfo(taskID)
 
 	if len(task.Tasks) > 0 {
 		for _, status := range task.Tasks[0].Statuses {
 			if status.State == "TASK_RUNNING" {
-				var netw []mesosproto.NetworkInfo
+				var netw []*mesosproto.NetworkInfo
 				netw = append(netw, status.ContainerStatus.NetworkInfos[0])
 				return netw
 			}
 		}
 	}
-	return []mesosproto.NetworkInfo{}
+	return []*mesosproto.NetworkInfo{}
 }
 
 // GetTaskInfo get the task object to the given ID
@@ -338,7 +327,7 @@ func (e *Mesos) GetTaskInfo(taskID string) cfg.MesosTasks {
 	if !e.Framework.MesosSSL {
 		protocol = "http"
 	}
-	req, _ := http.NewRequest("POST", protocol+"://"+e.Framework.MesosMasterServer+"/tasks/?task_id="+taskID+"&framework_id="+e.Framework.FrameworkInfo.ID.GetValue(), nil)
+	req, _ := http.NewRequest("POST", protocol+"://"+e.Framework.MesosMasterServer+"/tasks/?task_id="+taskID+"&framework_id="+e.Framework.FrameworkInfo.Id.GetValue(), nil)
 	req.Close = true
 	req.SetBasicAuth(e.Framework.Username, e.Framework.Password)
 	req.Header.Set("Content-Type", "application/json")
