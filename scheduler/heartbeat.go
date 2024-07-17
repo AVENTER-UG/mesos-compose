@@ -9,12 +9,6 @@ import (
 // Heartbeat - The Apache Mesos heatbeat function
 // nolint:gocyclo
 func (e *Scheduler) Heartbeat() {
-	// Check Connection state of Redis
-	err := e.Redis.PingRedis()
-	if err != nil {
-		e.Redis.Connect()
-	}
-
 	keys := e.Redis.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 	suppress := true
 	for keys.Next(e.Redis.CTX) {
@@ -108,12 +102,21 @@ func (e *Scheduler) Heartbeat() {
 	}
 }
 
+// Check Connection state of Redis
+func (e *Scheduler) checkRedis() {
+	err := e.Redis.PingRedis()
+	if err != nil {
+		e.Redis.Connect()
+	}
+}
+
 // HeartbeatLoop - The main loop for the hearbeat
 func (e *Scheduler) HeartbeatLoop() {
 	ticker := time.NewTicker(e.Config.EventLoopTime)
 	defer ticker.Stop()
 	for ; true; <-ticker.C {
 		e.Heartbeat()
+		e.checkRedis()
 	}
 }
 

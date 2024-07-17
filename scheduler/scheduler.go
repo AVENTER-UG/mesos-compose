@@ -136,6 +136,8 @@ func (e *Scheduler) EventLoop() {
 			go e.HandleUpdate(&event)
 			go e.Redis.SaveConfig(*e.Config)
 			go e.callPluginEvent(&event)
+		case mesosproto.Event_HEARTBEAT.Number():
+			go e.Heartbeat()
 		case mesosproto.Event_OFFERS.Number():
 			// Search Failed containers and restart them
 			err = e.HandleOffers(event.Offers)

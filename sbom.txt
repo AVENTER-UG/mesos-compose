@@ -69,16 +69,16 @@ github.com/sirupsen/logrus                       v1.9.3                         
 go.uber.org/atomic                               v1.10.0                             go-module  
 golang.org/x/crypto                              v0.1.0                              go-module  
 golang.org/x/crypto                              v0.19.0                             go-module  
-golang.org/x/crypto                              v0.22.0                             go-module  
+golang.org/x/crypto                              v0.23.0                             go-module  
 golang.org/x/net                                 v0.1.0                              go-module  
 golang.org/x/net                                 v0.21.0                             go-module  
-golang.org/x/net                                 v0.24.0                             go-module  
+golang.org/x/net                                 v0.25.0                             go-module  
 golang.org/x/sys                                 v0.1.0                              go-module  
 golang.org/x/sys                                 v0.17.0                             go-module  
 golang.org/x/sys                                 v0.20.0                             go-module  
 golang.org/x/term                                v0.1.0                              go-module  
 golang.org/x/term                                v0.17.0                             go-module  
-golang.org/x/term                                v0.19.0                             go-module  
+golang.org/x/term                                v0.20.0                             go-module  
 golang.org/x/text                                v0.14.0                             go-module  
 golang.org/x/text                                v0.15.0                             go-module  
 golang.org/x/text                                v0.4.0                              go-module  
@@ -87,6 +87,7 @@ golang.org/x/time                                v0.5.0                         
 google.golang.org/genproto                       v0.0.0-20221027153422-115e99e71e1c  go-module  
 google.golang.org/grpc                           v1.50.1                             go-module  
 google.golang.org/protobuf                       v1.28.1                             go-module  
+google.golang.org/protobuf                       v1.34.1                             go-module  
 gopkg.in/square/go-jose.v2                       v2.6.0                              go-module  
 gopkg.in/yaml.v3                                 v3.0.1                              go-module  
 stdlib                                           go1.19.2                            go-module  
