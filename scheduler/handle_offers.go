@@ -20,6 +20,12 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			return nil
 		}
 
+		// before schedule the task, check again if there are already
+		// enough instances
+		if e.Redis.CountRedisKey(cmd.TaskName+":*", "__KILL") > cmd.Instances {
+			return nil
+		}
+
 		var takeOffer *mesosproto.Offer
 		takeOffer, offerIds = e.getOffer(offers, &cmd)
 		if takeOffer.GetHostname() == "" {

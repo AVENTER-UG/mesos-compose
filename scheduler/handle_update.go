@@ -32,6 +32,8 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 
 	task.State = update.Status.State.String()
 
+	logrus.WithField("func", "scheduler.HandleUpdate").Tracef("Event %s, State %s, TaskID %s", event.GetType().String(), task.State, task.TaskID)
+
 	switch *update.Status.State {
 	case mesosproto.TaskState_TASK_FAILED, mesosproto.TaskState_TASK_KILLED, mesosproto.TaskState_TASK_ERROR, mesosproto.TaskState_TASK_FINISHED:
 		if task.TaskID == "" {

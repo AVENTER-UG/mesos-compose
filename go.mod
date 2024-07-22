@@ -1,6 +1,6 @@
 module github.com/AVENTER-UG/mesos-compose
 
-go 1.22
+go 1.21
 
 require (
 	github.com/AVENTER-UG/util v0.5.14

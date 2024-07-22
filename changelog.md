@@ -5,11 +5,12 @@
 - FIX: mesos cni and docker network alias handling
 - FIX: mesos task could be removed after it failed during restart
 - DEL: unneeded mesoscni env parameter.
-- ADD: Mesos Healthcheck integration. 
+- ADD: Mesos Healthcheck integration.
 - CHANGE: optimise offer handling
 - ADD: Posibility to add plugins. For an example, take a look into the plugins directory.
 - ADD: Kafka Plugin to forware mesos event messages to kafka
 - CHANGE: Migrate to google protobuf
+- FIX: Scale up/down of a mesos task.
 
 ## 1.0.3
 
@@ -44,10 +45,10 @@
 - FIX: Default CPU ressource
 - ADD: API Endpoint to supress the Framework
 - ADD: support for wss and h2c
-- FIX: Custom Executor command was not set 
+- FIX: Custom Executor command was not set
 - ADD: Support Mesos fetch to download files during runtime into the containers sandbox.
 - ADD: Scale up and down of mesos tasks
-- FIX: Increase TASK_ID during task_lost restart 
+- FIX: Increase TASK_ID during task_lost restart
 - FIX: Exit startup if cannot connect redis
 - CHANGE: Change the discovery name format to fit the DNS RFC.
 - ADD: Better support for mesos containerizer (thanks to @harryzz)
@@ -60,7 +61,7 @@
 
 ## 0.4.2
 
-- CHANGE: Command attribute from array to string. 
+- CHANGE: Command attribute from array to string.
 - ADD: Support of docker-compose capability parameter [cap_add](https://docs.docker.com/compose/compose-file/#cap_add).
 - ADD: Support of mesos command executor. Set the label:
   `biz.aventer.mesos_compose.container_type: "NONE"`
@@ -78,17 +79,17 @@
 - ADD: Overwrite the webui URL by env "FRAMEWORK_WEBUIRUL"
 - ADD: Mesos CLI restart and update service.
 - ADD: Support for `node.platform.os` and `node.platform.arch` constraint
-- ADD: Support of docker-compose command [restart](https://docs.docker.com/compose/compose-file/#read_only) 
+- ADD: Support of docker-compose command [restart](https://docs.docker.com/compose/compose-file/#read_only)
 - ADD: Show all Tasks as API call and mesos-cli command.
 - FIX: Offer for multiple host ports.
-- FIX: kill services and tasks 
+- FIX: kill services and tasks
 - FIX: restart services and tasks to prevent unmanaged tasks
 - ADD: Support for user defined network with exposed ports
-- ADD: customize taskname `bis.aventer.mesos_compose.taskname: "test:app"`. 
+- ADD: customize taskname `bis.aventer.mesos_compose.taskname: "test:app"`.
 - FIX: restore MesosAgent info after update task by API
 - FIX: Remove LOST mesos tasks from redis
 - ADD: mesos reconcile loop to periodically sync state with mesos
-  
+
 ## v0.4.0
 
 - ADD: Redis Connection retry and health check.

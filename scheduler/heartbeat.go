@@ -40,14 +40,12 @@ func (e *Scheduler) Heartbeat() {
 
 		// there are lesser instances are running as it should be
 		if e.Redis.CountRedisKey(task.TaskName+":*", "__KILL") < task.Instances {
-			if e.getLabelValue("__mc_placement", task) != "unique" && e.Mesos.CountAgent >= task.Instances {
-				logrus.WithField("func", "scheduler.CheckState").Info("Scale up Mesos Task: ", task.TaskName)
-				e.Mesos.Revive()
-				task.State = ""
-				task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
-				e.Redis.SaveTaskRedis(task)
-				continue
-			}
+			logrus.WithField("func", "scheduler.CheckState").Info("Scale up Mesos Task: ", task.TaskName)
+			e.Mesos.Revive()
+			task.State = ""
+			task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
+			e.Redis.SaveTaskRedis(task)
+			continue
 		}
 
 		// there are more instances are running as it should be
