@@ -11,6 +11,7 @@
 - ADD: Kafka Plugin to forware mesos event messages to kafka
 - CHANGE: Migrate to google protobuf
 - FIX: Scale up/down of a mesos task.
+- FIX: unique placement
 
 ## 1.0.3
 

@@ -40,6 +40,12 @@ func (e *Scheduler) Heartbeat() {
 
 		// there are lesser instances are running as it should be
 		if e.Redis.CountRedisKey(task.TaskName+":*", "__KILL") < task.Instances {
+			// do not schedule task if the placement is unique and the amount of running tasks
+			// are same like the amount of mesos agents.
+			if e.getLabelValue("__mc_placement", task) == "unique" && e.Redis.CountRedisKeyState(task.TaskName+":*", "TASK_RUNNING") >= e.Mesos.CountAgent {
+				continue
+			}
+
 			logrus.WithField("func", "scheduler.CheckState").Info("Scale up Mesos Task: ", task.TaskName)
 			e.Mesos.Revive()
 			task.State = ""

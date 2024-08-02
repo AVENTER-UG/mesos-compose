@@ -125,6 +125,31 @@ func (e *Redis) CountRedisKey(pattern string, ignoreState string) int {
 	return count
 }
 
+// CountRedisKeyState will get back the amount of redis keys with the spesific state.
+func (e *Redis) CountRedisKeyState(pattern string, state string) int {
+	keys := e.GetAllRedisKeys(pattern)
+	count := 0
+	for keys.Next(e.CTX) {
+		// ignore redis keys if they are not mesos tasks
+		if e.CheckIfNotTask(keys) {
+			continue
+		}
+
+		// do not count these key
+		if state != "" {
+			// get the values of the current key
+			key := e.GetRedisKey(keys.Val())
+			task := e.Mesos.DecodeTask(key)
+
+			if task.State != state {
+				continue
+			}
+		}
+		count++
+	}
+	return count
+}
+
 // SaveConfig store the current framework config
 func (e *Redis) SaveConfig(config cfg.Config) {
 	data, _ := json.Marshal(config)
