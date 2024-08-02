@@ -1,6 +1,6 @@
 # Changelog
 
-## master
+## v1.1.0
 
 - FIX: mesos cni and docker network alias handling
 - FIX: mesos task could be removed after it failed during restart
