@@ -1,5 +1,9 @@
 # Changelog
 
+## master
+
+- FIX: restart API set the wrong restart flag.
+
 ## v1.1.0
 
 - FIX: mesos cni and docker network alias handling
