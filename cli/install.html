@@ -90,7 +90,9 @@
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded "><a href="../index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../vars.html"><strong aria-hidden="true">2.</strong> Environment Variables</a></li><li class="chapter-item expanded affix "><li class="part-title">CLI</li><li class="chapter-item expanded "><a href="../cli/install.html" class="active"><strong aria-hidden="true">3.</strong> Installation for Mesos-CLI</a></li><li class="chapter-item expanded "><a href="../cli/usage.html"><strong aria-hidden="true">4.</strong> Usage</a></li><li class="chapter-item expanded affix "><li class="part-title">Networking</li><li class="chapter-item expanded "><a href="../network/bridge.html"><strong aria-hidden="true">5.</strong> Bridged Network</a></li><li class="chapter-item expanded "><a href="../network/user.html"><strong aria-hidden="true">6.</strong> User Network</a></li><li class="chapter-item expanded "><a href="../network/host.html"><strong aria-hidden="true">7.</strong> Host Network</a></li><li class="chapter-item expanded affix "><li class="part-title">Hashicorp Vault</li><li class="chapter-item expanded "><a href="../vault/vault.html"><strong aria-hidden="true">8.</strong> How to use</a></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
 
         <!-- Track and set sidebar scroll position -->
@@ -172,7 +174,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="mesos-compose-cli-installation-for-mesos-cli"><a class="header" href="#mesos-compose-cli-installation-for-mesos-cli">Mesos-Compose CLI Installation for Mesos-CLI</a></h1>
-<p>If you do not already have installe the mesos cli, please follow the steps under &quot;Install Mesos-CLI&quot; first.</p>
+<p>If you do not already have installe the mesos cli, please follow the steps under "Install Mesos-CLI" first.</p>
 <p>The installation of the Mesos-Compose plugin for mesos-cli is done in few steps.</p>
 <p>First, edit the mesos-cli config file.</p>
 <pre><code class="language-bash">
@@ -184,26 +186,26 @@ vim .mesos/config.toml
 # The `plugins` array lists the absolute paths of the
 # plugins you want to add to the CLI.
 plugins = [
-  &quot;/example/mesos-compose/mesos_cli/compose&quot;
+  "/example/mesos-compose/mesos_cli/compose"
 ]
 
 [compose.&lt;FRAMEWORK_PREFIX&gt;]
-  principal = &quot;&lt;framework username&gt;&quot;
-  secret = &quot;&lt;framework password&gt;&quot;
+  principal = "&lt;framework username&gt;"
+  secret = "&lt;framework password&gt;"
 
 </code></pre>
 <p>A example for multiple mesos-compose frameworks:</p>
 <pre><code class="language-bash">
 [compose.mc-a]
-  principal = &quot;&lt;framework username&gt;&quot;
-  secret = &quot;&lt;framework password&gt;&quot;
+  principal = "&lt;framework username&gt;"
+  secret = "&lt;framework password&gt;"
 
 [compose.mc-b]
-  principal = &quot;&lt;framework username&gt;&quot;
-  secret = &quot;&lt;framework password&gt;&quot;
+  principal = "&lt;framework username&gt;"
+  secret = "&lt;framework password&gt;"
 
 </code></pre>
-<p>As you can see, the &quot;compose&quot; section have to extend with the prefix of Mesos-Compose framework.</p>
+<p>As you can see, the "compose" section have to extend with the prefix of Mesos-Compose framework.</p>
 <p>Now we will see the M3s plugin in mesos cli:</p>
 <pre><code class="language-bash">
 mesos-cli help
@@ -228,7 +230,7 @@ Commands:
 
 </code></pre>
 <h2 id="install-mesos-cli"><a class="header" href="#install-mesos-cli">Install Mesos-CLI</a></h2>
-<p>Download the mesos-cli binary for linux from <a href="https://www.aventer.biz/files/sw/Linux/mesos-cli.zip">here</a>. Extract 
+<p>Download the mesos-cli binary for linux from <a href="https://www.aventer.biz/files/sw/Linux/mesos-cli.zip">here</a>. Extract
 the mesos-cli and copy the file into your PATH directory.</p>
 
                     </main>

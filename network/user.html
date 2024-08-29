@@ -90,7 +90,9 @@
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded "><a href="../index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../vars.html"><strong aria-hidden="true">2.</strong> Environment Variables</a></li><li class="chapter-item expanded affix "><li class="part-title">CLI</li><li class="chapter-item expanded "><a href="../cli/install.html"><strong aria-hidden="true">3.</strong> Installation for Mesos-CLI</a></li><li class="chapter-item expanded "><a href="../cli/usage.html"><strong aria-hidden="true">4.</strong> Usage</a></li><li class="chapter-item expanded affix "><li class="part-title">Networking</li><li class="chapter-item expanded "><a href="../network/bridge.html"><strong aria-hidden="true">5.</strong> Bridged Network</a></li><li class="chapter-item expanded "><a href="../network/user.html" class="active"><strong aria-hidden="true">6.</strong> User Network</a></li><li class="chapter-item expanded "><a href="../network/host.html"><strong aria-hidden="true">7.</strong> Host Network</a></li><li class="chapter-item expanded affix "><li class="part-title">Hashicorp Vault</li><li class="chapter-item expanded "><a href="../vault/vault.html"><strong aria-hidden="true">8.</strong> How to use</a></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
 
         <!-- Track and set sidebar scroll position -->
@@ -172,15 +174,15 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="user-network"><a class="header" href="#user-network">User Network</a></h1>
-<p>The networkmode &quot;user&quot; will start the container without a port. The container will be deployed in the defined CNI network.</p>
-<p>Example: </p>
+<p>The networkmode "user" will start the container without a port. The container will be deployed in the defined CNI network.</p>
+<p>Example:</p>
 <pre><code class="language-yaml">version: '3.9'
 services:
   redis-user:
     image: redis:latest
     ports:
-      - &quot;9401:6379&quot;
-    network_mode: &quot;user&quot;
+      - "9401:6379"
+    network_mode: "user"
     network: default
 
 networks:
@@ -191,7 +193,7 @@ networks:
 <p><code>docker ps</code> will show as the container:</p>
 <pre><code class="language-bash">docker ps
 CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                     NAMES
-ed0350dd8632   redis:latest   &quot;docker-entrypoint.s…&quot;   16 minutes ago   Up 16 minutes   6379/tcp                  mesos-672d1601-42c6-4a6f-be92-4ddc6f271c55
+ed0350dd8632   redis:latest   "docker-entrypoint.s…"   16 minutes ago   Up 16 minutes   6379/tcp                  mesos-672d1601-42c6-4a6f-be92-4ddc6f271c55
 </code></pre>
 
                     </main>

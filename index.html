@@ -90,7 +90,9 @@
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded "><a href="index.html" class="active"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="vars.html"><strong aria-hidden="true">2.</strong> Environment Variables</a></li><li class="chapter-item expanded affix "><li class="part-title">CLI</li><li class="chapter-item expanded "><a href="cli/install.html"><strong aria-hidden="true">3.</strong> Installation for Mesos-CLI</a></li><li class="chapter-item expanded "><a href="cli/usage.html"><strong aria-hidden="true">4.</strong> Usage</a></li><li class="chapter-item expanded affix "><li class="part-title">Networking</li><li class="chapter-item expanded "><a href="network/bridge.html"><strong aria-hidden="true">5.</strong> Bridged Network</a></li><li class="chapter-item expanded "><a href="network/user.html"><strong aria-hidden="true">6.</strong> User Network</a></li><li class="chapter-item expanded "><a href="network/host.html"><strong aria-hidden="true">7.</strong> Host Network</a></li><li class="chapter-item expanded affix "><li class="part-title">Hashicorp Vault</li><li class="chapter-item expanded "><a href="vault/vault.html"><strong aria-hidden="true">8.</strong> How to use</a></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
 
         <!-- Track and set sidebar scroll position -->
@@ -186,11 +188,11 @@
 services:
   app:
     image: alpine:latest
-    command: &quot;sleep&quot;
-    arguments: [&quot;1000&quot;]        
+    command: "sleep"
+    arguments: ["1000"]        
     restart: always
     volumes:
-      - &quot;12345test:/tmp&quot;
+      - "12345test:/tmp"
     environment:
       MYSQL_HOST: test
     hostname: test
@@ -198,29 +200,29 @@ services:
     container_type: docker
     shell: true
     mesos:
-      task_name: &quot;mc:test:app1&quot; # an alternative taskname      
+      task_name: "mc:test:app1" # an alternative taskname      
       executer:
-        command: &quot;/mnt/mesos/sandbox/my-custom-executor&quot;
+        command: "/mnt/mesos/sandbox/my-custom-executor"
       fetch:
         - value: http://localhost/my-custom-executor
           executable: true
 					extract:  false
 					cache: false
     labels:
-      traefik.enable: &quot;true&quot;
-      traefik.http.routers.test.entrypoints: &quot;web&quot;
-      traefik.http.routers.test.service: &quot;mc_test_app1_80&quot; # if an alternative taskname is set, we have to use it here to
-      traefik.http.routers.test.rule: &quot;HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)&quot;
-    network_mode: &quot;BRIDGE&quot;
+      traefik.enable: "true"
+      traefik.http.routers.test.entrypoints: "web"
+      traefik.http.routers.test.service: "mc_test_app1_80" # if an alternative taskname is set, we have to use it here to
+      traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
+    network_mode: "BRIDGE"
     ports:
-      - &quot;8080:80&quot;
-      - &quot;9090&quot;
-      - &quot;8081:81/tcp&quot;
-      - &quot;8082:82/udp&quot;
-      - &quot;8082:82/http&quot;
-      - &quot;8082:82/https&quot;  
-      - &quot;8082:82/h2c&quot;
-      - &quot;8082:82/wss&quot;       
+      - "8080:80"
+      - "9090"
+      - "8081:81/tcp"
+      - "8082:82/udp"
+      - "8082:82/http"
+      - "8082:82/https"  
+      - "8082:82/h2c"
+      - "8082:82/wss"       
     network: default
     ulimits:
       memlock:
@@ -229,12 +231,27 @@ services:
       nofile:
         soft: 65536 
         hard: 65536
+    healthcheck:
+      delay_seconds: 15
+      interval_seconds: 10
+      timeout_seconds: 20
+      consecutive_failures: 3
+      grace_period_seconds: 10
+      command:
+        value: "mysqladmin ping -h localhost"
+      http:
+        scheme: 
+        port:
+        path: 
+        statuses:
+      tcp:
+        port:        
     deploy:
       placement:
         constraints:
-          - &quot;node.hostname==localhost&quot;
-          - &quot;node.platform.os==linux&quot;
-          - &quot;node.platform.arch==arm&quot;
+          - "node.hostname==localhost"
+          - "node.platform.os==linux"
+          - "node.platform.arch==arm"
       replicas: 1
       resources:
         limits:
@@ -258,16 +275,16 @@ common: &amp;common
   image: alpine:latest
   restart: always
   labels:
-    biz.aventer.mesos_compose.container_type: &quot;DOCKER&quot;
+    biz.aventer.mesos_compose.container_type: "DOCKER"
 
 services:
   app1:
     &lt;&lt;: *common
-    command: [&quot;sleep&quot;, &quot;1000&quot;]
+    command: ["sleep", "1000"]
 
   app2:
     &lt;&lt;: *common
-    command: [&quot;sleep&quot;, &quot;2000&quot;]
+    command: ["sleep", "2000"]
 
 networks:
   default:

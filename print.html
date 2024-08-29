@@ -91,7 +91,9 @@
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="vars.html"><strong aria-hidden="true">2.</strong> Environment Variables</a></li><li class="chapter-item expanded affix "><li class="part-title">CLI</li><li class="chapter-item expanded "><a href="cli/install.html"><strong aria-hidden="true">3.</strong> Installation for Mesos-CLI</a></li><li class="chapter-item expanded "><a href="cli/usage.html"><strong aria-hidden="true">4.</strong> Usage</a></li><li class="chapter-item expanded affix "><li class="part-title">Networking</li><li class="chapter-item expanded "><a href="network/bridge.html"><strong aria-hidden="true">5.</strong> Bridged Network</a></li><li class="chapter-item expanded "><a href="network/user.html"><strong aria-hidden="true">6.</strong> User Network</a></li><li class="chapter-item expanded "><a href="network/host.html"><strong aria-hidden="true">7.</strong> Host Network</a></li><li class="chapter-item expanded affix "><li class="part-title">Hashicorp Vault</li><li class="chapter-item expanded "><a href="vault/vault.html"><strong aria-hidden="true">8.</strong> How to use</a></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
 
         <!-- Track and set sidebar scroll position -->
@@ -187,11 +189,11 @@
 services:
   app:
     image: alpine:latest
-    command: &quot;sleep&quot;
-    arguments: [&quot;1000&quot;]        
+    command: "sleep"
+    arguments: ["1000"]        
     restart: always
     volumes:
-      - &quot;12345test:/tmp&quot;
+      - "12345test:/tmp"
     environment:
       MYSQL_HOST: test
     hostname: test
@@ -199,29 +201,29 @@ services:
     container_type: docker
     shell: true
     mesos:
-      task_name: &quot;mc:test:app1&quot; # an alternative taskname      
+      task_name: "mc:test:app1" # an alternative taskname      
       executer:
-        command: &quot;/mnt/mesos/sandbox/my-custom-executor&quot;
+        command: "/mnt/mesos/sandbox/my-custom-executor"
       fetch:
         - value: http://localhost/my-custom-executor
           executable: true
 					extract:  false
 					cache: false
     labels:
-      traefik.enable: &quot;true&quot;
-      traefik.http.routers.test.entrypoints: &quot;web&quot;
-      traefik.http.routers.test.service: &quot;mc_test_app1_80&quot; # if an alternative taskname is set, we have to use it here to
-      traefik.http.routers.test.rule: &quot;HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)&quot;
-    network_mode: &quot;BRIDGE&quot;
+      traefik.enable: "true"
+      traefik.http.routers.test.entrypoints: "web"
+      traefik.http.routers.test.service: "mc_test_app1_80" # if an alternative taskname is set, we have to use it here to
+      traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
+    network_mode: "BRIDGE"
     ports:
-      - &quot;8080:80&quot;
-      - &quot;9090&quot;
-      - &quot;8081:81/tcp&quot;
-      - &quot;8082:82/udp&quot;
-      - &quot;8082:82/http&quot;
-      - &quot;8082:82/https&quot;  
-      - &quot;8082:82/h2c&quot;
-      - &quot;8082:82/wss&quot;       
+      - "8080:80"
+      - "9090"
+      - "8081:81/tcp"
+      - "8082:82/udp"
+      - "8082:82/http"
+      - "8082:82/https"  
+      - "8082:82/h2c"
+      - "8082:82/wss"       
     network: default
     ulimits:
       memlock:
@@ -230,12 +232,27 @@ services:
       nofile:
         soft: 65536 
         hard: 65536
+    healthcheck:
+      delay_seconds: 15
+      interval_seconds: 10
+      timeout_seconds: 20
+      consecutive_failures: 3
+      grace_period_seconds: 10
+      command:
+        value: "mysqladmin ping -h localhost"
+      http:
+        scheme: 
+        port:
+        path: 
+        statuses:
+      tcp:
+        port:        
     deploy:
       placement:
         constraints:
-          - &quot;node.hostname==localhost&quot;
-          - &quot;node.platform.os==linux&quot;
-          - &quot;node.platform.arch==arm&quot;
+          - "node.hostname==localhost"
+          - "node.platform.os==linux"
+          - "node.platform.arch==arm"
       replicas: 1
       resources:
         limits:
@@ -259,16 +276,16 @@ common: &amp;common
   image: alpine:latest
   restart: always
   labels:
-    biz.aventer.mesos_compose.container_type: &quot;DOCKER&quot;
+    biz.aventer.mesos_compose.container_type: "DOCKER"
 
 services:
   app1:
     &lt;&lt;: *common
-    command: [&quot;sleep&quot;, &quot;1000&quot;]
+    command: ["sleep", "1000"]
 
   app2:
     &lt;&lt;: *common
-    command: [&quot;sleep&quot;, &quot;2000&quot;]
+    command: ["sleep", "2000"]
 
 networks:
   default:
@@ -292,7 +309,7 @@ own project name.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
 <p>The following environment variables are available:</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mesos-compose-cli-installation-for-mesos-cli"><a class="header" href="#mesos-compose-cli-installation-for-mesos-cli">Mesos-Compose CLI Installation for Mesos-CLI</a></h1>
-<p>If you do not already have installe the mesos cli, please follow the steps under &quot;Install Mesos-CLI&quot; first.</p>
+<p>If you do not already have installe the mesos cli, please follow the steps under "Install Mesos-CLI" first.</p>
 <p>The installation of the Mesos-Compose plugin for mesos-cli is done in few steps.</p>
 <p>First, edit the mesos-cli config file.</p>
 <pre><code class="language-bash">
@@ -304,26 +321,26 @@ vim .mesos/config.toml
 # The `plugins` array lists the absolute paths of the
 # plugins you want to add to the CLI.
 plugins = [
-  &quot;/example/mesos-compose/mesos_cli/compose&quot;
+  "/example/mesos-compose/mesos_cli/compose"
 ]
 
 [compose.&lt;FRAMEWORK_PREFIX&gt;]
-  principal = &quot;&lt;framework username&gt;&quot;
-  secret = &quot;&lt;framework password&gt;&quot;
+  principal = "&lt;framework username&gt;"
+  secret = "&lt;framework password&gt;"
 
 </code></pre>
 <p>A example for multiple mesos-compose frameworks:</p>
 <pre><code class="language-bash">
 [compose.mc-a]
-  principal = &quot;&lt;framework username&gt;&quot;
-  secret = &quot;&lt;framework password&gt;&quot;
+  principal = "&lt;framework username&gt;"
+  secret = "&lt;framework password&gt;"
 
 [compose.mc-b]
-  principal = &quot;&lt;framework username&gt;&quot;
-  secret = &quot;&lt;framework password&gt;&quot;
+  principal = "&lt;framework username&gt;"
+  secret = "&lt;framework password&gt;"
 
 </code></pre>
-<p>As you can see, the &quot;compose&quot; section have to extend with the prefix of Mesos-Compose framework.</p>
+<p>As you can see, the "compose" section have to extend with the prefix of Mesos-Compose framework.</p>
 <p>Now we will see the M3s plugin in mesos cli:</p>
 <pre><code class="language-bash">
 mesos-cli help
@@ -348,7 +365,7 @@ Commands:
 
 </code></pre>
 <h2 id="install-mesos-cli"><a class="header" href="#install-mesos-cli">Install Mesos-CLI</a></h2>
-<p>Download the mesos-cli binary for linux from <a href="https://www.aventer.biz/files/sw/Linux/mesos-cli.zip">here</a>. Extract 
+<p>Download the mesos-cli binary for linux from <a href="https://www.aventer.biz/files/sw/Linux/mesos-cli.zip">here</a>. Extract
 the mesos-cli and copy the file into your PATH directory.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mesos-compose-cli-usage"><a class="header" href="#mesos-compose-cli-usage">Mesos-Compose CLI Usage</a></h1>
 <p>The Mesos-Compose framework does support the new version of mesos-cli.</p>
@@ -368,13 +385,14 @@ Options:
   --version  Show version info.
 
 Commands:
-  info     Get information about the running Mesos compose framework.
-  kill     Kill Mesos compose workload
-  launch   Launch Mesos workload from compose file
-  list     Show all running tasks.
-  restart  Restart service
-  update   Update service from compose file
-  version  Get the version number of Mesos compose
+    framework  Framework Commands.
+    info       Get information about the running Mesos compose framework.
+    kill       Kill a single task (ID) or a whole service (Task Name)
+    launch     Launch Mesos workload from compose file
+    list       Show all running tasks.
+    restart    Restart a single task (ID) or a whole service (Task Name)
+    update     Update service from compose file
+    version    Get the version number of Mesos compose
 
 </code></pre>
 <h2 id="launch-workload"><a class="header" href="#launch-workload">Launch Workload</a></h2>
@@ -396,13 +414,20 @@ Description:
 </code></pre>
 <p>Example:</p>
 <pre><code class="language-bash">
-mesos compose launch mc allwebserver docs/example/test-http.yaml 
+mesos compose launch mc allwebserver docs/example/test-http.yaml
 
 </code></pre>
 <ul>
 <li><code>mc</code> is the Mesos registration name of the framework.</li>
-<li><code>allwebserver</code> is the project name. We can also see it as subcategory. </li>
+<li><code>allwebserver</code> is the project name. We can also see it as subcategory.</li>
 </ul>
+<h2 id="list-all-tasks-managed-my-the-framework"><a class="header" href="#list-all-tasks-managed-my-the-framework">List all Tasks managed my the framework</a></h2>
+<pre><code class="language-bash">
+mesos-cli compose list mc
+ID                                                 Task Name             State         Mesos Agent
+test_test1.55662bcc-7268-905e-333a-47a03314d7d5.0  mc:test:allwebserver  TASK_RUNNING  testagent.test.internal
+
+</code></pre>
 <h2 id="update-workload"><a class="header" href="#update-workload">Update Workload</a></h2>
 <p>To launch workload, you need a compose file.</p>
 <pre><code class="language-bash">
@@ -422,95 +447,113 @@ Description:
 </code></pre>
 <p>Example:</p>
 <pre><code class="language-bash">
-mesos compose update mc allwebserver test1 docs/example/test-http.yaml 
+mesos compose update mc allwebserver test1 docs/example/test-http.yaml
 
 </code></pre>
 <ul>
 <li><code>mc</code> is the Mesos registration name of the framework.</li>
-<li><code>allwebserver</code> is the project name. We can also see it as subcategory. </li>
+<li><code>allwebserver</code> is the project name. We can also see it as subcategory.</li>
 <li><code>test1</code> is the service name of the container we defined in our compose file.</li>
 </ul>
-<h2 id="restart-workload"><a class="header" href="#restart-workload">Restart Workload</a></h2>
-<p>To launch workload, you need a compose file.</p>
+<h2 id="restart-all-tasks-of-a-service"><a class="header" href="#restart-all-tasks-of-a-service">Restart all tasks of a service</a></h2>
+<p>A Service can run multiple instances of a task. The following example will show,
+how to restart the entire service.</p>
 <pre><code class="language-bash">
 mesos-cli compose restart
-Restart service
+Restart a single task (ID) or a whole service (Task Name)
 
 Usage:
   mesos compose restart (-h | --help)
   mesos compose restart --version
-  mesos compose restart [options] &lt;framework-name&gt; &lt;project&gt; &lt;service&gt;
+  mesos compose restart [options] &lt;framework-name&gt; &lt;task&gt;
 
 Options:
   -h --help  Show this screen.
 
 Description:
-  Restart service
+  Use the "ID" to restart a single task or the "Task Name" to restart the entire service.
+
 </code></pre>
 <p>Example:</p>
 <pre><code class="language-bash">
-mesos compose restart mc allwebserver test1 
+mesos compose restart mc mc:test:allwebserver
 
 </code></pre>
 <ul>
 <li><code>mc</code> is the Mesos registration name of the framework.</li>
-<li><code>allwebserver</code> is the project name. We can also see it as subcategory. </li>
-<li><code>test1</code> is the service name of the container we defined in our compose file.</li>
+<li><code>mc:test:allwebserver</code> is the Task-Name.</li>
 </ul>
-<h2 id="kill-workload"><a class="header" href="#kill-workload">Kill Workload</a></h2>
-<p>Kill running or staled workload managed by Mesos-Compose.</p>
+<h2 id="restart-a-single-task"><a class="header" href="#restart-a-single-task">Restart a single Task</a></h2>
+<p>Sometimes it's enough to restart a single task and not the entire service.</p>
 <pre><code class="language-bash">
-mesos compose kill
-Kill Mesos compose workload
+mesos-cli compose restart
+Restart a single task (ID) or a whole service (Task Name)
+
+Usage:
+  mesos compose restart (-h | --help)
+  mesos compose restart --version
+  mesos compose restart [options] &lt;framework-name&gt; &lt;task&gt;
+
+Options:
+  -h --help  Show this screen.
+
+Description:
+  Use the "ID" to restart a single task or the "Task Name" to restart the entire service.
+
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-bash">
+mesos compose restart mc test_test1.55662bcc-7268-905e-333a-47a03314d7d5.0
+
+</code></pre>
+<ul>
+<li><code>mc</code> is the Mesos registration name of the framework.</li>
+<li><code>test_test1.55662bcc-7268-905e-333a-47a03314d7d5.0</code> is the ID of the Task we want restart.</li>
+</ul>
+<h2 id="kill-a-service-or-a-single-task"><a class="header" href="#kill-a-service-or-a-single-task">Kill a Service or a single Task</a></h2>
+<p>To kill a service or a single task is equvalent to restart.</p>
+<pre><code class="language-bash">
+mesos-cli compose kill
+Kill a single task (ID) or a whole service (Task Name)
 
 Usage:
   mesos compose kill (-h | --help)
   mesos compose kill --version
-  mesos compose kill [options] &lt;framework-name&gt; &lt;project&gt; &lt;service&gt; 
+  mesos compose kill [options] &lt;framework-name&gt; &lt;task&gt;
 
 Options:
   -h --help  Show this screen.
 
 Description:
-  Kill Mesos compose workload
+  Use the "ID" to Kill a single task or the "Task Name" to kill the entire service.
 
 </code></pre>
-<p>Example:</p>
-<pre><code class="language-bash">
-mesos compose kill mc allwebserver test1
-
-</code></pre>
-<ul>
-<li><code>mc</code> is the Mesos registration name of the framework.</li>
-<li><code>allwebserver</code> is the project name. We can also see it as subcategory. </li>
-<li><code>test1</code> is the service name of the container we defined in our compose file.</li>
-</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="bridged-network"><a class="header" href="#bridged-network">Bridged Network</a></h1>
-<p>The networkmode &quot;bridge&quot; will start the container with a dynamic host port. </p>
-<p>Example: </p>
+<p>The networkmode "bridge" will start the container with a dynamic host port.</p>
+<p>Example:</p>
 <pre><code class="language-yaml">version: '3.9'
 services:
   redis-bridge:
     image: redis:latest
     ports:
-      - &quot;9401:6379&quot;
-    network_mode: &quot;bridge&quot;
+      - "9401:6379"
+    network_mode: "bridge"
 </code></pre>
 <p><code>docker ps</code> will show as the container:</p>
 <pre><code class="language-bash">docker ps
 CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                     NAMES
-b15c1ba19cc7   redis:latest   &quot;docker-entrypoint.s…&quot;   11 minutes ago   Up 11 minutes   0.0.0.0:31916-&gt;6379/tcp   mesos-42da8556-5bec-4bba-b8e0-98d2e74c6d20]
+b15c1ba19cc7   redis:latest   "docker-entrypoint.s…"   11 minutes ago   Up 11 minutes   0.0.0.0:31916-&gt;6379/tcp   mesos-42da8556-5bec-4bba-b8e0-98d2e74c6d20]
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="user-network"><a class="header" href="#user-network">User Network</a></h1>
-<p>The networkmode &quot;user&quot; will start the container without a port. The container will be deployed in the defined CNI network.</p>
-<p>Example: </p>
+<p>The networkmode "user" will start the container without a port. The container will be deployed in the defined CNI network.</p>
+<p>Example:</p>
 <pre><code class="language-yaml">version: '3.9'
 services:
   redis-user:
     image: redis:latest
     ports:
-      - &quot;9401:6379&quot;
-    network_mode: &quot;user&quot;
+      - "9401:6379"
+    network_mode: "user"
     network: default
 
 networks:
@@ -521,21 +564,21 @@ networks:
 <p><code>docker ps</code> will show as the container:</p>
 <pre><code class="language-bash">docker ps
 CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                     NAMES
-ed0350dd8632   redis:latest   &quot;docker-entrypoint.s…&quot;   16 minutes ago   Up 16 minutes   6379/tcp                  mesos-672d1601-42c6-4a6f-be92-4ddc6f271c55
+ed0350dd8632   redis:latest   "docker-entrypoint.s…"   16 minutes ago   Up 16 minutes   6379/tcp                  mesos-672d1601-42c6-4a6f-be92-4ddc6f271c55
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="host-network"><a class="header" href="#host-network">Host Network</a></h1>
-<p>The networkmode &quot;host&quot; will start the container with the exposed port inside of the container. </p>
-<p>Example: </p>
+<p>The networkmode "host" will start the container with the exposed port inside of the container.</p>
+<p>Example:</p>
 <pre><code class="language-yaml">version: '3.9'
 services:
   redis-host:
     image: redis:latest
-    network_mode: &quot;host&quot;
+    network_mode: "host"
 </code></pre>
 <p><code>docker ps</code> will show as the container:</p>
 <pre><code class="language-bash">docker ps
 CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                     NAMES
-52b853e8272b   redis:latest   &quot;docker-entrypoint.s…&quot;   16 minutes ago   Up 16 minutes                             mesos-16aa16b9-903f-45cc-bd77-5aacfce5d87d
+52b853e8272b   redis:latest   "docker-entrypoint.s…"   16 minutes ago   Up 16 minutes                             mesos-16aa16b9-903f-45cc-bd77-5aacfce5d87d
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="how-to-use-hashicorp-vault-with-mesos-compose"><a class="header" href="#how-to-use-hashicorp-vault-with-mesos-compose">How to use Hashicorp Vault with mesos-compose</a></h1>
 <p>Mesos-Compose support to store secrets in Hashicorp Vault (short vault). The configuration is so simple as possible.</p>
@@ -557,7 +600,7 @@ export VAULT_TOKEN=&lt;YOUR_VAULT_TOKEN&gt;
 services:
   test1:
     image: alpine
-    command: &quot;env&quot;
+    command: "env"
     restart: always
     environment:
       test: vault://secret/data/m3s/test:test1
@@ -565,11 +608,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: &quot;0.1&quot;
-          memory: &quot;50&quot;
+          cpus: "0.1"
+          memory: "50"
 
 </code></pre>
-<p>Please notice, that the KV V2 store needs &quot;data&quot; inside of the path. Even if it's not visible in the UI.</p>
+<p>Please notice, that the KV V2 store needs "data" inside of the path. Even if it's not visible in the UI.</p>
 
                     </main>
 

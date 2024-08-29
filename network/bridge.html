@@ -90,7 +90,9 @@
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded "><a href="../index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../vars.html"><strong aria-hidden="true">2.</strong> Environment Variables</a></li><li class="chapter-item expanded affix "><li class="part-title">CLI</li><li class="chapter-item expanded "><a href="../cli/install.html"><strong aria-hidden="true">3.</strong> Installation for Mesos-CLI</a></li><li class="chapter-item expanded "><a href="../cli/usage.html"><strong aria-hidden="true">4.</strong> Usage</a></li><li class="chapter-item expanded affix "><li class="part-title">Networking</li><li class="chapter-item expanded "><a href="../network/bridge.html" class="active"><strong aria-hidden="true">5.</strong> Bridged Network</a></li><li class="chapter-item expanded "><a href="../network/user.html"><strong aria-hidden="true">6.</strong> User Network</a></li><li class="chapter-item expanded "><a href="../network/host.html"><strong aria-hidden="true">7.</strong> Host Network</a></li><li class="chapter-item expanded affix "><li class="part-title">Hashicorp Vault</li><li class="chapter-item expanded "><a href="../vault/vault.html"><strong aria-hidden="true">8.</strong> How to use</a></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
 
         <!-- Track and set sidebar scroll position -->
@@ -172,20 +174,20 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="bridged-network"><a class="header" href="#bridged-network">Bridged Network</a></h1>
-<p>The networkmode &quot;bridge&quot; will start the container with a dynamic host port. </p>
-<p>Example: </p>
+<p>The networkmode "bridge" will start the container with a dynamic host port.</p>
+<p>Example:</p>
 <pre><code class="language-yaml">version: '3.9'
 services:
   redis-bridge:
     image: redis:latest
     ports:
-      - &quot;9401:6379&quot;
-    network_mode: &quot;bridge&quot;
+      - "9401:6379"
+    network_mode: "bridge"
 </code></pre>
 <p><code>docker ps</code> will show as the container:</p>
 <pre><code class="language-bash">docker ps
 CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                     NAMES
-b15c1ba19cc7   redis:latest   &quot;docker-entrypoint.s…&quot;   11 minutes ago   Up 11 minutes   0.0.0.0:31916-&gt;6379/tcp   mesos-42da8556-5bec-4bba-b8e0-98d2e74c6d20]
+b15c1ba19cc7   redis:latest   "docker-entrypoint.s…"   11 minutes ago   Up 11 minutes   0.0.0.0:31916-&gt;6379/tcp   mesos-42da8556-5bec-4bba-b8e0-98d2e74c6d20]
 </code></pre>
 
                     </main>

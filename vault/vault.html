@@ -90,7 +90,9 @@
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded "><a href="../index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../vars.html"><strong aria-hidden="true">2.</strong> Environment Variables</a></li><li class="chapter-item expanded affix "><li class="part-title">CLI</li><li class="chapter-item expanded "><a href="../cli/install.html"><strong aria-hidden="true">3.</strong> Installation for Mesos-CLI</a></li><li class="chapter-item expanded "><a href="../cli/usage.html"><strong aria-hidden="true">4.</strong> Usage</a></li><li class="chapter-item expanded affix "><li class="part-title">Networking</li><li class="chapter-item expanded "><a href="../network/bridge.html"><strong aria-hidden="true">5.</strong> Bridged Network</a></li><li class="chapter-item expanded "><a href="../network/user.html"><strong aria-hidden="true">6.</strong> User Network</a></li><li class="chapter-item expanded "><a href="../network/host.html"><strong aria-hidden="true">7.</strong> Host Network</a></li><li class="chapter-item expanded affix "><li class="part-title">Hashicorp Vault</li><li class="chapter-item expanded "><a href="../vault/vault.html" class="active"><strong aria-hidden="true">8.</strong> How to use</a></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
 
         <!-- Track and set sidebar scroll position -->
@@ -191,7 +193,7 @@ export VAULT_TOKEN=&lt;YOUR_VAULT_TOKEN&gt;
 services:
   test1:
     image: alpine
-    command: &quot;env&quot;
+    command: "env"
     restart: always
     environment:
       test: vault://secret/data/m3s/test:test1
@@ -199,11 +201,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: &quot;0.1&quot;
-          memory: &quot;50&quot;
+          cpus: "0.1"
+          memory: "50"
 
 </code></pre>
-<p>Please notice, that the KV V2 store needs &quot;data&quot; inside of the path. Even if it's not visible in the UI.</p>
+<p>Please notice, that the KV V2 store needs "data" inside of the path. Even if it's not visible in the UI.</p>
 
                     </main>
 

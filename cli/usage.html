@@ -90,7 +90,9 @@
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded "><a href="../index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../vars.html"><strong aria-hidden="true">2.</strong> Environment Variables</a></li><li class="chapter-item expanded affix "><li class="part-title">CLI</li><li class="chapter-item expanded "><a href="../cli/install.html"><strong aria-hidden="true">3.</strong> Installation for Mesos-CLI</a></li><li class="chapter-item expanded "><a href="../cli/usage.html" class="active"><strong aria-hidden="true">4.</strong> Usage</a></li><li class="chapter-item expanded affix "><li class="part-title">Networking</li><li class="chapter-item expanded "><a href="../network/bridge.html"><strong aria-hidden="true">5.</strong> Bridged Network</a></li><li class="chapter-item expanded "><a href="../network/user.html"><strong aria-hidden="true">6.</strong> User Network</a></li><li class="chapter-item expanded "><a href="../network/host.html"><strong aria-hidden="true">7.</strong> Host Network</a></li><li class="chapter-item expanded affix "><li class="part-title">Hashicorp Vault</li><li class="chapter-item expanded "><a href="../vault/vault.html"><strong aria-hidden="true">8.</strong> How to use</a></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
 
         <!-- Track and set sidebar scroll position -->
@@ -189,13 +191,14 @@ Options:
   --version  Show version info.
 
 Commands:
-  info     Get information about the running Mesos compose framework.
-  kill     Kill Mesos compose workload
-  launch   Launch Mesos workload from compose file
-  list     Show all running tasks.
-  restart  Restart service
-  update   Update service from compose file
-  version  Get the version number of Mesos compose
+    framework  Framework Commands.
+    info       Get information about the running Mesos compose framework.
+    kill       Kill a single task (ID) or a whole service (Task Name)
+    launch     Launch Mesos workload from compose file
+    list       Show all running tasks.
+    restart    Restart a single task (ID) or a whole service (Task Name)
+    update     Update service from compose file
+    version    Get the version number of Mesos compose
 
 </code></pre>
 <h2 id="launch-workload"><a class="header" href="#launch-workload">Launch Workload</a></h2>
@@ -217,13 +220,20 @@ Description:
 </code></pre>
 <p>Example:</p>
 <pre><code class="language-bash">
-mesos compose launch mc allwebserver docs/example/test-http.yaml 
+mesos compose launch mc allwebserver docs/example/test-http.yaml
 
 </code></pre>
 <ul>
 <li><code>mc</code> is the Mesos registration name of the framework.</li>
-<li><code>allwebserver</code> is the project name. We can also see it as subcategory. </li>
+<li><code>allwebserver</code> is the project name. We can also see it as subcategory.</li>
 </ul>
+<h2 id="list-all-tasks-managed-my-the-framework"><a class="header" href="#list-all-tasks-managed-my-the-framework">List all Tasks managed my the framework</a></h2>
+<pre><code class="language-bash">
+mesos-cli compose list mc
+ID                                                 Task Name             State         Mesos Agent
+test_test1.55662bcc-7268-905e-333a-47a03314d7d5.0  mc:test:allwebserver  TASK_RUNNING  testagent.test.internal
+
+</code></pre>
 <h2 id="update-workload"><a class="header" href="#update-workload">Update Workload</a></h2>
 <p>To launch workload, you need a compose file.</p>
 <pre><code class="language-bash">
@@ -243,69 +253,87 @@ Description:
 </code></pre>
 <p>Example:</p>
 <pre><code class="language-bash">
-mesos compose update mc allwebserver test1 docs/example/test-http.yaml 
+mesos compose update mc allwebserver test1 docs/example/test-http.yaml
 
 </code></pre>
 <ul>
 <li><code>mc</code> is the Mesos registration name of the framework.</li>
-<li><code>allwebserver</code> is the project name. We can also see it as subcategory. </li>
+<li><code>allwebserver</code> is the project name. We can also see it as subcategory.</li>
 <li><code>test1</code> is the service name of the container we defined in our compose file.</li>
 </ul>
-<h2 id="restart-workload"><a class="header" href="#restart-workload">Restart Workload</a></h2>
-<p>To launch workload, you need a compose file.</p>
+<h2 id="restart-all-tasks-of-a-service"><a class="header" href="#restart-all-tasks-of-a-service">Restart all tasks of a service</a></h2>
+<p>A Service can run multiple instances of a task. The following example will show,
+how to restart the entire service.</p>
 <pre><code class="language-bash">
 mesos-cli compose restart
-Restart service
+Restart a single task (ID) or a whole service (Task Name)
 
 Usage:
   mesos compose restart (-h | --help)
   mesos compose restart --version
-  mesos compose restart [options] &lt;framework-name&gt; &lt;project&gt; &lt;service&gt;
+  mesos compose restart [options] &lt;framework-name&gt; &lt;task&gt;
 
 Options:
   -h --help  Show this screen.
 
 Description:
-  Restart service
+  Use the "ID" to restart a single task or the "Task Name" to restart the entire service.
+
 </code></pre>
 <p>Example:</p>
 <pre><code class="language-bash">
-mesos compose restart mc allwebserver test1 
+mesos compose restart mc mc:test:allwebserver
 
 </code></pre>
 <ul>
 <li><code>mc</code> is the Mesos registration name of the framework.</li>
-<li><code>allwebserver</code> is the project name. We can also see it as subcategory. </li>
-<li><code>test1</code> is the service name of the container we defined in our compose file.</li>
+<li><code>mc:test:allwebserver</code> is the Task-Name.</li>
 </ul>
-<h2 id="kill-workload"><a class="header" href="#kill-workload">Kill Workload</a></h2>
-<p>Kill running or staled workload managed by Mesos-Compose.</p>
+<h2 id="restart-a-single-task"><a class="header" href="#restart-a-single-task">Restart a single Task</a></h2>
+<p>Sometimes it's enough to restart a single task and not the entire service.</p>
 <pre><code class="language-bash">
-mesos compose kill
-Kill Mesos compose workload
+mesos-cli compose restart
+Restart a single task (ID) or a whole service (Task Name)
+
+Usage:
+  mesos compose restart (-h | --help)
+  mesos compose restart --version
+  mesos compose restart [options] &lt;framework-name&gt; &lt;task&gt;
+
+Options:
+  -h --help  Show this screen.
+
+Description:
+  Use the "ID" to restart a single task or the "Task Name" to restart the entire service.
+
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-bash">
+mesos compose restart mc test_test1.55662bcc-7268-905e-333a-47a03314d7d5.0
+
+</code></pre>
+<ul>
+<li><code>mc</code> is the Mesos registration name of the framework.</li>
+<li><code>test_test1.55662bcc-7268-905e-333a-47a03314d7d5.0</code> is the ID of the Task we want restart.</li>
+</ul>
+<h2 id="kill-a-service-or-a-single-task"><a class="header" href="#kill-a-service-or-a-single-task">Kill a Service or a single Task</a></h2>
+<p>To kill a service or a single task is equvalent to restart.</p>
+<pre><code class="language-bash">
+mesos-cli compose kill
+Kill a single task (ID) or a whole service (Task Name)
 
 Usage:
   mesos compose kill (-h | --help)
   mesos compose kill --version
-  mesos compose kill [options] &lt;framework-name&gt; &lt;project&gt; &lt;service&gt; 
+  mesos compose kill [options] &lt;framework-name&gt; &lt;task&gt;
 
 Options:
   -h --help  Show this screen.
 
 Description:
-  Kill Mesos compose workload
+  Use the "ID" to Kill a single task or the "Task Name" to kill the entire service.
 
 </code></pre>
-<p>Example:</p>
-<pre><code class="language-bash">
-mesos compose kill mc allwebserver test1
-
-</code></pre>
-<ul>
-<li><code>mc</code> is the Mesos registration name of the framework.</li>
-<li><code>allwebserver</code> is the project name. We can also see it as subcategory. </li>
-<li><code>test1</code> is the service name of the container we defined in our compose file.</li>
-</ul>
 
                     </main>
 
