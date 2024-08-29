@@ -2,7 +2,9 @@
 
 ## master
 
-- FIX: restart API set the wrong restart flag.
+- FIX: Restart API set the wrong restart flag.
+- ADD: Restart API to restart a single Task.
+- ADD: Kill API to kill a single Task.
 
 ## v1.1.0
 

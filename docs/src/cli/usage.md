@@ -21,13 +21,14 @@ Options:
   --version  Show version info.
 
 Commands:
-  info     Get information about the running Mesos compose framework.
-  kill     Kill Mesos compose workload
-  launch   Launch Mesos workload from compose file
-  list     Show all running tasks.
-  restart  Restart service
-  update   Update service from compose file
-  version  Get the version number of Mesos compose
+    framework  Framework Commands.
+    info       Get information about the running Mesos compose framework.
+    kill       Kill a single task (ID) or a whole service (Task Name)
+    launch     Launch Mesos workload from compose file
+    list       Show all running tasks.
+    restart    Restart a single task (ID) or a whole service (Task Name)
+    update     Update service from compose file
+    version    Get the version number of Mesos compose
 
 ```
 
@@ -57,12 +58,22 @@ Example:
 
 ```bash
 
-mesos compose launch mc allwebserver docs/example/test-http.yaml 
+mesos compose launch mc allwebserver docs/example/test-http.yaml
 
 ```
 
 - `mc` is the Mesos registration name of the framework.
-- `allwebserver` is the project name. We can also see it as subcategory. 
+- `allwebserver` is the project name. We can also see it as subcategory.
+
+## List all Tasks managed my the framework
+
+```bash
+
+mesos-cli compose list mc
+ID                                                 Task Name             State         Mesos Agent
+test_test1.55662bcc-7268-905e-333a-47a03314d7d5.0  mc:test:allwebserver  TASK_RUNNING  testagent.test.internal
+
+```
 
 ## Update Workload
 
@@ -90,79 +101,100 @@ Example:
 
 ```bash
 
-mesos compose update mc allwebserver test1 docs/example/test-http.yaml 
+mesos compose update mc allwebserver test1 docs/example/test-http.yaml
 
 ```
 
 - `mc` is the Mesos registration name of the framework.
-- `allwebserver` is the project name. We can also see it as subcategory. 
+- `allwebserver` is the project name. We can also see it as subcategory.
 - `test1` is the service name of the container we defined in our compose file.
 
-## Restart Workload
+## Restart all tasks of a service
 
-To launch workload, you need a compose file.
+A Service can run multiple instances of a task. The following example will show,
+how to restart the entire service.
 
 
 ```bash
 
 mesos-cli compose restart
-Restart service
+Restart a single task (ID) or a whole service (Task Name)
 
 Usage:
   mesos compose restart (-h | --help)
   mesos compose restart --version
-  mesos compose restart [options] <framework-name> <project> <service>
+  mesos compose restart [options] <framework-name> <task>
 
 Options:
   -h --help  Show this screen.
 
 Description:
-  Restart service
+  Use the "ID" to restart a single task or the "Task Name" to restart the entire service.
+
 ```
 
 Example:
 
 ```bash
 
-mesos compose restart mc allwebserver test1 
+mesos compose restart mc mc:test:allwebserver
 
 ```
 
 - `mc` is the Mesos registration name of the framework.
-- `allwebserver` is the project name. We can also see it as subcategory. 
-- `test1` is the service name of the container we defined in our compose file.
+- `mc:test:allwebserver` is the Task-Name.
 
-## Kill Workload
+## Restart a single Task
 
-Kill running or staled workload managed by Mesos-Compose.
-
+Sometimes it's enough to restart a single task and not the entire service.
 
 ```bash
 
-mesos compose kill
-Kill Mesos compose workload
+mesos-cli compose restart
+Restart a single task (ID) or a whole service (Task Name)
+
+Usage:
+  mesos compose restart (-h | --help)
+  mesos compose restart --version
+  mesos compose restart [options] <framework-name> <task>
+
+Options:
+  -h --help  Show this screen.
+
+Description:
+  Use the "ID" to restart a single task or the "Task Name" to restart the entire service.
+
+```
+
+Example:
+
+```bash
+
+mesos compose restart mc test_test1.55662bcc-7268-905e-333a-47a03314d7d5.0
+
+```
+
+- `mc` is the Mesos registration name of the framework.
+- `test_test1.55662bcc-7268-905e-333a-47a03314d7d5.0` is the ID of the Task we want restart.
+
+## Kill a Service or a single Task
+
+To kill a service or a single task is equvalent to restart.
+
+```bash
+
+mesos-cli compose kill
+Kill a single task (ID) or a whole service (Task Name)
 
 Usage:
   mesos compose kill (-h | --help)
   mesos compose kill --version
-  mesos compose kill [options] <framework-name> <project> <service> 
+  mesos compose kill [options] <framework-name> <task>
 
 Options:
   -h --help  Show this screen.
 
 Description:
-  Kill Mesos compose workload
+  Use the "ID" to Kill a single task or the "Task Name" to kill the entire service.
 
 ```
-
-Example:
-
-```bash
-
-mesos compose kill mc allwebserver test1
-
-```
-
-- `mc` is the Mesos registration name of the framework.
-- `allwebserver` is the project name. We can also see it as subcategory. 
-- `test1` is the service name of the container we defined in our compose file.

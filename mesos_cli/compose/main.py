@@ -53,7 +53,7 @@ class Config():
         """
 
         return self.data.get("secret")
-    
+
     def ssl_verify(self, default=False):
         """
         Return if the ssl certificate should be verified
@@ -111,16 +111,16 @@ class mesosCompose(PluginBase):
             "long_help": "Update service from compose file",
         },
         "kill": {
-            "arguments": ["<framework-name>", "<task-name>"],
+            "arguments": ["<framework-name>", "<task>"],
             "flags": {},
-            "short_help": "Kill Mesos compose workload",
-            "long_help": "Kill Mesos compose workload",
+            "short_help": "Kill a single task (ID) or a whole service (Task Name)",
+            "long_help": "Use the \"ID\" to Kill a single task or the \"Task Name\" to kill the entire service."
         },
         "restart": {
-            "arguments": ["<framework-name>", "<task-name>"],
+            "arguments": ["<framework-name>", "<task>"],
             "flags": {},
-            "short_help": "Restart service",
-            "long_help": "Restart service",
+            "short_help": "Restart a single task (ID) or a whole service (Task Name)",
+            "long_help": "Use the \"ID\" to restart a single task or the \"Task Name\" to restart the entire service."
         },
         "framework": {
             "arguments": ["<framework-name>", "<operations>"],
@@ -362,23 +362,27 @@ class mesosCompose(PluginBase):
                 "Unable to get leading master address: {error}".format(error=exception)
             ) from exception
 
-        if not argv.get("<task-name>").__contains__(":"):
-            print("Parameter does not looks like a Task Name")
-            return
-
-        task = argv.get("<task-name>").split(":")
-        project = task[1]
-        service = task[2]
         framework_address = get_framework_address(
             self.get_framework_id(argv), master, config
         )
 
-        data = self.write_endpoint(
-            framework_address,
-            "/api/compose/v0/" + project + "/" + service,
-            self.mesos_config,
-            "DELETE",
-        )
+        if argv.get("<task>").__contains__(":"):
+            task = argv.get("<task>").split(":")
+            project = task[1]
+            service = task[2]
+            data = self.write_endpoint(
+                framework_address,
+                "/api/compose/v0/" + project + "/" + service,
+                self.mesos_config,
+                "DELETE",
+            )
+        else:
+            data = self.write_endpoint(
+                framework_address,
+                "/api/compose/v0/tasks/"+ argv.get("<task>"),
+                self.mesos_config,
+                "DELETE",
+            )
 
         print(data)
 
@@ -398,23 +402,31 @@ class mesosCompose(PluginBase):
                 "Unable to get leading master address: {error}".format(error=exception)
             ) from exception
 
-        if not argv.get("<task-name>").__contains__(":"):
-            print("Parameter does not looks like a Task Name")
-            return
-
-        task = argv.get("<task-name>").split(":")
-        project = task[1]
-        service = task[2]
         framework_address = get_framework_address(
             self.get_framework_id(argv), master, config
         )
 
-        data = self.write_endpoint(
-            framework_address,
-            "/api/compose/v0/" + project + "/" + service + "/restart",
-            self.mesos_config,
-            "PUT",
-        )
+        if argv.get("<task>").__contains__(":"):
+            """
+            The given parameter looks like a task-name
+            """
+            task = argv.get("<task>").split(":")
+            project = task[1]
+            service = task[2]
+
+            data = self.write_endpoint(
+                framework_address,
+                "/api/compose/v0/" + project + "/" + service + "/restart",
+                self.mesos_config,
+                "PUT",
+            )
+        else:
+            data = self.write_endpoint(
+                framework_address,
+                "/api/compose/v0/tasks/"+ argv.get("<task>") + "/restart",
+                self.mesos_config,
+                "PUT",
+            )
 
         print(data)
 
@@ -487,7 +499,7 @@ class mesosCompose(PluginBase):
             if config.ssl_verify() is not True:
                 http = urllib3.PoolManager(cert_reqs='CERT_NONE')
             else:
-                http = urllib3.PoolManager()                
+                http = urllib3.PoolManager()
             http_response = http.request(
                 method,
                 url,
