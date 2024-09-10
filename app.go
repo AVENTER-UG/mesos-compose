@@ -81,8 +81,8 @@ func main() {
 	server := &http.Server{
 		Addr:              config.Listen,
 		Handler:           a.Commands(),
-		ReadTimeout:       1 * time.Second,
-		WriteTimeout:      1 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      10 * time.Second,
 		IdleTimeout:       30 * time.Second,
 		ReadHeaderTimeout: 2 * time.Second,
 		TLSConfig: &tls.Config{
