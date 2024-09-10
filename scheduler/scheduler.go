@@ -81,15 +81,23 @@ func (e *Scheduler) EventLoop() {
 	res, err := e.Client.Do(e.Req)
 
 	if err != nil {
-		logrus.WithField("func", "scheduler.EventLoop").Error("Mesos Master connection error: ", err.Error())
+		logrus.WithField("func", "scheduler.EventLoop").Errorf("Mesos Master connection error: %s", err.Error())
 		return
 	}
 	defer res.Body.Close()
 
 	reader := bufio.NewReader(res.Body)
 
-	line, _ := reader.ReadString('\n')
-	bytesCount, _ := strconv.Atoi(strings.Trim(line, "\n"))
+	line, err := reader.ReadString('\n')
+	if err != nil {
+		logrus.WithField("func", "scheduler.EventLoop").Errorf("Error read string from Mesos Master: %s", err.Error())
+		return
+	}
+	bytesCount, err := strconv.Atoi(strings.Trim(line, "\n"))
+	if err != nil {
+		logrus.WithField("func", "scheduler.EventLoop").Errorf("Error get bytescount from string: %s", err.Error())
+		return
+	}
 
 	go e.HeartbeatLoop()
 	go e.ReconcileLoop()
@@ -97,11 +105,11 @@ func (e *Scheduler) EventLoop() {
 	for {
 		// Read line from Mesos
 		line, err = reader.ReadString('\n')
-		_ = strings.Trim(line, "\n")
 		if err != nil {
-			logrus.WithField("func", "scheduler.EventLoop").Error("Error to read data from Mesos Master: ", err.Error())
+			logrus.WithField("func", "scheduler.EventLoop").Errorf("Error to read data from Mesos Master: %s", err.Error())
 			return
 		}
+		line = strings.Trim(line, "\n")
 
 		// skip if no data
 		if line == "" || len(line)-1 < bytesCount {
@@ -110,13 +118,13 @@ func (e *Scheduler) EventLoop() {
 			continue
 		}
 		data := line[:bytesCount]
-		bytesCount, _ = strconv.Atoi(line[bytesCount : len(line)-1])
+		bytesCount, _ = strconv.Atoi(line[bytesCount:])
 
 		// Read important data
 		var event mesosproto.Event // Event as ProtoBuf
 		err := protojson.Unmarshal([]byte(data), &event)
 		if err != nil {
-			logrus.WithField("func", "scheduler.EventLoop").Warn("Could not unmarshal Mesos Master data: ", err.Error())
+			logrus.WithField("func", "scheduler.EventLoop").Warnf("Could not unmarshal Mesos Master data: %s", err.Error())
 			continue
 		}
 
@@ -125,7 +133,7 @@ func (e *Scheduler) EventLoop() {
 		switch event.Type.Number() {
 		case mesosproto.Event_SUBSCRIBED.Number():
 			logrus.WithField("func", "scheduler.EventLoop").Info("Subscribed")
-			logrus.WithField("func", "scheduler.EventLoop").Debug("FrameworkId: ", event.Subscribed.GetFrameworkId())
+			logrus.WithField("func", "scheduler.EventLoop").Debugf("FrameworkId: %s", event.Subscribed.GetFrameworkId())
 			e.Framework.FrameworkInfo.Id = event.Subscribed.GetFrameworkId()
 			e.Framework.MesosStreamID = res.Header.Get("Mesos-Stream-Id")
 
