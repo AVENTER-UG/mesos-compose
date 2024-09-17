@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.1
+
+- FIX: API timeout issue
+
 ## v1.1.0
 
 - FIX: mesos cni and docker network alias handling
