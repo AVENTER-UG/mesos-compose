@@ -6,6 +6,16 @@
 - ADD: Restart API to restart a single Task.
 - ADD: Kill API to kill a single Task.
 
+## v1.1.2
+
+- FIX: Healtcheck missconfiguration
+- FIX: Task Lost message handling
+- ADD: Wait 60 seconds before try to reconnect to the mesos leader.
+
+## v1.1.1
+
+- FIX: Increase http client timeout
+
 ## v1.1.0
 
 - FIX: mesos cni and docker network alias handling
