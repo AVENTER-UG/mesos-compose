@@ -72,6 +72,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
 		task.State = ""
+		task.Killed = false
 	case mesosproto.TaskState_TASK_LOST:
 		if task.TaskID == "" {
 			e.Mesos.Call(msg)

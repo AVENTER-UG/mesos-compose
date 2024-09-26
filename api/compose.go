@@ -76,7 +76,18 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 
 // Set the healtchek configuration
 func (e *API) setHealthCheck(cmd *cfg.Command) {
-	if (e.Service.HealthCheck != &mesosproto.HealthCheck{}) {
+	if e.Service.HealthCheck != nil {
+		if e.Service.HealthCheck.Command.GetValue() != "" {
+			e.Service.HealthCheck.Type = func() *mesosproto.HealthCheck_Type { x := mesosproto.HealthCheck_COMMAND; return &x }()
+		} else if e.Service.HealthCheck.Http.GetPort() != 0 {
+			e.Service.HealthCheck.Type = func() *mesosproto.HealthCheck_Type { x := mesosproto.HealthCheck_HTTP; return &x }()
+		} else if e.Service.HealthCheck.Tcp.GetPort() != 0 {
+			e.Service.HealthCheck.Type = func() *mesosproto.HealthCheck_Type { x := mesosproto.HealthCheck_TCP; return &x }()
+		} else {
+			// if no command, http port or tcp port is set, then disable the healthcheck
+			cmd.EnableHealthCheck = false
+			return
+		}
 		cmd.EnableHealthCheck = true
 		cmd.Health = e.Service.HealthCheck
 		return

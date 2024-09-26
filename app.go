@@ -124,6 +124,7 @@ func main() {
 			e.Vault = v
 			e.Redis = r
 			e.EventLoop()
+			time.Sleep(60 * time.Second)
 		}
 	}
 }

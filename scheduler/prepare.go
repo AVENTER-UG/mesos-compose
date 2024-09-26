@@ -200,7 +200,11 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent *mesosproto.AgentID, c
 	}
 
 	if cmd.EnableHealthCheck {
-		msg.HealthCheck = cmd.Health
+		if cmd.Health != nil && cmd.Health.GetType() != 0 {
+			msg.HealthCheck = cmd.Health
+		} else {
+			msg.HealthCheck = nil
+		}
 	}
 
 	d, _ = json.Marshal(&msg)

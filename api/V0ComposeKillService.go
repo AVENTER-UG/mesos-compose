@@ -40,6 +40,7 @@ func (e *API) V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 		task := e.Mesos.DecodeTask(key)
 		task.State = "__KILL"
 		task.Restart = "no"
+		task.Instances = 0
 		e.Redis.SaveTaskRedis(task)
 		e.Mesos.SuppressFramework()
 
