@@ -70,6 +70,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
 		task.State = ""
 		task.Killed = false
+		break
 	case mesosproto.TaskState_TASK_LOST:
 		if task.TaskID == "" {
 			e.Mesos.Call(msg)
