@@ -53,7 +53,7 @@ func (e *Redis) GetAllRedisKeys(pattern string) *goredis.ScanIterator {
 func (e *Redis) GetRedisKey(key string) string {
 	val, err := e.Client.Get(e.CTX, key).Result()
 	if err != nil {
-		logrus.WithField("func", "redis.GetRedisKey").Error("Error getting key: ", err)
+		logrus.WithField("func", "redis.GetRedisKey").Errorf("Error getting key (%s): %s", key, err.Error())
 	}
 
 	return val

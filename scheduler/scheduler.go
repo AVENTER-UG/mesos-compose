@@ -186,7 +186,7 @@ func (e *Scheduler) reconcile() {
 
 		task := e.Mesos.DecodeTask(key)
 
-		if task.TaskID == "" || task.Agent == "" {
+		if task.TaskID == "" || task.Agent == "" || task.State == "__NEW" || task.State == "__KILL" || task.State == "" {
 			continue
 		}
 
