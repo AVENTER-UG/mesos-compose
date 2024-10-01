@@ -139,9 +139,9 @@ func (e *Scheduler) EventLoop() {
 
 			go e.reconcile()
 			go e.Redis.SaveFrameworkRedis(e.Framework)
+			go e.Redis.SaveConfig(*e.Config)
 		case mesosproto.Event_UPDATE.Number():
 			go e.HandleUpdate(&event)
-			go e.Redis.SaveConfig(*e.Config)
 			go e.callPluginEvent(&event)
 		case mesosproto.Event_HEARTBEAT.Number():
 			go e.Heartbeat()
