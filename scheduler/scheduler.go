@@ -139,7 +139,6 @@ func (e *Scheduler) EventLoop() {
 
 			go e.reconcile()
 			go e.Redis.SaveFrameworkRedis(e.Framework)
-			go e.Redis.SaveConfig(*e.Config)
 		case mesosproto.Event_UPDATE.Number():
 			go e.HandleUpdate(&event)
 			go e.Redis.SaveConfig(*e.Config)
@@ -181,6 +180,8 @@ func (e *Scheduler) reconcile() {
 		if e.Redis.CheckIfNotTask(keys) {
 			continue
 		}
+
+		keys.Val()
 
 		key := e.Redis.GetRedisKey(keys.Val())
 

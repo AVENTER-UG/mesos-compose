@@ -16,7 +16,7 @@ services:
     network_mode: "user"    
     network: default
     deploy:
-      replicas: 1
+      replicas: 20
 
 networks:
   default:
