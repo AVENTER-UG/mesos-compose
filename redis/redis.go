@@ -19,6 +19,7 @@ type Redis struct {
 	Server   string
 	Password string
 	DB       int
+	PoolSize int
 	Prefix   string
 	Mesos    mesos.Mesos
 }
@@ -29,12 +30,11 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Redis {
 		Server:   cfg.RedisServer,
 		Password: cfg.RedisPassword,
 		DB:       cfg.RedisDB,
+		PoolSize: cfg.RedisPoolSize,
 		Prefix:   frm.FrameworkName,
 		CTX:      context.Background(),
 		Mesos:    *mesos.New(cfg, frm),
 	}
-
-	logrus.WithField("func", "Redis.New").Info("Redis Connection: ", e.Connect())
 
 	return e
 }
@@ -197,6 +197,8 @@ func (e *Redis) Connect() bool {
 	var redisOptions goredis.Options
 	redisOptions.Addr = e.Server
 	redisOptions.DB = e.DB
+	redisOptions.PoolSize = e.PoolSize
+
 	if e.Password != "" {
 		redisOptions.Password = e.Password
 	}
