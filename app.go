@@ -113,18 +113,13 @@ func main() {
 	go loadPlugins(r)
 
 	//	this loop is for resubscribtion purpose
-	ticker := time.NewTicker(30 * time.Second)
-	defer ticker.Stop()
-	//nolint:gosimple
 	for {
-		select {
-		case <-ticker.C:
-			e := scheduler.Subscribe(&config, &framework)
-			e.API = a
-			e.Vault = v
-			e.Redis = r
-			e.EventLoop()
-			time.Sleep(60 * time.Second)
-		}
+		e := scheduler.Subscribe(&config, &framework)
+		e.API = a
+		e.Vault = v
+		e.Redis = r
+		e.EventLoop()
+		e.Redis.SaveConfig(*e.Config)
+		time.Sleep(60 * time.Second)
 	}
 }
