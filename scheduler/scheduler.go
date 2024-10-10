@@ -99,9 +99,6 @@ func (e *Scheduler) EventLoop() {
 		return
 	}
 
-	go e.HeartbeatLoop()
-	go e.ReconcileLoop()
-
 	for {
 		// Read line from Mesos
 		line, err = reader.ReadString('\n')
@@ -143,8 +140,6 @@ func (e *Scheduler) EventLoop() {
 		case mesosproto.Event_UPDATE.Number():
 			go e.HandleUpdate(&event)
 			go e.callPluginEvent(&event)
-		case mesosproto.Event_HEARTBEAT.Number():
-			go e.Heartbeat()
 		case mesosproto.Event_OFFERS.Number():
 			// Search Failed containers and restart them
 			err = e.HandleOffers(event.Offers)

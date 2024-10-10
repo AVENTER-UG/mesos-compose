@@ -1,6 +1,7 @@
 package scheduler
 
 import (
+	"context"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -119,21 +120,31 @@ func (e *Scheduler) checkRedis() {
 }
 
 // HeartbeatLoop - The main loop for the hearbeat
-func (e *Scheduler) HeartbeatLoop() {
+func (e *Scheduler) HeartbeatLoop(ctx context.Context) {
 	ticker := time.NewTicker(e.Config.EventLoopTime)
 	defer ticker.Stop()
 	for ; true; <-ticker.C {
-		e.Heartbeat()
-		e.checkRedis()
+		select {
+		case <-ctx.Done():
+			return
+		default:
+			e.Heartbeat()
+			e.checkRedis()
+		}
 	}
 }
 
 // ReconcileLoop - The reconcile loop to check periodicly the task state
-func (e *Scheduler) ReconcileLoop() {
+func (e *Scheduler) ReconcileLoop(ctx context.Context) {
 	ticker := time.NewTicker(e.Config.ReconcileLoopTime)
 	defer ticker.Stop()
 	for ; true; <-ticker.C {
-		e.reconcile()
-		e.implicitReconcile()
+		select {
+		case <-ctx.Done():
+			return
+		default:
+			e.reconcile()
+			e.implicitReconcile()
+		}
 	}
 }
