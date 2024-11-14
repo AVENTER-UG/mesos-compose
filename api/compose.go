@@ -406,7 +406,6 @@ func (e *API) getNetworkMode() string {
 
 	if e.Service.NetworkMode != "" {
 		mode = e.Service.NetworkMode
-		return strings.ToLower(mode)
 	}
 
 	if len(e.Compose.Networks) > 0 {
