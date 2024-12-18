@@ -24,10 +24,8 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 	// if these object have not TaskID it's currently unknown by these framework.
 	if task.TaskID == "" {
 		logrus.WithField("func", "scheduler.HandleUpdate").Debug("Could not found Task in Redis: ", update.Status.GetTaskId())
-
-		if *update.Status.State != mesosproto.TaskState_TASK_LOST {
-			e.Mesos.Kill(*update.Status.GetTaskId().Value, *update.Status.GetAgentId().Value)
-		}
+		e.Mesos.Call(msg)
+		return
 	}
 
 	task.State = update.Status.State.String()
@@ -73,16 +71,17 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
 		task.State = ""
 		task.Killed = false
+		break
 	case mesosproto.TaskState_TASK_LOST:
 		if task.TaskID == "" {
 			e.Mesos.Call(msg)
 			return
 		}
 		logrus.WithField("func", "scheduler.HandleUpdate").Warn("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")
-		// all other cases, increase task count and restart task
 		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
-		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
-		task.State = ""
+		e.Mesos.ForceSuppressFramework()
+		e.Mesos.Call(msg)
+		return
 	case mesosproto.TaskState_TASK_RUNNING:
 		if !e.Mesos.IsSuppress {
 			logrus.WithField("func", "scheduler.HandleUpdate").Info("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")

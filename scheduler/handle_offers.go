@@ -16,7 +16,7 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 	select {
 	case cmd := <-e.Framework.CommandChan:
 		// if no taskid or taskname is given, it's a wrong task.
-		if cmd.TaskID == "" || cmd.TaskName == "" {
+		if cmd.TaskID == "" || cmd.TaskName == "" || cmd.Killed {
 			return nil
 		}
 
@@ -26,20 +26,22 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 			return nil
 		}
 
+		task := e.Redis.GetTaskFromTaskID(cmd.TaskID)
+
 		var takeOffer *mesosproto.Offer
-		takeOffer, offerIds = e.getOffer(offers, &cmd)
+		takeOffer, offerIds = e.getOffer(offers, task)
 		if takeOffer.GetHostname() == "" {
-			cmd.State = ""
-			e.Redis.SaveTaskRedis(&cmd)
+			task.State = ""
+			e.Redis.SaveTaskRedis(task)
 			logrus.WithField("func", "mesos.HandleOffers").Debug("No matched offer found.")
 			return nil
 		}
-		logrus.WithField("func", "scheduler.HandleOffers").Info("Take Offer from " + takeOffer.GetHostname() + " for task " + cmd.TaskID + " (" + cmd.TaskName + ")")
+		logrus.WithField("func", "scheduler.HandleOffers").Info("Take Offer from " + takeOffer.GetHostname() + " for task " + task.TaskID + " (" + task.TaskName + ")")
 
 		var taskInfo []*mesosproto.TaskInfo
 		RefuseSeconds := 5.0
 
-		taskInfo = e.PrepareTaskInfoExecuteContainer(takeOffer.GetAgentId(), &cmd)
+		taskInfo = e.PrepareTaskInfoExecuteContainer(takeOffer.GetAgentId(), task)
 
 		// build mesos call object
 		accept := &mesosproto.Call{
@@ -57,7 +59,7 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 						TaskInfos: taskInfo,
 					}}}}}
 
-		e.Redis.SaveTaskRedis(&cmd)
+		e.Redis.SaveTaskRedis(task)
 
 		logrus.WithField("func", "scheduler.HandleOffers").Debug("Offer Accept: ", takeOffer.GetId(), " On Node: ", takeOffer.GetHostname())
 
