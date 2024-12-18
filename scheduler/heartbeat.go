@@ -92,6 +92,7 @@ func (e *Scheduler) Heartbeat() {
 
 		// Revieve Mesos to get new offers
 		if task.State == "__NEW" {
+			e.Mesos.IsRevive = false
 			e.Mesos.Revive()
 			suppress = false
 			e.Config.Suppress = false
