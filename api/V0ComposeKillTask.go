@@ -43,5 +43,6 @@ func (e *API) V0ComposeKillTask(w http.ResponseWriter, r *http.Request) {
 
 	task.State = "__KILL"
 	task.Restart = "no"
+	task.Instances = 0
 	e.Redis.SaveTaskRedis(task)
 }

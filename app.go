@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
@@ -113,18 +114,17 @@ func main() {
 	go loadPlugins(r)
 
 	//	this loop is for resubscribtion purpose
-	ticker := time.NewTicker(30 * time.Second)
-	defer ticker.Stop()
-	//nolint:gosimple
 	for {
-		select {
-		case <-ticker.C:
-			e := scheduler.Subscribe(&config, &framework)
-			e.API = a
-			e.Vault = v
-			e.Redis = r
-			e.EventLoop()
-			time.Sleep(60 * time.Second)
-		}
+		e := scheduler.Subscribe(&config, &framework)
+		e.API = a
+		e.Vault = v
+		ctx, cancel := context.WithCancel(context.Background())
+		go e.HeartbeatLoop(ctx)
+		go e.ReconcileLoop(ctx)
+		e.Redis = r
+		e.EventLoop()
+		cancel()
+		e.Redis.SaveConfig(*e.Config)
+		time.Sleep(60 * time.Second)
 	}
 }

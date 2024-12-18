@@ -26,6 +26,7 @@ type Config struct {
 	RedisServer                string
 	RedisPassword              string
 	RedisDB                    int
+	RedisPoolSize              int
 	SkipSSL                    bool
 	SSLKey                     string
 	SSLCrt                     string

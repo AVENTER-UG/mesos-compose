@@ -20,5 +20,5 @@ services:
 
 networks:
   default:
-    name: weave
-    driver: weave
+    name: mesos-net
+    driver: mesos-net

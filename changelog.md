@@ -2,12 +2,16 @@
 
 ## master
 
-- FIX: Restart API set the wrong restart flag.
-- ADD: Restart API to restart a single Task.
-- ADD: Kill API to kill a single Task.
+## v1.1.3
+
+- FIX: Do not reconcile not scheduled tasks
+
 
 ## v1.1.2
 
+- FIX: Restart API set the wrong restart flag.
+- ADD: Restart API to restart a single Task.
+- ADD: Kill API to kill a single Task.
 - FIX: Healtcheck missconfiguration
 - FIX: Task Lost message handling
 - ADD: Wait 60 seconds before try to reconnect to the mesos leader.

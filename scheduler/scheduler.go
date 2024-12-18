@@ -99,9 +99,6 @@ func (e *Scheduler) EventLoop() {
 		return
 	}
 
-	go e.HeartbeatLoop()
-	go e.ReconcileLoop()
-
 	for {
 		// Read line from Mesos
 		line, err = reader.ReadString('\n')
@@ -142,10 +139,7 @@ func (e *Scheduler) EventLoop() {
 			go e.Redis.SaveConfig(*e.Config)
 		case mesosproto.Event_UPDATE.Number():
 			go e.HandleUpdate(&event)
-			go e.Redis.SaveConfig(*e.Config)
 			go e.callPluginEvent(&event)
-		case mesosproto.Event_HEARTBEAT.Number():
-			go e.Heartbeat()
 		case mesosproto.Event_OFFERS.Number():
 			// Search Failed containers and restart them
 			err = e.HandleOffers(event.Offers)
@@ -182,11 +176,13 @@ func (e *Scheduler) reconcile() {
 			continue
 		}
 
+		keys.Val()
+
 		key := e.Redis.GetRedisKey(keys.Val())
 
 		task := e.Mesos.DecodeTask(key)
 
-		if task.TaskID == "" || task.Agent == "" {
+		if task.TaskID == "" || task.Agent == "" || task.State == "__NEW" || task.State == "__KILL" || task.State == "" {
 			continue
 		}
 
