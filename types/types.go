@@ -26,6 +26,7 @@ type Config struct {
 	RedisServer                string
 	RedisPassword              string
 	RedisDB                    int
+	RedisPoolSize              int
 	SkipSSL                    bool
 	SSLKey                     string
 	SSLCrt                     string
@@ -40,6 +41,7 @@ type Config struct {
 	DiscoveryPortNameDelimiter string
 	Plugins                    map[string]*plugin.Plugin
 	PluginsEnable              bool
+	ThreadEnable               bool
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework

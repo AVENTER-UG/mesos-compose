@@ -46,6 +46,7 @@ func init() {
 	config.RedisServer = util.Getenv("REDIS_SERVER", "127.0.0.1:6379")
 	config.RedisPassword = util.Getenv("REDIS_PASSWORD", "")
 	config.RedisDB, _ = strconv.Atoi(util.Getenv("REDIS_DB", "1"))
+	config.RedisPoolSize, _ = strconv.Atoi(util.Getenv("REDIS_POOLSIZE", "0"))
 	config.SSLKey = util.Getenv("SSL_KEY_BASE64", "")
 	config.SSLCrt = util.Getenv("SSL_CRT_BASE64", "")
 	config.PrefixTaskName = util.Getenv("PREFIX_TASKNAME", framework.FrameworkName)
@@ -56,6 +57,13 @@ func init() {
 	config.VaultTimeout, _ = time.ParseDuration(util.Getenv("VAULT_TIMEOUT", "10s"))
 	config.DiscoveryInfoNameDelimiter = util.Getenv("DISCOVERY_INFONAME_DELIMITER", ".")
 	config.DiscoveryPortNameDelimiter = util.Getenv("DISCOVERY_PORTNAME_DELIMITER", "_")
+
+	// Enable Threads
+	if strings.Compare(util.Getenv("THREAD_ENABLE", "false"), "false") == 0 {
+		config.ThreadEnable = false
+	} else {
+		config.ThreadEnable = true
+	}
 
 	// Enable plugins
 	if strings.Compare(util.Getenv("COMPOSE_PLUGINS_ENABLE", "false"), "false") == 0 {
