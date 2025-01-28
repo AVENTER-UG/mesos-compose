@@ -31,6 +31,7 @@ func decodeBase64Cert(pemCert string) []byte {
 	if err != nil {
 		logrus.Fatal("Error decoding SSL PEM from Base64: ", err.Error())
 	}
+
 	return sslPem
 }
 

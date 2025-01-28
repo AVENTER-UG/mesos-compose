@@ -22,6 +22,8 @@ type Mesos struct {
 	IsSuppress bool
 	IsRevive   bool
 	CountAgent int
+ 	Req        *http.Request
+	Client     *http.Client
 }
 
 // Marshaler to serialize Protobuf Message to JSON
@@ -41,6 +43,36 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Mesos {
 	}
 
 	return e
+}
+
+func (e *Mesos) Subscribe() {
+	subscribeCall := &mesosproto.Call{
+		FrameworkId: e.Framework.FrameworkInfo.Id,
+		Type:        mesosproto.Call_SUBSCRIBE.Enum(),
+		Subscribe: &mesosproto.Call_Subscribe{
+			FrameworkInfo: &e.Framework.FrameworkInfo,
+		},
+	}
+
+	logrus.WithField("func", "scheduler.Subscribe").Debug(subscribeCall)
+	body, _ := marshaller.Marshal(subscribeCall)
+	client := &http.Client{}
+	// #nosec G402
+	client.Transport = &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: e.Config.SkipSSL},
+	}
+
+	protocol := "https"
+	if !e.Framework.MesosSSL {
+		protocol = "http"
+	}
+	req, _ := http.NewRequest("POST", protocol+"://"+e.Framework.MesosMasterServer+"/api/v1/scheduler", bytes.NewBuffer([]byte(body)))
+	req.Close = true
+	req.SetBasicAuth(e.Framework.Username, e.Framework.Password)
+	req.Header.Set("Content-Type", "application/json")
+
+	e.Req = req
+	e.Client = client
 }
 
 // Revive will revive the mesos tasks to clean up

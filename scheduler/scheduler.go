@@ -2,8 +2,6 @@ package scheduler
 
 import (
 	"bufio"
-	"bytes"
-	"crypto/tls"
 	"net/http"
 	"strconv"
 	"strings"
@@ -46,39 +44,14 @@ func Subscribe(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Scheduler {
 		Mesos:     *mesos.New(cfg, frm),
 	}
 
-	subscribeCall := &mesosproto.Call{
-		FrameworkId: e.Framework.FrameworkInfo.Id,
-		Type:        mesosproto.Call_SUBSCRIBE.Enum(),
-		Subscribe: &mesosproto.Call_Subscribe{
-			FrameworkInfo: &e.Framework.FrameworkInfo,
-		},
-	}
-	logrus.WithField("func", "scheduler.Subscribe").Debug(subscribeCall)
-	body, _ := marshaller.Marshal(subscribeCall)
-	client := &http.Client{}
-	// #nosec G402
-	client.Transport = &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: e.Config.SkipSSL},
-	}
-
-	protocol := "https"
-	if !e.Framework.MesosSSL {
-		protocol = "http"
-	}
-	req, _ := http.NewRequest("POST", protocol+"://"+e.Framework.MesosMasterServer+"/api/v1/scheduler", bytes.NewBuffer([]byte(body)))
-	req.Close = true
-	req.SetBasicAuth(e.Framework.Username, e.Framework.Password)
-	req.Header.Set("Content-Type", "application/json")
-
-	e.Req = req
-	e.Client = client
+	e.Mesos.Subscribe()
 
 	return e
 }
 
 // EventLoop is the main loop for the mesos events.
 func (e *Scheduler) EventLoop() {
-	res, err := e.Client.Do(e.Req)
+	res, err := e.Mesos.Client.Do(e.Mesos.Req)
 
 	if err != nil {
 		logrus.WithField("func", "scheduler.EventLoop").Errorf("Mesos Master connection error: %s", err.Error())
@@ -148,6 +121,13 @@ func (e *Scheduler) EventLoop() {
 				e.HandleUpdate(&event)
 			}
 			go e.callPluginEvent(&event)
+		case mesosproto.Event_HEARTBEAT.Number():
+		  if e.Framework.FrameworkInfo.Id != nil {
+		    if e.Framework.FrameworkInfo.Id.GetValue() == "" {
+		      logrus.WithField("func", "scheduler.EventLoop").Tracef("HEARBEAT: Could not find framework ID")
+		      return
+		    }
+		  }
 		case mesosproto.Event_OFFERS.Number():
 			// Search Failed containers and restart them
 			err = e.HandleOffers(event.Offers)

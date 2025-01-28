@@ -2,10 +2,13 @@
 
 ## master
 
+- ADD: Enable/Disable event handling as own thread (ENV Variable THREAD_ENABLE)
+- ADD: API Endpoint to cleanup the Framework ID. That will force a resubscription under
+       a new Framework ID.
+
 ## v1.1.3
 
 - FIX: Do not reconcile not scheduled tasks
-
 
 ## v1.1.2
 
