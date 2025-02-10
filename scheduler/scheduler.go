@@ -122,12 +122,12 @@ func (e *Scheduler) EventLoop() {
 			}
 			go e.callPluginEvent(&event)
 		case mesosproto.Event_HEARTBEAT.Number():
-		  if e.Framework.FrameworkInfo.Id != nil {
-		    if e.Framework.FrameworkInfo.Id.GetValue() == "" {
-		      logrus.WithField("func", "scheduler.EventLoop").Tracef("HEARBEAT: Could not find framework ID")
-		      return
-		    }
-		  }
+			if e.Framework.FrameworkInfo.Id != nil {
+				if e.Framework.FrameworkInfo.Id.GetValue() == "" {
+					logrus.WithField("func", "scheduler.EventLoop").Tracef("HEARBEAT: Could not find framework ID")
+					return
+				}
+			}
 		case mesosproto.Event_OFFERS.Number():
 			// Search Failed containers and restart them
 			err = e.HandleOffers(event.Offers)

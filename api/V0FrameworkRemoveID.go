@@ -1,12 +1,12 @@
 package api
 
 import (
-	"net/http"
 	cTls "crypto/tls"
 	"encoding/json"
+	"net/http"
 
-	util "github.com/AVENTER-UG/util/util"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	util "github.com/AVENTER-UG/util/util"
 	"github.com/sirupsen/logrus"
 )
 
@@ -36,45 +36,44 @@ func (e *API) V0FrameworkRemoveID(w http.ResponseWriter, r *http.Request) {
 		protocol = "http"
 	}
 
-  req, _ := http.NewRequest("GET", protocol+"://"+e.Framework.MesosMasterServer+"/frameworks/?framework_id="+e.Framework.FrameworkInfo.Id.GetValue(), nil)
+	req, _ := http.NewRequest("GET", protocol+"://"+e.Framework.MesosMasterServer+"/frameworks/?framework_id="+e.Framework.FrameworkInfo.Id.GetValue(), nil)
 	req.SetBasicAuth(e.Framework.Username, e.Framework.Password)
 	req.Header.Set("Content-Type", "application/json")
 	res, err := client.Do(req)
 
 	if err != nil {
-    logrus.WithField("func", "api.V0FrameworkRemoveID").Errorf("Mesos Master connection error: %s", err.Error())
-    w.WriteHeader(http.StatusNotAcceptable)
-    return
+		logrus.WithField("func", "api.V0FrameworkRemoveID").Errorf("Mesos Master connection error: %s", err.Error())
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-    logrus.WithField("func", "api.V0FrameworkRemoveID").Errorf("http status code: %s", err.Error())
-    w.WriteHeader(http.StatusNotAcceptable)
+		logrus.WithField("func", "api.V0FrameworkRemoveID").Errorf("http status code: %s", err.Error())
+		w.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
 
-  var framework cfg.MesosFrameworkStatus
-  err = json.NewDecoder(res.Body).Decode(&framework)
+	var framework cfg.MesosFrameworkStatus
+	err = json.NewDecoder(res.Body).Decode(&framework)
 
 	if err != nil {
-    logrus.WithField("func", "api.V0FrameworkRemoveID").Errorf("Could not decode mesos framework information: %s", err.Error())
-    w.WriteHeader(http.StatusNotAcceptable)
-    return
+		logrus.WithField("func", "api.V0FrameworkRemoveID").Errorf("Could not decode mesos framework information: %s", err.Error())
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
 	}
 
 	// Search the current framework id. If it's inside, then the framework is
 	// still registered and we do not have to remove it
-  for _,v := range framework.Frameworks {
-    if v.ID == e.Framework.FrameworkInfo.Id.GetValue() {
-      return
-    }
-  }
+	for _, v := range framework.Frameworks {
+		if v.ID == e.Framework.FrameworkInfo.Id.GetValue() {
+			return
+		}
+	}
 
-  logrus.WithField("func", "api.V0FrameworkRemoveID").Infof("Remove unregistered Framework ID: %s", e.Framework.FrameworkInfo.Id.GetValue())
+	logrus.WithField("func", "api.V0FrameworkRemoveID").Infof("Remove unregistered Framework ID: %s", e.Framework.FrameworkInfo.Id.GetValue())
 
 	// Remove framework ID
 	e.Framework.FrameworkInfo.Id.Value = util.StringToPointer("")
-  e.Redis.SaveFrameworkRedis(e.Framework)
+	e.Redis.SaveFrameworkRedis(e.Framework)
 }
-

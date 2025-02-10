@@ -22,7 +22,7 @@ type Mesos struct {
 	IsSuppress bool
 	IsRevive   bool
 	CountAgent int
- 	Req        *http.Request
+	Req        *http.Request
 	Client     *http.Client
 }
 
