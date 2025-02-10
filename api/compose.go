@@ -405,16 +405,15 @@ func (e *API) getNetworkMode() string {
 	mode := "user"
 
 	if e.Service.NetworkMode != "" {
-		mode = e.Service.NetworkMode
+		return strings.ToLower(e.Service.NetworkMode)
 	}
 
 	if len(e.Compose.Networks) > 0 {
 		network := e.getNetworkName(0)
-		// if network driver is not set, use the network name
+		// the name of the network driver (CNI) will be configured by getNetworkInfo
+		// and it would be a part of the mesos networkinfo.
 		if e.Compose.Networks[network].Driver != "" {
-			mode = e.Compose.Networks[network].Driver
-		} else if e.Compose.Networks[network].Name != "" {
-			mode = e.Compose.Networks[network].Name
+		  mode = e.Compose.Networks[network].Driver
 		}
 	}
 
