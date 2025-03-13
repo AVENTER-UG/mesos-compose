@@ -85,6 +85,13 @@ type Service struct {
 	Ulimits       Ulimits                 `yaml:"ulimits"`
 	Mesos         Mesos                   `yaml:"mesos"`
 	HealthCheck   *mesosproto.HealthCheck `yaml:"healthcheck"`
+  GPUs          GPUs                    `yaml:"gpus"`
+}
+
+// Gpus holds the config for gpu usage
+type GPUs struct {
+  Driver        string                  `yaml:"driver"`
+  Device        int                     `yaml:"device"`
 }
 
 // Mesos custom mesos task configuration

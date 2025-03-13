@@ -36,6 +36,9 @@ services:
       default:
         aliases:
           - test # alias hostname
+    gpus:
+      driver: "nvidia"
+      device: 1
     ports:
       - "8080:80"
       - "9090"

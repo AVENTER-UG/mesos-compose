@@ -58,11 +58,13 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Shell = e.getShell()
 	cmd.LinuxInfo = e.getLinuxInfo()
 	cmd.DockerParameter = e.getDockerParameter(cmd)
+	cmd.DockerParameter = e.getGPUs(cmd)
 	cmd.PullPolicy = e.getPullPolicy()
 	cmd.Restart = e.getRestart()
 	cmd.Mesos = e.Service.Mesos
 	cmd.Uris = e.getURIs()
 	cmd.Arguments = e.getArguments()
+
 
 	// set healthcheck if it's configured
 	e.setHealthCheck(cmd)
@@ -72,6 +74,30 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 
 	// store/update the mesos task in db
 	e.Redis.SaveTaskRedis(cmd)
+}
+
+// Set GPU config for the docker container. Mesos container not supportet right now.
+func (e *API) getGPUs(cmd *cfg.Command) []*mesosproto.Parameter {
+	param := cmd.DockerParameter
+
+	if len(param) == 0 {
+		param = make([]*mesosproto.Parameter, 0)
+	}
+
+	if e.getContainerType() == "docker" && len(e.Service.GPUs.Driver) > 0 {
+    if e.Service.GPUs.Driver == "amd" {
+      param = e.addDockerParameter(param, "device", "/dev/kfd")
+      param = e.addDockerParameter(param, "device", "/dev/dri")
+      param = e.addDockerParameter(param, "security-opt", "seccomp=unconfined")
+    }
+
+    if e.Service.GPUs.Driver == "nvidia" && e.Service.GPUs.Device >= 0 {
+      i := strconv.Itoa(e.Service.GPUs.Device)
+      param = e.addDockerParameter(param, "gpus", "device="+i)
+    }
+	}
+
+	return param
 }
 
 // Set the healtchek configuration

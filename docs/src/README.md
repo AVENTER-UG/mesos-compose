@@ -12,13 +12,15 @@
 Compose file with all supported parameters:
 
 ```yaml
+## This is an example of all supported parameters
+
 version: '3.9'
 
 services:
   app:
     image: alpine:latest
     command: "sleep"
-    arguments: ["1000"]        
+    arguments: ["1000"]
     restart: always
     volumes:
       - "12345test:/tmp"
@@ -29,7 +31,7 @@ services:
     container_type: docker
     shell: true
     mesos:
-      task_name: "mc:test:app1" # an alternative taskname      
+      task_name: "mc:test:app1" # an alternative taskname
       executer:
         command: "/mnt/mesos/sandbox/my-custom-executor"
       fetch:
@@ -40,25 +42,32 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.test.entrypoints: "web"
-      traefik.http.routers.test.service: "mc_test_app1_80" # if an alternative taskname is set, we have to use it here to
+      traefik.http.routers.test.service: "mc_test_app1_80" # if an alternative taskname is set, we have to use it here too
       traefik.http.routers.test.rule: "HostRegexp(`example.com`, `{subdomain:[a-z]+}.example.com`)"
-    network_mode: "BRIDGE"
+    network_mode: "BRIDGE" # network mode always overwrite the driver under networks (line 84)
+    network: default
+    networks:
+      default:
+        aliases:
+          - test # alias hostname
+    gpus:
+      driver: "nvidia"
+      device: 1
     ports:
       - "8080:80"
       - "9090"
       - "8081:81/tcp"
       - "8082:82/udp"
       - "8082:82/http"
-      - "8082:82/https"  
+      - "8082:82/https"
       - "8082:82/h2c"
-      - "8082:82/wss"       
-    network: default
+      - "8082:82/wss"
     ulimits:
       memlock:
         soft: -1
         hard: -1
       nofile:
-        soft: 65536 
+        soft: 65536
         hard: 65536
     healthcheck:
       delay_seconds: 15
@@ -69,18 +78,20 @@ services:
       command:
         value: "mysqladmin ping -h localhost"
       http:
-        scheme: 
+        scheme:
         port:
-        path: 
+        path:
         statuses:
+          - 200
       tcp:
-        port:        
+        port:
     deploy:
       placement:
         constraints:
           - "node.hostname==localhost"
           - "node.platform.os==linux"
           - "node.platform.arch==arm"
+          - "unique"
       replicas: 1
       resources:
         limits:
@@ -90,38 +101,8 @@ services:
 networks:
   default:
     external: true
-    name: weave
-    driver: bridge
-
-volumes:
-  12345test:
-    driver: local
-```
-
-We can also use yaml anchors and more then one service in a compose file:
-
-```bash
-version: '3.9'
-
-common: &common
-  image: alpine:latest
-  restart: always
-  labels:
-    biz.aventer.mesos_compose.container_type: "DOCKER"
-
-services:
-  app1:
-    <<: *common
-    command: ["sleep", "1000"]
-
-  app2:
-    <<: *common
-    command: ["sleep", "2000"]
-
-networks:
-  default:
-    external: true
-    name: weave
+    name: mesos-cni
+    driver: user
 
 volumes:
   12345test:
