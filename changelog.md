@@ -8,6 +8,7 @@
 - CHANGE: !!!! If compose.networks is set, the network mode will be automaticly "user".
        It can be overwritten if compose.networks.driver is set. !!!!
 - ADD: Support for AMD and NVIDIA GPUs.
+- ADD: Mesos Framework GPU Capabilities to get GPU offers from mesos.
 
 ## v1.1.3
 

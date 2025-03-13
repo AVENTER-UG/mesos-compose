@@ -13,6 +13,7 @@ import (
 	"github.com/Showmax/go-fqdn"
 	"github.com/sirupsen/logrus"
 
+	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
 	"github.com/AVENTER-UG/mesos-compose/redis"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 )
@@ -105,6 +106,10 @@ func init() {
 	config.Listen = listen
 	config.Suppress = false
 
+	// tell mesos that we can handle gpu offers
+	capabilities := &mesosproto.FrameworkInfo_Capability{
+		Type: mesosproto.FrameworkInfo_Capability_GPU_RESOURCES.Enum(),
+	}
 	framework.State = map[string]cfg.State{}
 
 	framework.FrameworkInfo.User = util.StringToPointer(framework.FrameworkUser)
@@ -114,6 +119,7 @@ func init() {
 	framework.FrameworkInfo.Checkpoint = &checkpoint
 	framework.FrameworkInfo.Principal = &config.Principal
 	framework.FrameworkInfo.Role = util.StringToPointer(framework.FrameworkRole)
+	framework.FrameworkInfo.Capabilities = append(framework.FrameworkInfo.Capabilities, capabilities)
 }
 
 func loadPlugins(r *redis.Redis) {

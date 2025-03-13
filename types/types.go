@@ -208,6 +208,7 @@ type Command struct {
 	Memory             float64
 	Mesos              Mesos
 	CPU                float64
+  GPUs               float64
 	Disk               float64
 	Agent              string
 	Labels             []*mesosproto.Label

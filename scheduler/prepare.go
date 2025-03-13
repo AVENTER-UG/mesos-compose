@@ -15,9 +15,11 @@ func (e *Scheduler) defaultResources(cmd *cfg.Command) []*mesosproto.Resource {
 	CPU := "cpus"
 	MEM := "mem"
 	DISK := "disk"
+	GPUs := "gpus"
 	cpu := cmd.CPU
 	mem := cmd.Memory
 	disk := cmd.Disk
+	gpus := cmd.GPUs
 
 	// FIX: https://github.com/AVENTER-UG/mesos-compose/issues/8
 	// If the task already exists from a prev mesos-compose version, disk
@@ -41,6 +43,11 @@ func (e *Scheduler) defaultResources(cmd *cfg.Command) []*mesosproto.Resource {
 			Name:   &DISK,
 			Type:   mesosproto.Value_SCALAR.Enum(),
 			Scalar: &mesosproto.Value_Scalar{Value: &disk},
+		},
+		{
+			Name:   &GPUs,
+			Type:   mesosproto.Value_SCALAR.Enum(),
+			Scalar: &mesosproto.Value_Scalar{Value: &gpus},
 		},
 	}
 
