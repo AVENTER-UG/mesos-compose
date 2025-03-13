@@ -5,8 +5,8 @@
 - ADD: Enable/Disable event handling as own thread (ENV Variable THREAD_ENABLE)
 - ADD: API Endpoint to cleanup the Framework ID. That will force a resubscription under
        a new Framework ID.
-- CHANGE: !!!! If compose.network is set, the network mode will be automaticly "user".
-       It can be overwritten if networkmode is manually set. !!!!
+- CHANGE: !!!! If compose.networks is set, the network mode will be automaticly "user".
+       It can be overwritten if compose.networks.driver is set. !!!!
 
 ## v1.1.3
 

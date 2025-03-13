@@ -405,13 +405,19 @@ func (e *API) getNetworkMode() string {
 	mode := "user"
 
 	if e.Service.NetworkMode != "" {
-		return strings.ToLower(e.Service.NetworkMode)
+		mode = e.Service.NetworkMode
 	}
 
 	if len(e.Compose.Networks) > 0 {
 		network := e.getNetworkName(0)
 		// the name of the network driver (CNI) will be configured by getNetworkInfo
 		// and it would be a part of the mesos networkinfo.
+
+		// to use CNI or docker network plugins, we have to set the mode to user.
+		// it can be overwritten by the driver name.
+		if e.Compose.Networks[network].Name != "" {
+		  mode = "user"
+		}
 		if e.Compose.Networks[network].Driver != "" {
 		  mode = e.Compose.Networks[network].Driver
 		}
