@@ -1,7 +1,7 @@
 # Summary
 
 - [Introduction](README.md)
-- [Environment Variables](vars.md)
+- [GPUs](gpus.md)
 
 # CLI
 
