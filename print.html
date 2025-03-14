@@ -270,8 +270,37 @@ own project name.</p>
 <p>To scale the service, just execute the same call again. To update a already existing docker-compose project, call:</p>
 <pre><code class="language-bash">curl -X UPDATE http://localhost:10000/api/compose/v0/&lt;PROJECTNAME&gt; --data-binary @docs/example/docker-compose.yml
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
-<p>The following environment variables are available:</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gpus"><a class="header" href="#gpus">GPUs</a></h1>
+<p>mesos-compose does support the usage of GPU's with the docker containerizer.
+To do so there, take a look into the following examples:</p>
+<h2 id="amd"><a class="header" href="#amd">AMD</a></h2>
+<p>If you want to use your AMD GPU's inside of your docker container, you have
+to add the following yaml into your mesos-compose.yaml</p>
+<pre><code class="language-yaml">services:
+  app:
+    ...
+    gpus:
+      driver: "amd"
+</code></pre>
+<p>That will add the following parameters to the docker executor:</p>
+<pre><code class="language-bash">--device=/dev/kfd \
+--device=/dev/dri \
+--security-opt seccomp=unconfined
+</code></pre>
+<h2 id="nvidia"><a class="header" href="#nvidia">NVIDIA</a></h2>
+<p>If you want to use your NVIDIA GPU's inside of your docker container, you have
+to add the following yaml into your mesos-compose.yaml</p>
+<pre><code class="language-yaml">services:
+  app:
+    ...
+    gpus:
+      driver: "nvidia"
+      device: 1
+</code></pre>
+<p>That will add the following parameters to the docker executor:</p>
+<pre><code class="language-bash">--gpus device=1
+</code></pre>
+<p>The device it the ID or number of your GPU.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mesos-compose-cli-installation-for-mesos-cli"><a class="header" href="#mesos-compose-cli-installation-for-mesos-cli">Mesos-Compose CLI Installation for Mesos-CLI</a></h1>
 <p>If you do not already have installe the mesos cli, please follow the steps under "Install Mesos-CLI" first.</p>
 <p>The installation of the Mesos-Compose plugin for mesos-cli is done in few steps.</p>

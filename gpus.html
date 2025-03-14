@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Environment Variables - Mesos Compose - The Docker-Compose Orchestrator for Mesos</title>
+        <title>GPUs - Mesos Compose - The Docker-Compose Orchestrator for Mesos</title>
 
 
         <!-- Custom HTML head -->
@@ -152,8 +152,37 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
-<p>The following environment variables are available:</p>
+                        <h1 id="gpus"><a class="header" href="#gpus">GPUs</a></h1>
+<p>mesos-compose does support the usage of GPU's with the docker containerizer.
+To do so there, take a look into the following examples:</p>
+<h2 id="amd"><a class="header" href="#amd">AMD</a></h2>
+<p>If you want to use your AMD GPU's inside of your docker container, you have
+to add the following yaml into your mesos-compose.yaml</p>
+<pre><code class="language-yaml">services:
+  app:
+    ...
+    gpus:
+      driver: "amd"
+</code></pre>
+<p>That will add the following parameters to the docker executor:</p>
+<pre><code class="language-bash">--device=/dev/kfd \
+--device=/dev/dri \
+--security-opt seccomp=unconfined
+</code></pre>
+<h2 id="nvidia"><a class="header" href="#nvidia">NVIDIA</a></h2>
+<p>If you want to use your NVIDIA GPU's inside of your docker container, you have
+to add the following yaml into your mesos-compose.yaml</p>
+<pre><code class="language-yaml">services:
+  app:
+    ...
+    gpus:
+      driver: "nvidia"
+      device: 1
+</code></pre>
+<p>That will add the following parameters to the docker executor:</p>
+<pre><code class="language-bash">--gpus device=1
+</code></pre>
+<p>The device it the ID or number of your GPU.</p>
 
                     </main>
 
