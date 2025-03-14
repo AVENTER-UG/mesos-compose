@@ -85,16 +85,21 @@ func (e *API) getGPUs(cmd *cfg.Command) []*mesosproto.Parameter {
 	}
 
 	if e.getContainerType() == "docker" && len(e.Service.GPUs.Driver) > 0 {
-    if e.Service.GPUs.Driver == "amd" {
-      param = e.addDockerParameter(param, "device", "/dev/kfd")
-      param = e.addDockerParameter(param, "device", "/dev/dri")
-      param = e.addDockerParameter(param, "security-opt", "seccomp=unconfined")
-    }
 
-    if e.Service.GPUs.Driver == "nvidia" && e.Service.GPUs.Device >= 0 {
-      i := strconv.Itoa(e.Service.GPUs.Device)
-      param = e.addDockerParameter(param, "gpus", "device="+i)
-    }
+		// mesos does not support amd gpus for the offer. Instead, we can only tell
+		// docker to use gpus's.
+		if e.Service.GPUs.Driver == "amd" {
+			param = e.addDockerParameter(param, "device", "/dev/kfd")
+			param = e.addDockerParameter(param, "device", "/dev/dri")
+			param = e.addDockerParameter(param, "security-opt", "seccomp=unconfined")
+		}
+
+		// if we have nvidia gpus, we can use the gpu ID also for the offer
+		if e.Service.GPUs.Driver == "nvidia" && e.Service.GPUs.Device >= 0 {
+			i := strconv.Itoa(e.Service.GPUs.Device)
+			param = e.addDockerParameter(param, "gpus", "device="+i)
+			cmd.GPUs, _ = strconv.ParseFloat(i, 64)
+		}
 	}
 
 	return param
