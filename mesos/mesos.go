@@ -257,6 +257,10 @@ func (e *Mesos) IsRessourceMatched(ressource []*mesosproto.Resource, cmd *cfg.Co
 			logrus.WithField("func", "mesos.IsRessourceMatched").Debug("Matched Offer Memory: ", cmd.Memory)
 			mem = true
 		}
+		if v.GetName() == "gpus" && v.Scalar.GetValue() >= cmd.GPUs {
+			logrus.WithField("func", "mesos.IsRessourceMatched").Debug("Matched Offer GPU: ", cmd.GPUs)
+			mem = true
+		}
 		if len(cmd.DockerPortMappings) > 0 {
 			if v.GetName() == "ports" {
 				for _, taskPort := range cmd.DockerPortMappings {
