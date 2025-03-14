@@ -85,13 +85,13 @@ type Service struct {
 	Ulimits       Ulimits                 `yaml:"ulimits"`
 	Mesos         Mesos                   `yaml:"mesos"`
 	HealthCheck   *mesosproto.HealthCheck `yaml:"healthcheck"`
-  GPUs          GPUs                    `yaml:"gpus"`
+	GPUs          GPUs                    `yaml:"gpus"`
 }
 
 // Gpus holds the config for gpu usage
 type GPUs struct {
-  Driver        string                  `yaml:"driver"`
-  Device        int                     `yaml:"device"`
+	Driver        string                  `yaml:"driver"`
+	Device        int                     `yaml:"device"`
 }
 
 // Mesos custom mesos task configuration
@@ -128,6 +128,7 @@ type Deploy struct {
 			Memory float64 `yaml:"memory"`
 		} `yaml:"limits"`
 	} `yaml:"resources"`
+	Runtime		string		`yaml:"runtime"`
 }
 
 // Placement - The docker-compose placement

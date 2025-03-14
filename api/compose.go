@@ -59,6 +59,7 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.LinuxInfo = e.getLinuxInfo()
 	cmd.DockerParameter = e.getDockerParameter(cmd)
 	cmd.DockerParameter = e.getGPUs(cmd)
+	cmd.DockerParameter = e.getRuntime(cmd)
 	cmd.PullPolicy = e.getPullPolicy()
 	cmd.Restart = e.getRestart()
 	cmd.Mesos = e.Service.Mesos
@@ -75,6 +76,22 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	// store/update the mesos task in db
 	e.Redis.SaveTaskRedis(cmd)
 }
+
+// Set the Runtime (https://github.com/newsnowlabs/runcvm)
+func (e *API) getRuntime(cmd *cfg.Command) []*mesosproto.Parameter {
+	param := cmd.DockerParameter
+
+	if len(param) == 0 {
+		param = make([]*mesosproto.Parameter, 0)
+	}
+
+	if e.getContainerType() == "docker" && e.Service.Deploy.Runtime != "" {
+		param = e.addDockerParameter(param, "runtime", strings.ToLower(e.Service.Deploy.Runtime))
+	}
+
+	return param
+}
+
 
 // Set GPU config for the docker container. Mesos container not supportet right now.
 func (e *API) getGPUs(cmd *cfg.Command) []*mesosproto.Parameter {

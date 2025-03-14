@@ -86,6 +86,7 @@ services:
       tcp:
         port:
     deploy:
+      runtime: "runcvm"
       placement:
         constraints:
           - "node.hostname==localhost"
