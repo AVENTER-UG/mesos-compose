@@ -19,8 +19,8 @@ services:
 That will add the following parameters to the docker executor:
 
 ```bash
---device=/dev/kfd \
---device=/dev/dri \
+--device=/dev/kfd
+--device=/dev/dri
 --security-opt seccomp=unconfined
 ```
 
@@ -44,5 +44,5 @@ That will add the following parameters to the docker executor:
 --gpus device=1
 ```
 
-The device it the ID or number of your GPU.
+The device is the ID or number of your GPU.
 
