@@ -283,8 +283,8 @@ to add the following yaml into your mesos-compose.yaml</p>
       driver: "amd"
 </code></pre>
 <p>That will add the following parameters to the docker executor:</p>
-<pre><code class="language-bash">--device=/dev/kfd \
---device=/dev/dri \
+<pre><code class="language-bash">--device=/dev/kfd
+--device=/dev/dri
 --security-opt seccomp=unconfined
 </code></pre>
 <h2 id="nvidia"><a class="header" href="#nvidia">NVIDIA</a></h2>
@@ -300,7 +300,7 @@ to add the following yaml into your mesos-compose.yaml</p>
 <p>That will add the following parameters to the docker executor:</p>
 <pre><code class="language-bash">--gpus device=1
 </code></pre>
-<p>The device it the ID or number of your GPU.</p>
+<p>The device is the ID or number of your GPU.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mesos-compose-cli-installation-for-mesos-cli"><a class="header" href="#mesos-compose-cli-installation-for-mesos-cli">Mesos-Compose CLI Installation for Mesos-CLI</a></h1>
 <p>If you do not already have installe the mesos cli, please follow the steps under "Install Mesos-CLI" first.</p>
 <p>The installation of the Mesos-Compose plugin for mesos-cli is done in few steps.</p>

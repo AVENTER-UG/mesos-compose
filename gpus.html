@@ -165,8 +165,8 @@ to add the following yaml into your mesos-compose.yaml</p>
       driver: "amd"
 </code></pre>
 <p>That will add the following parameters to the docker executor:</p>
-<pre><code class="language-bash">--device=/dev/kfd \
---device=/dev/dri \
+<pre><code class="language-bash">--device=/dev/kfd
+--device=/dev/dri
 --security-opt seccomp=unconfined
 </code></pre>
 <h2 id="nvidia"><a class="header" href="#nvidia">NVIDIA</a></h2>
@@ -182,7 +182,7 @@ to add the following yaml into your mesos-compose.yaml</p>
 <p>That will add the following parameters to the docker executor:</p>
 <pre><code class="language-bash">--gpus device=1
 </code></pre>
-<p>The device it the ID or number of your GPU.</p>
+<p>The device is the ID or number of your GPU.</p>
 
                     </main>
 
