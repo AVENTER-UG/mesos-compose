@@ -88,6 +88,9 @@ services:
     deploy:
       runtime: "runcvm"
       placement:
+        attributes:
+          - "gpus: True"
+          - "airflow: True"
         constraints:
           - "node.hostname==localhost"
           - "node.platform.os==linux"

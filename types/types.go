@@ -133,6 +133,7 @@ type Deploy struct {
 
 // Placement - The docker-compose placement
 type Placement struct {
+	Attributes  []string `yaml:"attributes"`
 	Constraints []string `yaml:"constraints"`
 }
 
@@ -222,6 +223,7 @@ type Command struct {
 	EnableHealthCheck  bool
 	Health             *mesosproto.HealthCheck
 	MesosAgent         MesosSlaves
+	Attributes         []*mesosproto.Label
 }
 
 // State will have the state of all tasks stated by this framework

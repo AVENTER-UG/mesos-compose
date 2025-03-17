@@ -66,15 +66,31 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	cmd.Uris = e.getURIs()
 	cmd.Arguments = e.getArguments()
 
-
 	// set healthcheck if it's configured
 	e.setHealthCheck(cmd)
 
 	// set the docker constraints
 	e.setConstraints(cmd)
 
+  // set mesos attributes
+  e.setAttributes(cmd)
+
 	// store/update the mesos task in db
 	e.Redis.SaveTaskRedis(cmd)
+}
+
+// set mesos attributes
+func (e *API) setAttributes(cmd *cfg.Command) {
+	if len(e.Service.Deploy.Placement.Attributes) > 0 {
+		for _, attribute := range e.Service.Deploy.Placement.Attributes {
+			if strings.Contains(attribute, ":") {
+				attr := strings.Split(attribute, ":")
+				if len(attr) >= 2 {
+					cmd.Attributes = append(cmd.Attributes, &mesosproto.Label{Key: util.StringToPointer(attr[0]), Value: &attr[1]})
+				}
+			}
+		}
+	}
 }
 
 // Set the Runtime (https://github.com/newsnowlabs/runcvm)

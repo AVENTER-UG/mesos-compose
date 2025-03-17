@@ -10,6 +10,7 @@
 - ADD: Support for AMD and NVIDIA GPUs.
 - ADD: Mesos Framework GPU Capabilities to get GPU offers from mesos.
 - ADD: Runtime support for docker container (https://github.com/newsnowlabs/runcvm)
+- ADD: Support for Mesos attributes
 
 ## v1.1.3
 

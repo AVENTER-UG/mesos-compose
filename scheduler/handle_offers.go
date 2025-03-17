@@ -138,7 +138,13 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd *cfg.Command) 
 			continue
 		}
 
-		// if the ressources of this offer does not matched what the command need, the skip
+		// if the attributes of this offer does not matched what the command need, then skip
+		if !e.matchAttributes(cmd, offer) {
+			logrus.WithField("func", "scheduler.getOffer").Debug("Could not found any matched attributes, get next offer")
+			continue
+		}
+
+		// if the ressources of this offer does not matched what the command need, then skip
 		if !e.Mesos.IsRessourceMatched(offer.Resources, cmd) {
 			logrus.WithField("func", "scheduler.getOffer").Debug("Could not found any matched ressources, get next offer")
 			continue
@@ -153,6 +159,22 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd *cfg.Command) 
 	}
 	e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 	return offerret, offerIds
+}
+
+// search matched mesos attributes. if cmd does not has any attributes,
+// then the result would be true.
+func (e *Scheduler) matchAttributes(cmd *cfg.Command, offer *mesosproto.Offer) bool {
+	if len(cmd.Attributes) <= 0 {
+		return true
+	}
+
+  ret := false;
+	for _, attribute := range cmd.Attributes {
+		if strings.EqualFold("true", e.getAttributes(*attribute.Key, offer)) {
+			ret = ret && true
+		}
+	}
+	return ret
 }
 
 // search matched mesos attributes

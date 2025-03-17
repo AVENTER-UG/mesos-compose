@@ -166,6 +166,9 @@ services:
         port:
     deploy:
       runtime: "runcvm"
+      attributes:
+          - "gpus: True"
+          - "airflow: True"
       placement:
         constraints:
           - "node.hostname==localhost"
