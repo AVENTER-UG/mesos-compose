@@ -168,12 +168,17 @@ func (e *Scheduler) matchAttributes(cmd *cfg.Command, offer *mesosproto.Offer) b
 		return true
 	}
 
-  ret := false;
+  ret := true;
 	for _, attribute := range cmd.Attributes {
-		if strings.EqualFold("true", e.getAttributes(*attribute.Key, offer)) {
+		cmdAttr := strings.Replace(*attribute.Value, " ", "", -1)
+		offerAttr := strings.Replace(e.getAttributes(*attribute.Key, offer), " ", "", -1)
+		if strings.EqualFold(cmdAttr, offerAttr) {
 			ret = ret && true
+		} else {
+			ret = false
 		}
 	}
+
 	return ret
 }
 

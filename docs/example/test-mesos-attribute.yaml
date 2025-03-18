@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  test1:
+    image: docker.io/avhost/docker-lighttpd
+    restart: always
+    network: default
+    deploy:
+      placement:
+        attributes:
+          - "gpu: True"
+      replicas: 1
+
