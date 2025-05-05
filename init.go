@@ -87,6 +87,13 @@ func init() {
 		config.SkipSSL = false
 	}
 
+	// Enable GPU Allocation in Mesos.. If false, GPU can still be used but allocation wont be impacted in mesos
+	if strings.Compare(util.Getenv("ENABLE_GPU_ALLOCATION", "true"), "true") == 0 {
+		config.EnableGPUAllocation = true
+	} else {
+		config.EnableGPUAllocation = false
+	}
+
 	listen := fmt.Sprintf(":%s", framework.FrameworkPort)
 
 	failoverTimeout := 5000.0
