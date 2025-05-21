@@ -103,6 +103,8 @@ func (e *API) getRuntime(cmd *cfg.Command) []*mesosproto.Parameter {
 
 	if e.getContainerType() == "docker" && e.Service.Deploy.Runtime != "" {
 		param = e.addDockerParameter(param, "runtime", strings.ToLower(e.Service.Deploy.Runtime))
+		param = e.addDockerParameter(param, "memory-swap", "0")
+		param = e.addDockerParameter(param, "cpu-shares", "0")
 	}
 
 	return param

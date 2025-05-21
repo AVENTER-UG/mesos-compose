@@ -119,8 +119,8 @@ class mesosCompose(PluginBase):
         "restart": {
             "arguments": ["<framework-name>", "<task>"],
             "flags": {},
-            "short_help": "Restart a single task (ID) or a whole service (Task Name)",
-            "long_help": "Use the \"ID\" to restart a single task or the \"Task Name\" to restart the entire service."
+            "short_help": "Restart a whole service (Task Name)",
+            "long_help": "Use \"Task Name\" to restart the entire service."
         },
         "framework": {
             "arguments": ["<framework-name>", "<operations>"],

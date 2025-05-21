@@ -2,15 +2,17 @@
 
 ## master
 
+- CHANGE: !!!! If compose.networks is set, the network mode will be automaticly "user".
+       It can be overwritten if compose.networks.driver is set. !!!!
 - ADD: Enable/Disable event handling as own thread (ENV Variable THREAD_ENABLE)
 - ADD: API Endpoint to cleanup the Framework ID. That will force a resubscription under
        a new Framework ID.
-- CHANGE: !!!! If compose.networks is set, the network mode will be automaticly "user".
-       It can be overwritten if compose.networks.driver is set. !!!!
 - ADD: Support for AMD and NVIDIA GPUs.
 - ADD: Mesos Framework GPU Capabilities to get GPU offers from mesos.
 - ADD: Runtime support for docker container (https://github.com/newsnowlabs/runcvm)
 - ADD: Support for Mesos attributes
+- FIX: [API] Restart service
+- DEL: [API] Remove useless restart task API
 
 ## v1.1.3
 

@@ -22,7 +22,7 @@ func (e *Scheduler) Heartbeat() {
 
 		task := e.Mesos.DecodeTask(key)
 
-		if task.TaskID == "" || task.TaskName == "" || task.Killed {
+		if task.TaskID == "" || task.TaskName == "" {
 			continue
 		}
 
@@ -34,7 +34,6 @@ func (e *Scheduler) Heartbeat() {
 				continue
 			} else {
 				task.Restart = "no"
-				task.Killed = true
 				e.Redis.SaveTaskRedis(task)
 				e.Mesos.Kill(task.TaskID, task.Agent)
 			}
