@@ -129,8 +129,10 @@ func (e *Scheduler) HeartbeatLoop(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		default:
-			e.Heartbeat()
 			e.checkRedis()
+			if e.Config.FrameworkSubscribed {
+				e.Heartbeat()
+			}
 		}
 	}
 }
@@ -144,8 +146,10 @@ func (e *Scheduler) ReconcileLoop(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		default:
-			e.reconcile()
-			e.implicitReconcile()
+			if e.Config.FrameworkSubscribed {
+				e.reconcile()
+				e.implicitReconcile()
+			}
 		}
 	}
 }

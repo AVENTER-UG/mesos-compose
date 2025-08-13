@@ -106,6 +106,7 @@ func (e *Scheduler) EventLoop() {
 			logrus.WithField("func", "scheduler.EventLoop").Debugf("FrameworkId: %s", event.Subscribed.GetFrameworkId())
 			e.Framework.FrameworkInfo.Id = event.Subscribed.GetFrameworkId()
 			e.Framework.MesosStreamID = res.Header.Get("Mesos-Stream-Id")
+			e.Config.FrameworkSubscribed = true
 
 			if e.Config.ThreadEnable {
 				go e.reconcile()

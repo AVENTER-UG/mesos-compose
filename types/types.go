@@ -43,6 +43,8 @@ type Config struct {
 	PluginsEnable              bool
 	ThreadEnable               bool
 	EnableGPUAllocation        bool
+	HostConstraintsList        []string
+	FrameworkSubscribed        bool
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework
