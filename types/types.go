@@ -218,7 +218,6 @@ type Command struct {
 	Agent              string
 	Labels             []*mesosproto.Label
 	State              string
-	Killed             bool
 	StateTime          time.Time
 	Instances          int
 	LinuxInfo          *mesosproto.LinuxInfo `protobuf:"bytes,11,opt,name=linux_info,json=linuxInfo" json:"linux_info,omitempty"`

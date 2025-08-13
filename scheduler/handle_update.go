@@ -28,7 +28,10 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		return
 	}
 
-	task.State = update.Status.State.String()
+	// don't update state message if the task is in KILL state
+	if task.State != "__KILL" {
+		task.State = update.Status.State.String()
+	}
 
 	logrus.WithField("func", "scheduler.HandleUpdate").Tracef("Event %s, State %s, TaskID %s", event.GetType().String(), task.State, task.TaskID)
 
@@ -70,7 +73,6 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
 		task.State = ""
-		task.Killed = false
 		break
 	case mesosproto.TaskState_TASK_LOST:
 		if task.TaskID == "" {

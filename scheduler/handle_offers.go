@@ -16,7 +16,7 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 	select {
 	case cmd := <-e.Framework.CommandChan:
 		// if no taskid or taskname is given, it's a wrong task.
-		if cmd.TaskID == "" || cmd.TaskName == "" || cmd.Killed {
+		if cmd.TaskID == "" || cmd.TaskName == "" {
 			return nil
 		}
 
