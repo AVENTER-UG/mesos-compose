@@ -73,7 +73,6 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
 		task.State = ""
-		break
 	case mesosproto.TaskState_TASK_LOST:
 		if task.TaskID == "" {
 			e.Mesos.Call(msg)
@@ -81,9 +80,13 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		}
 		logrus.WithField("func", "scheduler.HandleUpdate").Warn("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")
 		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
-		e.Mesos.ForceSuppressFramework()
-		e.Mesos.Call(msg)
-		return
+
+		// bedesar/ISS-STOXX: Experimenting in here ..
+		// e.Mesos.ForceSuppressFramework()
+		// e.Mesos.Call(msg)
+
+		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
+		task.State = ""
 	case mesosproto.TaskState_TASK_RUNNING:
 		if !e.Mesos.IsSuppress {
 			logrus.WithField("func", "scheduler.HandleUpdate").Info("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")
@@ -93,7 +96,10 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		task.NetworkInfo = e.Mesos.GetNetworkInfo(task.TaskID)
 		task.Agent = update.Status.GetAgentId().GetValue()
 
-		e.Mesos.SuppressFramework()
+		// bedesar/ISS-STOXX: Do not need to explicitly supress here, the heartbeat loop will handle it. This can cause a series of "Revive+Suppress" when multiple tasks start at once
+		// e.Mesos.SuppressFramework()
+	default:
+		logrus.WithField("func", "scheduler.HandleUpdate").Warn("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + "). State not handled, no action has been taken")
 	}
 
 	// save the new state
