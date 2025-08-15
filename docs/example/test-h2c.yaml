@@ -3,8 +3,7 @@ services:
   test1:
     image: docker.io/avhost/docker-lighttpd
     ports:
-      - "9999:8888/h2c"
-    network_mode: "bridge"    
+      - "31820:8888/h2c"
     labels:
       traefik.enable: "true"
       traefik.http.routers.test1.entrypoints: "web"
@@ -15,6 +14,6 @@ services:
 
 networks:
   default:
-    external: true
-    name: mini
-          
+    name: mesos-net
+    driver: mesos-net
+
