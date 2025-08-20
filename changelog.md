@@ -13,7 +13,7 @@
 - ADD: Support for Mesos attributes
 - FIX: [API] Restart service
 - DEL: [API] Remove useless restart task API
-- FIX: Force suppress after successfull framework subscription to prevent offers
+- FIX: Force suppress after successfull framework subscription to prevent unwanted offers
 
 ## v1.1.3
 
