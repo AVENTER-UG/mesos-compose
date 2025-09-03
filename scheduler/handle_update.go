@@ -82,11 +82,14 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 
 		// bedesar/ISS-STOXX: Experimenting in here ..
-		// e.Mesos.ForceSuppressFramework()
-		// e.Mesos.Call(msg)
+		if task.ExpectedState != "__KILL" {
+			task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
+			task.State = ""
+		} else {
+			e.Mesos.ForceSuppressFramework()
+			e.Mesos.Call(msg)
+		}
 
-		task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
-		task.State = ""
 	case mesosproto.TaskState_TASK_RUNNING:
 		if !e.Mesos.IsSuppress {
 			logrus.WithField("func", "scheduler.HandleUpdate").Info("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")

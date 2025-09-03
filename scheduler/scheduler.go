@@ -106,15 +106,17 @@ func (e *Scheduler) EventLoop() {
 			logrus.WithField("func", "scheduler.EventLoop").Debugf("FrameworkId: %s", event.Subscribed.GetFrameworkId())
 			e.Framework.FrameworkInfo.Id = event.Subscribed.GetFrameworkId()
 			e.Framework.MesosStreamID = res.Header.Get("Mesos-Stream-Id")
-			e.Config.FrameworkSubscribed = true
 
 			if e.Config.ThreadEnable {
 				go e.reconcile()
 			} else {
 				e.reconcile()
 			}
+
+			e.Mesos.ForceSuppressFramework()
 			go e.Redis.SaveFrameworkRedis(e.Framework)
 			go e.Redis.SaveConfig(*e.Config)
+
 		case mesosproto.Event_UPDATE.Number():
 			if e.Config.ThreadEnable {
 				go e.HandleUpdate(&event)

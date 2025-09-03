@@ -33,7 +33,6 @@ func init() {
 	framework.MesosMasterServer = util.Getenv("MESOS_MASTER", "localhost:5050")
 	framework.PortRangeFrom, _ = strconv.Atoi(util.Getenv("PORTRANGE_FROM", "31000"))
 	framework.PortRangeTo, _ = strconv.Atoi(util.Getenv("PORTRANGE_TO", "32000"))
-	config.FrameworkSubscribed = false
 	config.Principal = util.Getenv("MESOS_PRINCIPAL", "")
 	config.CPU, _ = strconv.ParseFloat(util.Getenv("DEFAULT_CPU", "0.1"), 64)
 	config.Memory, _ = strconv.ParseFloat(util.Getenv("DEFAULT_MEMORY", "50"), 64)

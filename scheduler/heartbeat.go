@@ -126,12 +126,12 @@ func (e *Scheduler) HeartbeatLoop(ctx context.Context) {
 	for ; true; <-ticker.C {
 		select {
 		case <-ctx.Done():
+			logrus.WithField("Heartbeatloop", e.Framework.FrameworkName).Info("Heartbeat Stop")
 			return
 		default:
+			logrus.WithField("Heartbeatloop", e.Framework.FrameworkName).Info("Heartbeat")
 			e.checkRedis()
-			if e.Config.FrameworkSubscribed {
-				e.Heartbeat()
-			}
+			e.Heartbeat()
 		}
 	}
 }
@@ -143,12 +143,12 @@ func (e *Scheduler) ReconcileLoop(ctx context.Context) {
 	for ; true; <-ticker.C {
 		select {
 		case <-ctx.Done():
+			logrus.WithField("Reconcileloop", e.Framework.FrameworkName).Info("Reconcile Stop")
 			return
 		default:
-			if e.Config.FrameworkSubscribed {
-				e.reconcile()
-				e.implicitReconcile()
-			}
+			logrus.WithField("ReconcileLoop", e.Framework.FrameworkName).Info("Reconcile")
+			e.reconcile()
+			e.implicitReconcile()
 		}
 	}
 }
