@@ -1,6 +1,6 @@
 # Changelog
 
-## master
+## v1.2.0
 
 - CHANGE: !!!! If compose.networks is set, the network mode will be automaticly "user".
        It can be overwritten if compose.networks.driver is set. !!!!
