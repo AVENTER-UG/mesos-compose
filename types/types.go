@@ -90,8 +90,8 @@ type Service struct {
 
 // Gpus holds the config for gpu usage
 type GPUs struct {
-	Driver        string                  `yaml:"driver"`
-	Device        int                     `yaml:"device"`
+	Driver string `yaml:"driver"`
+	Device int    `yaml:"device"`
 }
 
 // Mesos custom mesos task configuration
@@ -128,7 +128,7 @@ type Deploy struct {
 			Memory float64 `yaml:"memory"`
 		} `yaml:"limits"`
 	} `yaml:"resources"`
-	Runtime		string		`yaml:"runtime"`
+	Runtime string `yaml:"runtime"`
 }
 
 // Placement - The docker-compose placement
@@ -210,7 +210,7 @@ type Command struct {
 	Memory             float64
 	Mesos              Mesos
 	CPU                float64
-  GPUs               float64
+	GPUs               float64
 	Disk               float64
 	Agent              string
 	Labels             []*mesosproto.Label

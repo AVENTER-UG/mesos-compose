@@ -168,7 +168,7 @@ func (e *Scheduler) matchAttributes(cmd *cfg.Command, offer *mesosproto.Offer) b
 		return true
 	}
 
-  ret := true;
+	ret := true
 	for _, attribute := range cmd.Attributes {
 		cmdAttr := strings.Replace(*attribute.Value, " ", "", -1)
 		offerAttr := strings.Replace(e.getAttributes(*attribute.Key, offer), " ", "", -1)

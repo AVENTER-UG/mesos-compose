@@ -55,10 +55,14 @@ seccheck:
 	grype --add-cpes-if-none .
 
 imagecheck:
-	trivy image ${IMAGEFULLNAME}:latest
+	grype --add-cpes-if-none ${IMAGEFULLNAME}:latest > cve-report.md
 
 go-fmt:
 	@gofmt -w .
+
+protobuf:
+	@cd proto; protoc --gofast_out=. mesos.proto
+	@cd proto; protoc --gofast_out=. scheduler.proto
 
 version:
 	@echo ">>>> Generate version file"

@@ -72,8 +72,8 @@ func (e *API) mapComposeServiceToMesosTask(vars map[string]string, name string, 
 	// set the docker constraints
 	e.setConstraints(cmd)
 
-  // set mesos attributes
-  e.setAttributes(cmd)
+	// set mesos attributes
+	e.setAttributes(cmd)
 
 	// store/update the mesos task in db
 	e.Redis.SaveTaskRedis(cmd)
@@ -109,7 +109,6 @@ func (e *API) getRuntime(cmd *cfg.Command) []*mesosproto.Parameter {
 
 	return param
 }
-
 
 // Set GPU config for the docker container. Mesos container not supportet right now.
 func (e *API) getGPUs(cmd *cfg.Command) []*mesosproto.Parameter {
@@ -482,10 +481,10 @@ func (e *API) getNetworkMode() string {
 		// to use CNI or docker network plugins, we have to set the mode to user.
 		// it can be overwritten by the driver name.
 		if e.Compose.Networks[network].Name != "" {
-		  mode = "user"
+			mode = "user"
 		}
 		if e.Compose.Networks[network].Driver != "" {
-		  mode = e.Compose.Networks[network].Driver
+			mode = e.Compose.Networks[network].Driver
 		}
 	}
 
