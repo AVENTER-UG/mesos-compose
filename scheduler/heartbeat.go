@@ -128,8 +128,8 @@ func (e *Scheduler) HeartbeatLoop(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		default:
-			e.checkRedis()
 			e.Heartbeat()
+			e.checkRedis()
 		}
 	}
 }
@@ -141,10 +141,8 @@ func (e *Scheduler) ReconcileLoop(ctx context.Context) {
 	for ; true; <-ticker.C {
 		select {
 		case <-ctx.Done():
-			logrus.WithField("Reconcileloop", e.Framework.FrameworkName).Info("Reconcile Stop")
 			return
 		default:
-			logrus.WithField("ReconcileLoop", e.Framework.FrameworkName).Info("Reconcile")
 			e.reconcile()
 			e.implicitReconcile()
 		}

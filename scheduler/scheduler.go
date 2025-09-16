@@ -112,7 +112,6 @@ func (e *Scheduler) EventLoop() {
 
 			go e.Redis.SaveFrameworkRedis(e.Framework)
 			go e.Redis.SaveConfig(*e.Config)
-
 		case mesosproto.Event_UPDATE.Number():
 			if e.Config.ThreadEnable {
 				go e.HandleUpdate(&event)

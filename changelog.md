@@ -14,6 +14,11 @@
 - FIX: [API] Restart service
 - DEL: [API] Remove useless restart task API
 - FIX: Force suppress after successfull framework subscription to prevent unwanted offers
+- ADD: GPU Allocation Option in Mesos. Can still use GPU's on the host but will not be allocated in mesos.
+- ADD/FIX: TASK_LOST Update causes TASKS to be killed
+- FIX: Unwanted Decline Offer causing duplicate declines removed
+- ADD: Host constraint: Option to only accept/request offers from particular hosts. 
+- FIX: Continously accepting offers when no task running. 
 
 ## v1.1.3
 
