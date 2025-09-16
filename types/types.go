@@ -42,6 +42,8 @@ type Config struct {
 	Plugins                    map[string]*plugin.Plugin
 	PluginsEnable              bool
 	ThreadEnable               bool
+	EnableGPUAllocation        bool
+	HostConstraintsList        []string
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework
@@ -215,6 +217,7 @@ type Command struct {
 	Agent              string
 	Labels             []*mesosproto.Label
 	State              string
+	ExpectedState      string
 	StateTime          time.Time
 	Instances          int
 	LinuxInfo          *mesosproto.LinuxInfo `protobuf:"bytes,11,opt,name=linux_info,json=linuxInfo" json:"linux_info,omitempty"`

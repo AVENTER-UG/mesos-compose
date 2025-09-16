@@ -157,7 +157,6 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd *cfg.Command) 
 	if offerret.GetHostname() != "" {
 		offerIds = e.removeOffer(offerIds, offerret.GetId().GetValue())
 	}
-	e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 	return offerret, offerIds
 }
 
