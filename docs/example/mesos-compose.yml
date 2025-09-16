@@ -91,8 +91,8 @@ services:
 networks:
   default:
     external: true
-    name: mesos-cni
-    driver: user
+    name: mesos-net
+    driver: mesos-net
 
 volumes:
   12345test:

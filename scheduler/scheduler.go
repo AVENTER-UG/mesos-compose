@@ -107,13 +107,9 @@ func (e *Scheduler) EventLoop() {
 			e.Framework.FrameworkInfo.Id = event.Subscribed.GetFrameworkId()
 			e.Framework.MesosStreamID = res.Header.Get("Mesos-Stream-Id")
 
-			if e.Config.ThreadEnable {
-				go e.reconcile()
-			} else {
-				e.reconcile()
-			}
-
+			e.reconcile()
 			e.Mesos.ForceSuppressFramework()
+
 			go e.Redis.SaveFrameworkRedis(e.Framework)
 			go e.Redis.SaveConfig(*e.Config)
 

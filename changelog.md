@@ -1,6 +1,6 @@
 # Changelog
 
-## master
+## v1.2.0
 
 - CHANGE: !!!! If compose.networks is set, the network mode will be automaticly "user".
        It can be overwritten if compose.networks.driver is set. !!!!
@@ -13,6 +13,7 @@
 - ADD: Support for Mesos attributes
 - FIX: [API] Restart service
 - DEL: [API] Remove useless restart task API
+- FIX: Force suppress after successfull framework subscription to prevent unwanted offers
 
 ## v1.1.3
 

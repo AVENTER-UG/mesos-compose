@@ -9,6 +9,5 @@ services:
 
 networks:
   default:
-    external: true
-    name: mini
-    
+    name: mesos-net
+    driver: mesos-net

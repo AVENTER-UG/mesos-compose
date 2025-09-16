@@ -59,7 +59,7 @@ func (e *Scheduler) Heartbeat() {
 		}
 
 		// there are more instances are running as it should be
-		if e.Redis.CountRedisKey(task.TaskName+":*", "_KILL") > task.Instances {
+		if e.Redis.CountRedisKey(task.TaskName+":*", "__KILL") > task.Instances {
 			logrus.WithField("func", "scheduler.CheckState").Info("Scale down Mesos Task: ", task.TaskName)
 			e.Mesos.Revive()
 			task.State = "__KILL"
