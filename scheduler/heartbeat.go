@@ -126,10 +126,8 @@ func (e *Scheduler) HeartbeatLoop(ctx context.Context) {
 	for ; true; <-ticker.C {
 		select {
 		case <-ctx.Done():
-			logrus.WithField("Heartbeatloop", e.Framework.FrameworkName).Info("Heartbeat Stop")
 			return
 		default:
-			logrus.WithField("Heartbeatloop", e.Framework.FrameworkName).Info("Heartbeat")
 			e.checkRedis()
 			e.Heartbeat()
 		}
