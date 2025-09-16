@@ -1,9 +1,7 @@
 NAME                                             VERSION                             TYPE                       
-command-line-arguments                           (devel)                             go-module                   
-command-line-arguments                           0.10.0                              go-module                   
 github.com/AVENTER-UG/go-logrus-formatter        v0.5.4                              go-module  (+1 duplicate)   
-github.com/AVENTER-UG/mesos-compose              (devel)                             go-module  (+1 duplicate)   
-github.com/AVENTER-UG/util                       v0.5.15                             go-module                   
+github.com/AVENTER-UG/mesos-compose              UNKNOWN                             go-module  (+1 duplicate)   
+github.com/AVENTER-UG/util                       v0.5.18                             go-module                   
 github.com/AVENTER-UG/util                       v0.5.6                              go-module                   
 github.com/Showmax/go-fqdn                       v1.0.0                              go-module                   
 github.com/cenkalti/backoff/v3                   v3.2.2                              go-module                   
@@ -13,7 +11,7 @@ github.com/cespare/xxhash/v2                     v2.3.0                         
 github.com/confluentinc/confluent-kafka-go       v1.9.2                              go-module  (+1 duplicate)   
 github.com/dgryski/go-rendezvous                 v0.0.0-20200823014737-9f7001d12a5f  go-module  (+2 duplicates)  
 github.com/go-jose/go-jose/v3                    v3.0.1                              go-module                   
-github.com/go-jose/go-jose/v4                    v4.0.4                              go-module                   
+github.com/go-jose/go-jose/v4                    v4.1.2                              go-module                   
 github.com/go-redis/redis/v9                     v9.0.0-rc.2                         go-module  (+1 duplicate)   
 github.com/gogo/protobuf                         v1.3.2                              go-module  (+1 duplicate)   
 github.com/gorilla/mux                           v1.8.1                              go-module                   
@@ -21,36 +19,39 @@ github.com/hashicorp/errwrap                     v1.1.0                         
 github.com/hashicorp/go-cleanhttp                v0.5.2                              go-module  (+1 duplicate)   
 github.com/hashicorp/go-multierror               v1.1.1                              go-module  (+1 duplicate)   
 github.com/hashicorp/go-retryablehttp            v0.7.5                              go-module                   
-github.com/hashicorp/go-retryablehttp            v0.7.7                              go-module                   
+github.com/hashicorp/go-retryablehttp            v0.7.8                              go-module                   
 github.com/hashicorp/go-rootcerts                v1.0.2                              go-module  (+1 duplicate)   
-github.com/hashicorp/go-secure-stdlib/parseutil  v0.1.8                              go-module  (+1 duplicate)   
+github.com/hashicorp/go-secure-stdlib/parseutil  v0.1.8                              go-module                   
+github.com/hashicorp/go-secure-stdlib/parseutil  v0.2.0                              go-module                   
 github.com/hashicorp/go-secure-stdlib/strutil    v0.1.2                              go-module  (+1 duplicate)   
 github.com/hashicorp/go-sockaddr                 v1.0.6                              go-module                   
 github.com/hashicorp/go-sockaddr                 v1.0.7                              go-module                   
-github.com/hashicorp/hcl                         v1.0.0                              go-module  (+1 duplicate)   
+github.com/hashicorp/hcl                         v1.0.0                              go-module                   
+github.com/hashicorp/hcl                         v1.0.1-vault-7                      go-module                   
 github.com/hashicorp/vault/api                   v1.12.0                             go-module                   
-github.com/hashicorp/vault/api                   v1.15.0                             go-module                   
-github.com/mattn/go-colorable                    v0.1.13                             go-module  (+1 duplicate)   
+github.com/hashicorp/vault/api                   v1.21.0                             go-module                   
+github.com/mattn/go-colorable                    v0.1.13                             go-module                   
+github.com/mattn/go-colorable                    v0.1.14                             go-module                   
 github.com/mattn/go-isatty                       v0.0.20                             go-module  (+1 duplicate)   
 github.com/mgutz/ansi                            v0.0.0-20200706080929-d51e80ef957d  go-module  (+1 duplicate)   
 github.com/mitchellh/go-homedir                  v1.1.0                              go-module                   
 github.com/mitchellh/mapstructure                v1.5.0                              go-module  (+1 duplicate)   
-github.com/redis/go-redis/v9                     v9.7.0                              go-module                   
+github.com/redis/go-redis/v9                     v9.14.0                             go-module                   
 github.com/russross/blackfriday                  v1.6.0                              go-module  (+1 duplicate)   
 github.com/ryanuber/go-glob                      v1.0.0                              go-module  (+1 duplicate)   
 github.com/sirupsen/logrus                       v1.9.3                              go-module  (+2 duplicates)  
 golang.org/x/crypto                              v0.19.0                             go-module                   
-golang.org/x/crypto                              v0.31.0                             go-module                   
+golang.org/x/crypto                              v0.42.0                             go-module                   
 golang.org/x/net                                 v0.21.0                             go-module                   
-golang.org/x/net                                 v0.32.0                             go-module                   
+golang.org/x/net                                 v0.44.0                             go-module                   
 golang.org/x/sys                                 v0.17.0                             go-module  (+1 duplicate)   
-golang.org/x/sys                                 v0.28.0                             go-module                   
+golang.org/x/sys                                 v0.36.0                             go-module                   
 golang.org/x/term                                v0.17.0                             go-module                   
-golang.org/x/term                                v0.27.0                             go-module                   
+golang.org/x/term                                v0.35.0                             go-module                   
 golang.org/x/text                                v0.14.0                             go-module                   
-golang.org/x/text                                v0.21.0                             go-module                   
+golang.org/x/text                                v0.29.0                             go-module                   
+golang.org/x/time                                v0.13.0                             go-module                   
 golang.org/x/time                                v0.5.0                              go-module                   
-golang.org/x/time                                v0.8.0                              go-module                   
-google.golang.org/protobuf                       v1.35.2                             go-module                   
+google.golang.org/protobuf                       v1.36.9                             go-module                   
 gopkg.in/yaml.v3                                 v3.0.1                              go-module                   
 stdlib                                           go1.21.7                            go-module  (+1 duplicate)

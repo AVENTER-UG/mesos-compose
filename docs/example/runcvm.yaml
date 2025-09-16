@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  test1:
+    image: nginx
+    restart: always
+    deploy:
+      runtime: "runcvm"
+      placement:
+        attributes:
+          - "runcvm: True"

@@ -1,13 +1,13 @@
 package api
 
 import (
-	"time"
 	"net/http"
+	"time"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	"github.com/AVENTER-UG/util/util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
-	"github.com/AVENTER-UG/util/util"
 )
 
 // V0ComposeRestartService will restart a service from a specific project
@@ -72,7 +72,7 @@ func (e *API) increaseAfterKill(task *cfg.Command, project, serviceName string) 
 	for !done {
 		select {
 		case <-ticker.C:
-			if e.Redis.CountRedisKey(e.Config.PrefixTaskName + ":" + project + ":" + serviceName + ":*", "") <= 0 {
+			if e.Redis.CountRedisKey(e.Config.PrefixTaskName+":"+project+":"+serviceName+":*", "") <= 0 {
 				done = true
 
 				logrus.WithField("func", "api.increaseAfterKill").Infof("Restart Task %s", serviceName)

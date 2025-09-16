@@ -11,7 +11,7 @@ ARG TAG
 ARG BUILDDATE
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags "-X main.BuildVersion=$BUILDDATE -X main.GitVersion=$TAG -extldflags \"-static\"" -o main .
 
-FROM alpine:3.19
+FROM alpine:3.22
 LABEL maintainer="Andreas Peters <support@aventer.biz>"
 LABEL org.opencontainers.image.title="mesos-m3s" 
 LABEL org.opencontainers.image.description="ClusterD/Apache Mesos container orchestrator"

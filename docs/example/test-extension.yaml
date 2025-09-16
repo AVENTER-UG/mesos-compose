@@ -23,5 +23,6 @@ services:
 
 networks:
   default:
-    name: mini
-          
+    name: mesos-net
+    driver: mesos-net
+
