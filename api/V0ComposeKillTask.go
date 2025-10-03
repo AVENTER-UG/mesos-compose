@@ -42,7 +42,6 @@ func (e *API) V0ComposeKillTask(w http.ResponseWriter, r *http.Request) {
 	logrus.WithField("func", "api.V0ComposeKillTask").Infof("Kill Task (%s)", taskID)
 
 	task.State = "__KILL"
-	task.ExpectedState = "__KILL"
 	task.Restart = "no"
 	task.Instances = 0
 	e.Redis.SaveTaskRedis(task)

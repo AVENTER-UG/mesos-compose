@@ -81,12 +81,13 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		logrus.WithField("func", "scheduler.HandleUpdate").Warn("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")
 		e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 
-		if task.ExpectedState != "__KILL" {
-			task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
-			task.State = ""
-		} else {
+		// Remove task if lost as a default behaviour.. This can be overriden using ENV variable "TASK_LOST_REMOVE_TASK" which will restart the task
+		if e.Config.TaskLostRemovesTask {
 			e.Mesos.ForceSuppressFramework()
 			e.Mesos.Call(msg)
+		} else {
+			task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
+			task.State = ""
 		}
 
 	case mesosproto.TaskState_TASK_RUNNING:
