@@ -58,6 +58,7 @@ func init() {
 	config.VaultTimeout, _ = time.ParseDuration(util.Getenv("VAULT_TIMEOUT", "10s"))
 	config.DiscoveryInfoNameDelimiter = util.Getenv("DISCOVERY_INFONAME_DELIMITER", ".")
 	config.DiscoveryPortNameDelimiter = util.Getenv("DISCOVERY_PORTNAME_DELIMITER", "_")
+	config.TaskLostRemovesTask, _ = strconv.ParseBool(util.Getenv("TASK_LOST_REMOVE_TASK", "true"))
 
 	// Enable Threads
 	if strings.Compare(util.Getenv("THREAD_ENABLE", "false"), "false") == 0 {
@@ -87,6 +88,13 @@ func init() {
 		config.SkipSSL = false
 	}
 
+	// Enable GPU Allocation in Mesos.. If false, GPU can still be used but allocation wont be impacted in mesos
+	if strings.Compare(util.Getenv("ENABLE_GPU_ALLOCATION", "true"), "true") == 0 {
+		config.EnableGPUAllocation = true
+	} else {
+		config.EnableGPUAllocation = false
+	}
+
 	listen := fmt.Sprintf(":%s", framework.FrameworkPort)
 
 	failoverTimeout := 5000.0
@@ -99,6 +107,13 @@ func init() {
 	// overwrite the webui URL
 	if os.Getenv("FRAMEWORK_WEBUIURL") != "" {
 		webuiurl = os.Getenv("FRAMEWORK_WEBUIURL")
+	}
+
+	// Set Hostname Constraints to not block offers of other hosts, optional
+	HostConstraintList := util.Getenv("HOST_CONSTRAINT_LIST", "")
+	if HostConstraintList != "" {
+		hostLists := strings.Split(HostConstraintList, ",")
+		config.HostConstraintsList = append(config.HostConstraintsList, hostLists...)
 	}
 
 	framework.CommandChan = make(chan cfg.Command, 100)

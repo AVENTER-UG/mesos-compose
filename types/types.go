@@ -42,6 +42,9 @@ type Config struct {
 	Plugins                    map[string]*plugin.Plugin
 	PluginsEnable              bool
 	ThreadEnable               bool
+	EnableGPUAllocation        bool
+	HostConstraintsList        []string
+	TaskLostRemovesTask        bool
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework

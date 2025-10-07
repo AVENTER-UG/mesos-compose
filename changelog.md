@@ -1,5 +1,14 @@
 # Changelog
 
+## Master
+
+- ADD: Option to make GPU allocation in mesos optional `ENABLE_GPU_ALLOCATION=true/false`
+- FIX: Offers when no tasks
+- ADD: Offer Constraints on Host Lists `HOST_CONSTRAINT_LIST`
+- ADD: Optional ENV variable `TASK_LOST_REMOVE_TASK` to override the behaviour on
+			 TASK_LOST status from Mesos.
+
+
 ## v1.2.0
 
 - CHANGE: !!!! If compose.networks is set, the network mode will be automaticly "user".
@@ -14,6 +23,11 @@
 - FIX: [API] Restart service
 - DEL: [API] Remove useless restart task API
 - FIX: Force suppress after successfull framework subscription to prevent unwanted offers
+- ADD: GPU Allocation Option in Mesos. Can still use GPU's on the host but will not be allocated in mesos.
+- ADD/FIX: TASK_LOST Update causes TASKS to be killed
+- FIX: Unwanted Decline Offer causing duplicate declines removed
+- ADD: Host constraint: Option to only accept/request offers from particular hosts. 
+- FIX: Continously accepting offers when no task running. 
 
 ## v1.1.3
 

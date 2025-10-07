@@ -54,6 +54,42 @@ func (e *Mesos) Subscribe() {
 		},
 	}
 
+	if len(e.Config.HostConstraintsList) > 0 {
+
+		offerConstraintGroups := []*mesosproto.OfferConstraints_RoleConstraints_Group{}
+		for _, hostname := range e.Config.HostConstraintsList {
+			offerConstraint := mesosproto.OfferConstraints_RoleConstraints_Group{
+				AttributeConstraints: []*mesosproto.AttributeConstraint{
+					{
+						Selector: &mesosproto.AttributeConstraint_Selector{
+							Selector: &mesosproto.AttributeConstraint_Selector_PseudoattributeType_{
+								PseudoattributeType: mesosproto.AttributeConstraint_Selector_HOSTNAME,
+							},
+						},
+						Predicate: &mesosproto.AttributeConstraint_Predicate{
+							Predicate: &mesosproto.AttributeConstraint_Predicate_TextEquals_{
+								TextEquals: &mesosproto.AttributeConstraint_Predicate_TextEquals{
+									Value: &hostname,
+								},
+							},
+						},
+					},
+				},
+			}
+			offerConstraintGroups = append(offerConstraintGroups, &offerConstraint)
+		}
+
+		offerConstraints := &mesosproto.OfferConstraints{
+			RoleConstraints: map[string]*mesosproto.OfferConstraints_RoleConstraints{
+				e.Framework.FrameworkRole: {
+					Groups: offerConstraintGroups,
+				},
+			},
+		}
+
+		subscribeCall.Subscribe.OfferConstraints = offerConstraints
+	}
+
 	logrus.WithField("func", "scheduler.Subscribe").Debug(subscribeCall)
 	body, _ := marshaller.Marshal(subscribeCall)
 	client := &http.Client{}

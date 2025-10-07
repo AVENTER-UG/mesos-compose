@@ -132,7 +132,9 @@ func (e *API) getGPUs(cmd *cfg.Command) []*mesosproto.Parameter {
 		if e.Service.GPUs.Driver == "nvidia" && e.Service.GPUs.Device >= 0 {
 			i := strconv.Itoa(e.Service.GPUs.Device)
 			param = e.addDockerParameter(param, "gpus", "device="+i)
-			cmd.GPUs, _ = strconv.ParseFloat(i, 64)
+			if e.Config.EnableGPUAllocation {
+				cmd.GPUs, _ = strconv.ParseFloat(i, 64)
+			}
 		}
 	}
 
