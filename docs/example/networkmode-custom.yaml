@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  redis-user:
+    image: redis:latest
+    network: default
+
+networks:
+  default:
+    external: true
+    name: mesos-net
+		driver: mesos-net
+    

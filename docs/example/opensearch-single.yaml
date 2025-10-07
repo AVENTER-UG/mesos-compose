@@ -1,0 +1,56 @@
+version: '3'
+services:
+  opensearch-node1:
+    image: opensearchproject/opensearch:2.0.1
+    container_name: opensearch-node1.mc.mesos
+    environment:
+      cluster.name: opensearch-cluster
+      node.name: opensearch-node1.mc.mesos
+      bootstrap.memory_lock: false # along with the memlock settings below, disables swapping
+      discovery.seed_hosts: opensearch-node1.mc.mesos
+      cluster.initial_master_nodes: opensearch-node1.mc.mesos
+      OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+      DISABLE_INSTALL_DEMO_CONFIG: true # disables execution of install_demo_configuration.sh bundled with security plugin, which installs demo certificates and security configurations to OpenSearch
+      DISABLE_SECURITY_PLUGIN: true # disables security plugin entirely in OpenSearch by setting plugins.security.disabled: true in opensearch.yml
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536 # maximum number of open files for the OpenSearch user, set to at least 65536 on modern systems
+        hard: 65536
+    ports:
+      - 9200:9200
+      - 9600:9600 # required for Performance Analyzer
+    network: default
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: 0.01
+          memory: 2000
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.0.1
+    container_name: opensearch-dashboards.mc.mesos
+    ports:
+      - 5601:5601
+    expose:
+      - "5601"
+    environment:
+      server.host: "0.0.0.0"
+      OPENSEARCH_HOSTS: '["http://opensearch-node1.mc.mesos:9200"]'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: true # disables security dashboards plugin in OpenSearch Dashboards
+    network: default
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: 0.01
+          memory: 2000
+
+networks:
+  default:
+    name: mesos-net
+    driver: mesos-net
+            
