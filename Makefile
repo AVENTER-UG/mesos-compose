@@ -10,7 +10,7 @@ IMAGEFULLNAME=${REPO}/${IMAGENAME}
 LASTCOMMIT=$(shell git log -1 --pretty=short | tail -n 1 | tr -d " " | tr -d "UPDATE:")
 
 
-.PHONY: help build all docs
+.PHONY: help build all docs test
 
 .DEFAULT_GOAL := all
 
@@ -66,4 +66,8 @@ version:
 	@echo "Saved under .version.json"
 
 check: go-fmt sboom seccheck
-all: check build imagecheck version 
+test:
+	@echo ">>> Run tests"
+	go test -count=1 ./...
+
+all: check build imagecheck version

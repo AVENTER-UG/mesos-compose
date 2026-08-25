@@ -6,20 +6,6 @@ import (
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 )
 
-// cmd.Labels = e.getLabels()
-// cmd.Executor = e.getExecutor()
-// cmd.DockerPortMappings = e.getDockerPorts()
-// cmd.Environment.Variables = e.getEnvironment()
-// cmd.Volumes = e.getVolumes(cmd.ContainerType)
-// cmd.Discovery = e.getDiscoveryInfo(cmd)
-// cmd.LinuxInfo = e.getLinuxInfo()
-// cmd.DockerParameter = e.getDockerParameter(cmd)
-// cmd.PullPolicy = e.getPullPolicy()
-// cmd.Restart = e.getRestart()
-// cmd.Mesos = e.Service.Mesos
-// cmd.Uris = e.getURIs()
-// cmd.NetworkInfo = e.getNetworkInfo()
-
 func TestGetShell(t *testing.T) {
 	var e API
 	e.Service.Command = "test"
@@ -28,7 +14,7 @@ func TestGetShell(t *testing.T) {
 	res := e.getShell()
 
 	if !res {
-		t.Errorf("getShell was incorrect. Got %s, want %s ", "false", "true")
+		t.Errorf("getShell was incorrect. Got %t, want %t", res, true)
 	}
 
 	e.Service.Command = ""
@@ -36,7 +22,7 @@ func TestGetShell(t *testing.T) {
 	res = e.getShell()
 
 	if res {
-		t.Errorf("getShell (with empty command) was incorrect. Got %s, want %s ", "true", "false")
+		t.Errorf("getShell (with empty command) was incorrect. Got %t, want %t", res, false)
 	}
 
 	e.Service.Shell = false
@@ -44,7 +30,7 @@ func TestGetShell(t *testing.T) {
 	res = e.getShell()
 
 	if res {
-		t.Errorf("getShell was incorrect. Got %s, want %s ", "true", "false")
+		t.Errorf("getShell was incorrect. Got %t, want %t", res, false)
 	}
 }
 
@@ -55,7 +41,7 @@ func TestGetCommand(t *testing.T) {
 	res := e.getCommand()
 
 	if res != "sleep" {
-		t.Errorf("getCommand was incorrect. Got %s, want %s ", res, "sleep")
+		t.Errorf("getCommand was incorrect. Got %s, want %s", res, "sleep")
 	}
 }
 
@@ -66,7 +52,7 @@ func TestGetHostname(t *testing.T) {
 	res := e.getHostname()
 
 	if res != "hostname" {
-		t.Errorf("getHostname (with Hostname) was incorrect. Got %s, want %s ", res, "hostname")
+		t.Errorf("getHostname (with Hostname) was incorrect. Got %s, want %s", res, "hostname")
 	}
 
 	e.Service.ContainerName = "containername"
@@ -74,36 +60,36 @@ func TestGetHostname(t *testing.T) {
 	res = e.getHostname()
 
 	if res != "hostname" {
-		t.Errorf("getHostname (with ContainerName and Hostname) was incorrect. Got %s, want %s ", res, "hostname")
+		t.Errorf("getHostname (with ContainerName and Hostname) was incorrect. Got %s, want %s", res, "hostname")
 	}
 
 	e.Service.Hostname = ""
 	res = e.getHostname()
 
 	if res != "containername" {
-		t.Errorf("getHostname (with ContainerName) was incorrect. Got %s, want %s ", res, "containername")
+		t.Errorf("getHostname (with ContainerName) was incorrect. Got %s, want %s", res, "containername")
 	}
 }
 
-func TestNetworkMode(t *testing.T) {
+func TestGetNetworkMode(t *testing.T) {
 	var e API
 	e.Service.NetworkMode = "host"
 
 	res := e.getNetworkMode()
 
 	if res != "host" {
-		t.Errorf("getNetworkMode was incorrect. Got %s, want %s ", res, "host")
+		t.Errorf("getNetworkMode was incorrect. Got %s, want %s", res, "host")
 	}
 }
 
-func TestContainerType(t *testing.T) {
+func TestGetContainerType(t *testing.T) {
 	var e API
 	e.Service.ContainerType = "DOCKER"
 
 	res := e.getContainerType()
 
 	if res != "docker" {
-		t.Errorf("getContainerType (container type docker) was incorrect. Got %s, want %s ", res, "docker")
+		t.Errorf("getContainerType (container type docker) was incorrect. Got %s, want %s", res, "docker")
 	}
 
 	e.Service.ContainerType = "MESOS"
@@ -111,7 +97,7 @@ func TestContainerType(t *testing.T) {
 	res = e.getContainerType()
 
 	if res != "mesos" {
-		t.Errorf("getContainerType (container type mesos) was incorrect. Got %s, want %s ", res, "mesos")
+		t.Errorf("getContainerType (container type mesos) was incorrect. Got %s, want %s", res, "mesos")
 	}
 
 	e.Service.ContainerType = ""
@@ -119,7 +105,7 @@ func TestContainerType(t *testing.T) {
 	res = e.getContainerType()
 
 	if res != "docker" {
-		t.Errorf("getContainerType (empty container type) was incorrect. Got %s, want %s ", res, "docker")
+		t.Errorf("getContainerType (empty container type) was incorrect. Got %s, want %s", res, "docker")
 	}
 
 	e.Service.ContainerType = "nothing"
@@ -127,11 +113,11 @@ func TestContainerType(t *testing.T) {
 	res = e.getContainerType()
 
 	if res != "docker" {
-		t.Errorf("getContainerType (wrong container type) was incorrect. Got %s, want %s ", res, "docker")
+		t.Errorf("getContainerType (wrong container type) was incorrect. Got %s, want %s", res, "docker")
 	}
 }
 
-func TestTaskName(t *testing.T) {
+func TestGetTaskName(t *testing.T) {
 	var e API
 	e.Config = &cfg.Config{}
 	e.Config.PrefixTaskName = "mc"
@@ -140,7 +126,7 @@ func TestTaskName(t *testing.T) {
 	res := e.getTaskName("project", "name")
 
 	if res != "mc:taskname" {
-		t.Errorf("getTaskName was incorrect. Got %s, want %s ", res, "mc:taskname")
+		t.Errorf("getTaskName was incorrect. Got %s, want %s", res, "mc:taskname")
 	}
 }
 
@@ -151,7 +137,7 @@ func TestGetCPU(t *testing.T) {
 	res := e.getCPU()
 
 	if res != 0.1 {
-		t.Errorf("getCPU was incorrect. Got %f, want %f ", res, 0.1)
+		t.Errorf("getCPU was incorrect. Got %f, want %f", res, 0.1)
 	}
 }
 
@@ -162,7 +148,7 @@ func TestGetMemory(t *testing.T) {
 	res := e.getMemory()
 
 	if res != 1000.0 {
-		t.Errorf("getMemory was incorrect. Got %f, want %f ", res, 1000.0)
+		t.Errorf("getMemory was incorrect. Got %f, want %f", res, 1000.0)
 	}
 }
 
@@ -174,7 +160,7 @@ func TestGetDisk(t *testing.T) {
 	res := e.getDisk()
 
 	if res != 1000.0 {
-		t.Errorf("getDisk was incorrect. Got %f, want %f ", res, 1000.0)
+		t.Errorf("getDisk was incorrect. Got %f, want %f", res, 1000.0)
 	}
 }
 
@@ -185,6 +171,45 @@ func TestGetReplicas(t *testing.T) {
 	res := e.getReplicas()
 
 	if res != 1 {
-		t.Errorf("getReplicas was incorrect. Got %d, want %d ", res, 1)
+		t.Errorf("getReplicas was incorrect. Got %d, want %d", res, 1)
+	}
+}
+
+func TestGetTaskNameWithPrefix(t *testing.T) {
+	var e API
+	e.Config = &cfg.Config{}
+	e.Config.PrefixTaskName = "testprefix"
+
+	// Test scenario: Taskname does not match prefix pattern
+	e.Service.Mesos.TaskName = "anotherprefix:something"
+
+	res := e.getTaskName("project", "service")
+
+	if res != "testprefix:project:service" {
+		t.Errorf("getTaskName was incorrect. Got %s, want testprefix:project:service", res)
+	}
+}
+
+func TestGetNetworkModeWithDefault(t *testing.T) {
+	var e API
+	// Test with default network mode when none set
+	e.Service.NetworkMode = ""
+
+	res := e.getNetworkMode()
+
+	if res != "user" {
+		t.Errorf("getNetworkMode was incorrect. Got %s, want user", res)
+	}
+}
+
+func TestGetContainerTypeWithDefault(t *testing.T) {
+	var e API
+	// Test with default container type when none set
+	e.Service.ContainerType = ""
+
+	res := e.getContainerType()
+
+	if res != "docker" {
+		t.Errorf("getContainerType was incorrect. Got %s, want docker", res)
 	}
 }

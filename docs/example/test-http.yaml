@@ -13,12 +13,11 @@ services:
       traefik.http.services.__mesos_taskid__.loadBalancer.healthCheck.interval: "10s"
       traefik.http.services.__mesos_taskid__.loadBalancer.healthCheck.timeout: "3s"
     restart: always
-    network_mode: "user"    
     network: default
     deploy:
-      replicas: 2
+      replicas: 1
 
 networks:
   default:
-    name: mesos-net
-    driver: mesos-net
+    external: true
+    driver: weave
