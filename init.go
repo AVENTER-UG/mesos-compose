@@ -59,6 +59,12 @@ func init() {
 	config.DiscoveryInfoNameDelimiter = util.Getenv("DISCOVERY_INFONAME_DELIMITER", ".")
 	config.DiscoveryPortNameDelimiter = util.Getenv("DISCOVERY_PORTNAME_DELIMITER", "_")
 	config.TaskLostRemovesTask, _ = strconv.ParseBool(util.Getenv("TASK_LOST_REMOVE_TASK", "true"))
+	for _, origin := range strings.Split(util.Getenv("CORS_ALLOWED_ORIGINS", ""), ",") {
+		origin = strings.TrimSpace(origin)
+		if origin != "" {
+			config.CORSAllowedOrigins = append(config.CORSAllowedOrigins, origin)
+		}
+	}
 
 	// Enable Threads
 	if strings.Compare(util.Getenv("THREAD_ENABLE", "false"), "false") == 0 {

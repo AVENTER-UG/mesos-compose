@@ -83,3 +83,38 @@ func TestCommandsRoutesVersions(t *testing.T) {
 		t.Fatalf("status = %d, want %d", recorder.Code, http.StatusOK)
 	}
 }
+
+func TestCommandsAddsCORSHeaders(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/api/compose/versions", nil)
+	req.Header.Set("Origin", "https://mesoscomposefrontend.weave.local:5173")
+
+	(&API{Config: &cfg.Config{CORSAllowedOrigins: []string{"https://mesoscomposefrontend.weave.local:5173"}}}).Commands().ServeHTTP(recorder, req)
+
+	if got, want := recorder.Header().Get("Access-Control-Allow-Origin"), "https://mesoscomposefrontend.weave.local:5173"; got != want {
+		t.Fatalf("Access-Control-Allow-Origin = %q, want %q", got, want)
+	}
+}
+
+func TestCommandsHandlesCORSPreflight(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodOptions, "/api/compose/v0/project", nil)
+	req.Header.Set("Origin", "http://localhost:3000")
+	req.Header.Set("Access-Control-Request-Method", http.MethodPut)
+	req.Header.Set("Access-Control-Request-Headers", "Authorization, Content-Type")
+
+	(&API{Config: &cfg.Config{CORSAllowedOrigins: []string{"http://localhost:3000"}}}).Commands().ServeHTTP(recorder, req)
+
+	if recorder.Code != http.StatusNoContent {
+		t.Fatalf("status = %d, want %d", recorder.Code, http.StatusNoContent)
+	}
+	if got, want := recorder.Header().Get("Access-Control-Allow-Origin"), "http://localhost:3000"; got != want {
+		t.Fatalf("Access-Control-Allow-Origin = %q, want %q", got, want)
+	}
+	if got, want := recorder.Header().Get("Access-Control-Allow-Methods"), "GET, PUT, UPDATE, DELETE, OPTIONS"; got != want {
+		t.Fatalf("Access-Control-Allow-Methods = %q, want %q", got, want)
+	}
+	if got, want := recorder.Header().Get("Access-Control-Allow-Headers"), "Content-Type, Authorization"; got != want {
+		t.Fatalf("Access-Control-Allow-Headers = %q, want %q", got, want)
+	}
+}

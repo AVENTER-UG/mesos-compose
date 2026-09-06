@@ -47,6 +47,7 @@ type Config struct {
 	EnableGPUAllocation        bool
 	HostConstraintsList        []string
 	TaskLostRemovesTask        bool
+	CORSAllowedOrigins         []string
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework

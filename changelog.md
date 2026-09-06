@@ -2,6 +2,7 @@
 
 ## Master
 
+- ADD: Configurable CORS origin allowlist via `CORS_ALLOWED_ORIGINS`
 - ADD: Option to make GPU allocation in mesos optional `ENABLE_GPU_ALLOCATION=true/false`
 - FIX: Offers when no tasks
 - ADD: Offer Constraints on Host Lists `HOST_CONSTRAINT_LIST`

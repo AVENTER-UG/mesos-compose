@@ -50,6 +50,7 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *API {
 // Commands is the main function of this package
 func (e *API) Commands() *mux.Router {
 	rtr := mux.NewRouter()
+	rtr.Use(e.corsMiddleware)
 	rtr.HandleFunc("/api/compose/versions", e.Versions).Methods("GET")
 	rtr.HandleFunc("/api/compose/v0/tasks", e.V0ShowAllTasks).Methods("GET")
 	rtr.HandleFunc("/api/compose/v0/tasks/{taskid}", e.V0ComposeKillTask).Methods("DELETE")
@@ -60,8 +61,31 @@ func (e *API) Commands() *mux.Router {
 	rtr.HandleFunc("/api/compose/v0/{project}", e.V0ComposeUpdate).Methods("UPDATE")
 	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}", e.V0ComposeKillService).Methods("DELETE")
 	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}/restart", e.V0ComposeRestartService).Methods("PUT")
+	rtr.PathPrefix("/").Methods(http.MethodOptions).HandlerFunc(corsPreflight)
 
 	return rtr
+}
+
+func (e *API) corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		origin := r.Header.Get("Origin")
+		if origin != "" {
+			w.Header().Add("Vary", "Origin")
+			for _, allowedOrigin := range e.Config.CORSAllowedOrigins {
+				if origin == allowedOrigin {
+					w.Header().Set("Access-Control-Allow-Origin", origin)
+					w.Header().Set("Access-Control-Allow-Methods", "GET, PUT, UPDATE, DELETE, OPTIONS")
+					w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+					break
+				}
+			}
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
+func corsPreflight(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNoContent)
 }
 
 // Versions give out a list of Versions
