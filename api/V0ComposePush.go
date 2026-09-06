@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
@@ -33,9 +34,15 @@ func (e *API) V0ComposePush(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	composeYAML, err := io.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+
 	var data cfg.Compose
 
-	err := yaml.NewDecoder(r.Body).Decode(&data)
+	err = yaml.Unmarshal(composeYAML, &data)
 
 	if err != nil {
 		logrus.WithField("func", "V0ComposePush").Error("Error: ", err.Error())
@@ -54,6 +61,7 @@ func (e *API) V0ComposePush(w http.ResponseWriter, r *http.Request) {
 			e.mapComposeServiceToMesosTask(vars, service, &cfg.Command{})
 		}
 	}
+	e.Redis.SaveComposeYAML(vars["project"], composeYAML)
 
 	out, _ := json.Marshal(&data)
 	w.Write([]byte(util.PrettyJSON(out)))

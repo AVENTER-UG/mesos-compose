@@ -66,13 +66,6 @@ func init() {
 		}
 	}
 
-	// Enable Threads
-	if strings.Compare(util.Getenv("THREAD_ENABLE", "false"), "false") == 0 {
-		config.ThreadEnable = false
-	} else {
-		config.ThreadEnable = true
-	}
-
 	// Enable plugins
 	if strings.Compare(util.Getenv("COMPOSE_PLUGINS_ENABLE", "false"), "false") == 0 {
 		config.PluginsEnable = false

@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/base64"
-	"encoding/json"
+
 	"flag"
 	"fmt"
 	"net/http"
@@ -33,6 +33,37 @@ func decodeBase64Cert(pemCert string) []byte {
 	}
 
 	return sslPem
+}
+
+// ReconnectBackoffBase is the initial delay before the first resubscription attempt.
+const ReconnectBackoffBase = 2 * time.Second
+
+// ReconnectBackoffMax caps the exponential resubscription backoff.
+const ReconnectBackoffMax = 60 * time.Second
+
+// reconnectBackoff returns a deterministic exponential backoff delay for the
+// given 0-based reconnect attempt: it starts at ReconnectBackoffBase and
+// doubles per attempt until it reaches ReconnectBackoffMax, where it plateaus.
+// No jitter is added, so the sequence is fully deterministic and testable.
+//
+// Limitation: main() cannot observe whether the attempt that preceded an
+// EventLoop() return ever produced a successful subscription, so the attempt
+// counter is never reset during a run; it only restarts from 0 when the
+// process is restarted. A caller that *does* know its subscription succeeded
+// should pass a fresh (lower) attempt index to reset the backoff.
+func reconnectBackoff(attempt int) time.Duration {
+	if attempt < 0 {
+		attempt = 0
+	}
+	delay := ReconnectBackoffBase
+	for attempt > 0 && delay < ReconnectBackoffMax {
+		delay *= 2
+		attempt--
+	}
+	if delay > ReconnectBackoffMax {
+		delay = ReconnectBackoffMax
+	}
+	return delay
 }
 
 func main() {
@@ -68,7 +99,11 @@ func main() {
 	var oldFramework cfg.FrameworkConfig
 	key := r.GetRedisKey(framework.FrameworkName + ":framework")
 	if key != "" {
-		json.Unmarshal([]byte(key), &oldFramework)
+		if storedFramework, err := redis.DecodeFramework([]byte(key)); err == nil {
+			oldFramework = *storedFramework
+		} else {
+			logrus.WithField("func", "main").Warn("Could not decode persisted framework: ", err)
+		}
 
 		framework.FrameworkInfo.Id = oldFramework.FrameworkInfo.Id
 		framework.MesosStreamID = oldFramework.MesosStreamID
@@ -115,17 +150,19 @@ func main() {
 	go loadPlugins(r)
 
 	//	this loop is for resubscribtion purpose
+	backoffAttempt := 0
 	for {
 		e := scheduler.Subscribe(&config, &framework)
 		e.API = a
 		e.Vault = v
 		ctx, cancel := context.WithCancel(context.Background())
-		go e.HeartbeatLoop(ctx)
-		go e.ReconcileLoop(ctx)
+		go e.RunAfterSubscription(ctx, e.HeartbeatLoop)
+		go e.RunAfterSubscription(ctx, e.ReconcileLoop)
 		e.Redis = r
 		e.EventLoop()
 		cancel()
 		e.Redis.SaveConfig(*e.Config)
-		time.Sleep(60 * time.Second)
+		time.Sleep(reconnectBackoff(backoffAttempt))
+		backoffAttempt++
 	}
 }

@@ -1,6 +1,6 @@
 module github.com/AVENTER-UG/mesos-compose
 
-go 1.25.0
+go 1.26
 
 require (
 	github.com/AVENTER-UG/util v0.6.1
@@ -11,6 +11,11 @@ require (
 	github.com/sirupsen/logrus v1.9.4
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/yaml.v3 v3.0.1
+)
+
+require (
+	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/pquerna/ffjson v0.0.0-20190930134022-aa0246cd15f7 // indirect
 )
 
 require (
@@ -29,6 +34,7 @@ require (
 	github.com/hashicorp/go-sockaddr v1.0.7 // indirect
 	github.com/hashicorp/hcl v1.0.1-vault-7 // indirect
 	github.com/hashicorp/vault/api v1.23.0 // indirect
+	github.com/m3scluster/clusterd-go v1.0.0
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect

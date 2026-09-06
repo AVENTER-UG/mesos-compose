@@ -8,7 +8,9 @@
 - ADD: Offer Constraints on Host Lists `HOST_CONSTRAINT_LIST`
 - ADD: Optional ENV variable `TASK_LOST_REMOVE_TASK` to override the behaviour on
 			 TASK_LOST status from Mesos.
-- ADD: csi support              
+- ADD: csi support
+- ADD: the pushed or updated yaml will be stored in the redis DB unter "_yaml".
+			 with the API Endpoint "/api/compose/v0/<taskname>" you will get back the YAML file.
 
 
 ## v1.2.0

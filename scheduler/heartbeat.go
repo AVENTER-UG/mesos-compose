@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/AVENTER-UG/mesos-compose/redis"
+	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	"github.com/sirupsen/logrus"
 )
 
@@ -20,7 +22,7 @@ func (e *Scheduler) Heartbeat() {
 		// get the values of the current key
 		key := e.Redis.GetRedisKey(keys.Val())
 
-		task := e.Mesos.DecodeTask(key)
+		task := redis.DecodeTaskOrEmpty([]byte(key))
 
 		if task.TaskID == "" || task.TaskName == "" {
 			continue
@@ -82,8 +84,15 @@ func (e *Scheduler) Heartbeat() {
 
 			e.Redis.SaveTaskRedis(task)
 
-			// add task to communication channel
-			e.Framework.CommandChan <- *task
+			// Add the task to the communication channel without blocking the
+			// heartbeat forever when the offer handler is busy. Leave it in a
+			// retryable state so the next heartbeat can enqueue it again.
+			if !enqueueCommand(e.Framework.CommandChan, *task) {
+				task.State = ""
+				e.Redis.SaveTaskRedis(task)
+				logrus.WithField("func", "scheduler.CheckState").Warn("Rescheduling command queue is full")
+				continue
+			}
 
 			logrus.WithField("func", "scheduler.CheckState").Info("Scheduled Mesos Task: ", task.TaskName)
 			continue
@@ -108,6 +117,25 @@ func (e *Scheduler) Heartbeat() {
 	if suppress && !e.Config.Suppress {
 		e.Mesos.SuppressFramework()
 		e.Config.Suppress = true
+	}
+}
+
+func enqueueCommand(commands chan cfg.Command, command cfg.Command) bool {
+	select {
+	case commands <- command:
+		return true
+	default:
+		return false
+	}
+}
+
+// RunAfterSubscription starts a scheduler loop only after Mesos confirmed the
+// subscription, or returns when the parent context is canceled.
+func (e *Scheduler) RunAfterSubscription(ctx context.Context, loop func(context.Context)) {
+	select {
+	case <-e.Subscribed:
+		loop(ctx)
+	case <-ctx.Done():
 	}
 }
 

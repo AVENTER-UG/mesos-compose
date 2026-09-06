@@ -43,11 +43,11 @@ type Config struct {
 	DiscoveryPortNameDelimiter string
 	Plugins                    map[string]*plugin.Plugin
 	PluginsEnable              bool
-	ThreadEnable               bool
-	EnableGPUAllocation        bool
-	HostConstraintsList        []string
-	TaskLostRemovesTask        bool
-	CORSAllowedOrigins         []string
+
+	EnableGPUAllocation bool
+	HostConstraintsList []string
+	TaskLostRemovesTask bool
+	CORSAllowedOrigins  []string
 }
 
 // UserCredentials - The Username and Password to authenticate against this framework

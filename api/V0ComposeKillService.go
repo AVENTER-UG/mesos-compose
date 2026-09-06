@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 
+	"github.com/AVENTER-UG/mesos-compose/redis"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -37,7 +38,7 @@ func (e *API) V0ComposeKillService(w http.ResponseWriter, r *http.Request) {
 	for keys.Next(e.Redis.CTX) {
 		key := e.Redis.GetRedisKey(keys.Val())
 
-		task := e.Mesos.DecodeTask(key)
+		task := redis.DecodeTaskOrEmpty([]byte(key))
 		task.State = "__KILL"
 		task.Restart = "no"
 		task.Instances = 0

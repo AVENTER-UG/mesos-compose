@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
+	"github.com/AVENTER-UG/mesos-compose/redis"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	"github.com/sirupsen/logrus"
 )
@@ -36,7 +37,7 @@ func (e *API) V0ShowAllTasks(w http.ResponseWriter, r *http.Request) {
 		}
 
 		key := e.Redis.GetRedisKey(keys.Val())
-		task := e.Mesos.DecodeTask(key)
+		task := redis.DecodeTaskOrEmpty([]byte(key))
 
 		task.Environment = &mesosproto.Environment{}
 

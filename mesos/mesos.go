@@ -1,18 +1,24 @@
 package mesos
 
 import (
-	"bytes"
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
+	"sync"
+
+	"time"
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	clusterd "github.com/m3scluster/clusterd-go/api/v1/lib"
+	"github.com/m3scluster/clusterd-go/api/v1/lib/encoding/codecs"
+	"github.com/m3scluster/clusterd-go/api/v1/lib/httpcli"
+	clusterdscheduler "github.com/m3scluster/clusterd-go/api/v1/lib/scheduler"
+	clusterdcalls "github.com/m3scluster/clusterd-go/api/v1/lib/scheduler/calls"
 	"github.com/sirupsen/logrus"
-	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // Mesos include all the current vars and global config
@@ -22,15 +28,77 @@ type Mesos struct {
 	IsSuppress bool
 	IsRevive   bool
 	CountAgent int
-	Req        *http.Request
-	Client     *http.Client
+
+	// Client and Transport are created once in New and reused for the whole
+	// lifetime of the framework, so non-stream Calls can keep connections
+	// alive and Subscribe applies the same TLS policy as everything else.
+	Client            *http.Client
+	Transport         *http.Transport
+	ClusterdClient    *httpcli.Client
+	ClusterdSubscribe *clusterdscheduler.Call
+	callTimeout       time.Duration
+	callMu            sync.Mutex
+	streamIDMu        sync.RWMutex
+
+	agentCacheMu sync.Mutex
+	agentCache   map[string]agentCacheEntry
 }
 
-// Marshaler to serialize Protobuf Message to JSON
-var marshaller = protojson.MarshalOptions{
-	UseEnumNumbers: false,
-	Indent:         " ",
-	UseProtoNames:  true,
+const agentInfoCacheTTL = 30 * time.Second
+
+func mesosEndpoint(framework *cfg.FrameworkConfig, path string) string {
+	protocol := "https"
+	if !framework.MesosSSL {
+		protocol = "http"
+	}
+	return protocol + "://" + framework.MesosMasterServer + path
+}
+
+type agentCacheEntry struct {
+	agent   cfg.MesosSlaves
+	expires time.Time
+}
+
+type streamIDRoundTripper struct {
+	next  http.RoundTripper
+	owner *Mesos
+}
+
+func (rt *streamIDRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	response, err := rt.next.RoundTrip(req)
+	if err == nil {
+		if streamID := response.Header.Get("Mesos-Stream-Id"); streamID != "" {
+			rt.owner.SetStreamID(streamID)
+		}
+	}
+	return response, err
+}
+
+func clusterdSchedulerCall(call *mesosproto.Call) (clusterdscheduler.Call, error) {
+	if call == nil {
+		return clusterdscheduler.Call{}, fmt.Errorf("scheduler call must not be nil")
+	}
+	data, err := json.Marshal(call)
+	if err != nil {
+		return clusterdscheduler.Call{}, fmt.Errorf("marshal scheduler call: %w", err)
+	}
+	var result clusterdscheduler.Call
+	if err := json.Unmarshal(data, &result); err != nil {
+		return clusterdscheduler.Call{}, fmt.Errorf("unmarshal clusterd scheduler call: %w", err)
+	}
+	return result, nil
+}
+
+func (e *Mesos) SetStreamID(streamID string) {
+	e.streamIDMu.Lock()
+	e.Framework.MesosStreamID = streamID
+	e.streamIDMu.Unlock()
+}
+
+func (e *Mesos) StreamID() string {
+	e.streamIDMu.RLock()
+	defer e.streamIDMu.RUnlock()
+	return e.Framework.MesosStreamID
 }
 
 // New will create a new API object
@@ -41,6 +109,38 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Mesos {
 		IsSuppress: false,
 		IsRevive:   false,
 	}
+
+	// One Transport (and one Client on top of it) is created for the whole
+	// lifetime of the framework and reused by Subscribe and every Call.
+	// Idle connections stay open, so non-stream Calls can be served over
+	// keep-alive connections instead of one TLS handshake per request.
+	e.Transport = &http.Transport{
+		// #nosec G402
+		TLSClientConfig:       &tls.Config{InsecureSkipVerify: cfg.SkipSSL},
+		MaxIdleConns:          100,
+		MaxIdleConnsPerHost:   10,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ResponseHeaderTimeout: 15 * time.Second,
+	}
+	e.Client = &http.Client{
+		Transport: e.Transport,
+	}
+	e.callTimeout = 15 * time.Second
+	e.ClusterdClient = httpcli.New(
+		httpcli.Endpoint(mesosEndpoint(frm, "/api/v1/scheduler")),
+		httpcli.Codec(codecs.ByMediaType[codecs.MediaTypeJSON]),
+		httpcli.Do(httpcli.With(
+			httpcli.BasicAuth(frm.Username, frm.Password),
+			httpcli.RoundTripper(e.Transport),
+			httpcli.WrapRoundTripper(func(next http.RoundTripper) http.RoundTripper {
+				return &streamIDRoundTripper{next: next, owner: e}
+			}),
+			// #nosec G402 -- SkipSSL is an explicit framework configuration option.
+			httpcli.TLSConfig(&tls.Config{InsecureSkipVerify: cfg.SkipSSL}),
+		)),
+	)
+	e.agentCache = make(map[string]agentCacheEntry)
 
 	return e
 }
@@ -91,24 +191,11 @@ func (e *Mesos) Subscribe() {
 	}
 
 	logrus.WithField("func", "scheduler.Subscribe").Debug(subscribeCall)
-	body, _ := marshaller.Marshal(subscribeCall)
-	client := &http.Client{}
-	// #nosec G402
-	client.Transport = &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: e.Config.SkipSSL},
+	if wireCall, err := clusterdSchedulerCall(subscribeCall); err == nil {
+		e.ClusterdSubscribe = &wireCall
+	} else {
+		logrus.WithField("func", "scheduler.Subscribe").Error("Could not create clusterd subscription call: ", err)
 	}
-
-	protocol := "https"
-	if !e.Framework.MesosSSL {
-		protocol = "http"
-	}
-	req, _ := http.NewRequest("POST", protocol+"://"+e.Framework.MesosMasterServer+"/api/v1/scheduler", bytes.NewBuffer([]byte(body)))
-	req.Close = true
-	req.SetBasicAuth(e.Framework.Username, e.Framework.Password)
-	req.Header.Set("Content-Type", "application/json")
-
-	e.Req = req
-	e.Client = client
 }
 
 // Revive will revive the mesos tasks to clean up
@@ -117,10 +204,7 @@ func (e *Mesos) Revive() {
 		logrus.WithField("func", "mesos.Revive").Info("Framework Revive")
 		e.IsSuppress = false
 		e.IsRevive = true
-		revive := &mesosproto.Call{
-			Type: mesosproto.Call_REVIVE.Enum(),
-		}
-		err := e.Call(revive)
+		err := e.CallClusterd(clusterdcalls.Revive())
 		if err != nil {
 			logrus.WithField("func", "mesos.Revive").Error("Call Revive: ", err)
 		}
@@ -140,10 +224,7 @@ func (e *Mesos) SuppressFramework() {
 		logrus.WithField("func", "mesos.SuppressFramework").Info("Framework Suppress")
 		e.IsSuppress = true
 		e.IsRevive = false
-		suppress := &mesosproto.Call{
-			Type: mesosproto.Call_SUPPRESS.Enum(),
-		}
-		err := e.Call(suppress)
+		err := e.CallClusterd(clusterdcalls.Suppress())
 		if err != nil {
 			logrus.WithField("func", "mesos.SupressFramework").Error("Suppress Framework Call: ")
 		}
@@ -154,128 +235,69 @@ func (e *Mesos) SuppressFramework() {
 func (e *Mesos) Kill(taskID string, agentID string) error {
 	logrus.WithField("func", "mesos.Kill").Info("Kill task ", taskID)
 	// tell mesos to shutdonw the given task
-	err := e.Call(&mesosproto.Call{
-		Type: mesosproto.Call_KILL.Enum(),
-		Kill: &mesosproto.Call_Kill{
-			TaskId: &mesosproto.TaskID{
-				Value: &taskID,
-			},
-			AgentId: &mesosproto.AgentID{
-				Value: &agentID,
-			},
-		},
-	})
+	return e.CallClusterd(clusterdcalls.Kill(taskID, agentID))
+}
 
+func (e *Mesos) CallClusterd(message *clusterdscheduler.Call) error {
+	if message == nil {
+		return fmt.Errorf("scheduler call must not be nil")
+	}
+	e.callMu.Lock()
+	defer e.callMu.Unlock()
+	frameworkID := e.Framework.FrameworkInfo.Id.GetValue()
+	message.FrameworkID = &clusterd.FrameworkID{Value: frameworkID}
+	ctx, cancel := context.WithTimeout(context.Background(), e.callTimeout)
+	defer cancel()
+	response, err := e.ClusterdClient.Do(message,
+		httpcli.Context(ctx),
+		httpcli.Header("Mesos-Stream-Id", e.StreamID()),
+	)
+	if response != nil {
+		_ = response.Close()
+	}
 	return err
 }
 
-// Call will send messages to mesos
-func (e *Mesos) Call(message *mesosproto.Call) error {
-	message.FrameworkId = e.Framework.FrameworkInfo.Id
-
-	if message.GetType() == mesosproto.Call_ACKNOWLEDGE {
-		if message.Acknowledge.GetUuid() == nil {
-			return nil
-		}
-	}
-
-	body, err := marshaller.Marshal(message)
-
-	if err != nil {
-		logrus.WithField("func", "mesos.Call").Debug("Could not Marshal message:", err.Error())
-		return err
-	}
-
-	client := &http.Client{}
-	// #nosec G402
-	client.Transport = &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-
-	protocol := "https"
-	if !e.Framework.MesosSSL {
-		protocol = "http"
-	}
-	req, _ := http.NewRequest("POST", protocol+"://"+e.Framework.MesosMasterServer+"/api/v1/scheduler", bytes.NewBuffer([]byte(body)))
-	req.Close = true
-	req.SetBasicAuth(e.Framework.Username, e.Framework.Password)
-	req.Header.Set("Mesos-Stream-Id", e.Framework.MesosStreamID)
-	req.Header.Set("Content-Type", "application/json")
-	res, err := client.Do(req)
-
-	if err != nil {
-		logrus.WithField("func", "mesos.Call").Error("Call Message: ", err)
-		return err
-	}
-
-	defer res.Body.Close()
-
-	if res.StatusCode != 202 {
-		body, err := io.ReadAll(res.Body)
+func (e *Mesos) AcceptOffer(offerID string, tasks []*mesosproto.TaskInfo, refuse time.Duration) error {
+	clusterdTasks := make([]clusterd.TaskInfo, 0, len(tasks))
+	for _, task := range tasks {
+		data, err := json.Marshal(task)
 		if err != nil {
-			logrus.WithField("func", "mesos.Call").Error("Call Handling (could not read res.Body)")
-			return fmt.Errorf("error %d", res.StatusCode)
+			return fmt.Errorf("marshal task for clusterd ACCEPT: %w", err)
 		}
-
-		logrus.WithField("func", "mesos.Call").Error("Call Handling: ", string(body))
+		var converted clusterd.TaskInfo
+		if err := json.Unmarshal(data, &converted); err != nil {
+			return fmt.Errorf("unmarshal task for clusterd ACCEPT: %w", err)
+		}
+		clusterdTasks = append(clusterdTasks, converted)
 	}
-
-	return nil
+	call := clusterdcalls.Accept(
+		clusterdcalls.OfferOperations{
+			clusterdcalls.OpLaunch(clusterdTasks...),
+		}.WithOffers(clusterd.OfferID{Value: offerID}),
+	).With(clusterdcalls.RefuseSeconds(refuse))
+	return e.CallClusterd(call)
 }
 
-// DecodeTask will decode the key into an mesos command struct
-func (e *Mesos) DecodeTask(key string) *cfg.Command {
-	var task *cfg.Command
-	if key != "" {
-		err := json.NewDecoder(strings.NewReader(key)).Decode(&task)
-		if err != nil {
-			logrus.WithField("func", "scheduler.DecodeTask").Error("Could not decode task: ", err.Error())
-			return &cfg.Command{}
+func (e *Mesos) DeclineOffers(offerIDs []*mesosproto.OfferID, refuse time.Duration) error {
+	ids := make([]clusterd.OfferID, 0, len(offerIDs))
+	for _, offerID := range offerIDs {
+		if offerID != nil {
+			ids = append(ids, clusterd.OfferID{Value: offerID.GetValue()})
 		}
-		return task
 	}
-	return &cfg.Command{}
+	return e.CallClusterd(clusterdcalls.Decline(ids...).With(clusterdcalls.RefuseSeconds(refuse)))
 }
 
-// GetOffer get out the offer for the mesos task
-func (e *Mesos) GetOffer(offers *mesosproto.Event_Offers, cmd *cfg.Command) (*mesosproto.Offer, []*mesosproto.OfferID) {
-	var offerIds []*mesosproto.OfferID
-	var offerret *mesosproto.Offer
-
-	for n, offer := range offers.Offers {
-		logrus.Debug("Got Offer From:", offer.GetHostname())
-		offerIds = append(offerIds, offer.Id)
-
-		if cmd.TaskName == "" {
-			continue
-		}
-
-		// if the ressources of this offer does not matched what the command need, the skip
-		if !e.IsRessourceMatched(offer.Resources, cmd) {
-			logrus.Debug("Could not found any matched ressources, get next offer")
-			e.Call(e.DeclineOffer(offerIds))
-			continue
-		}
-		offerret = offers.Offers[n]
+func (e *Mesos) AcknowledgeUpdate(status *mesosproto.TaskStatus) error {
+	if status == nil {
+		return nil
 	}
-	return offerret, offerIds
-}
-
-// DeclineOffer will decline the given offers
-func (e *Mesos) DeclineOffer(offerIds []*mesosproto.OfferID) *mesosproto.Call {
-
-	logrus.WithField("func", "scheduler.HandleOffers").Debug("Offer Decline: ", offerIds)
-
-	refuseSeconds := 120.0
-
-	decline := &mesosproto.Call{
-		Type: mesosproto.Call_DECLINE.Enum(),
-		Decline: &mesosproto.Call_Decline{OfferIds: offerIds, Filters: &mesosproto.Filters{
-			RefuseSeconds: &refuseSeconds,
-		},
-		},
-	}
-	return decline
+	return e.CallClusterd(clusterdcalls.Acknowledge(
+		status.GetAgentId().GetValue(),
+		status.GetTaskId().GetValue(),
+		status.GetUuid(),
+	))
 }
 
 // IsRessourceMatched - check if the ressources of the offer are matching the needs of the cmd
@@ -322,22 +344,26 @@ func (e *Mesos) IsRessourceMatched(ressource []*mesosproto.Resource, cmd *cfg.Co
 
 // GetAgentInfo get information about the agent
 func (e *Mesos) GetAgentInfo(agentID string) cfg.MesosSlaves {
-	client := &http.Client{}
-	// #nosec G402
-	client.Transport = &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	now := time.Now()
+	e.agentCacheMu.Lock()
+	if e.agentCache == nil {
+		e.agentCache = make(map[string]agentCacheEntry)
 	}
+	if cached, ok := e.agentCache[agentID]; ok && now.Before(cached.expires) {
+		e.agentCacheMu.Unlock()
+		return cached.agent
+	}
+	e.agentCacheMu.Unlock()
 
-	protocol := "https"
-	if !e.Framework.MesosSSL {
-		protocol = "http"
+	req, err := http.NewRequest("POST", mesosEndpoint(e.Framework, "/slaves/"+agentID), nil)
+	if err != nil {
+		logrus.WithField("func", "mesos.getAgentInfo").Error("Could not create agent request: ", err)
+		return cfg.MesosSlaves{}
 	}
-	req, _ := http.NewRequest("POST", protocol+"://"+e.Framework.MesosMasterServer+"/slaves/"+agentID, nil)
-	req.Close = true
 	req.SetBasicAuth(e.Framework.Username, e.Framework.Password)
-	req.Header.Set("Mesos-Stream-Id", e.Framework.MesosStreamID)
+	req.Header.Set("Mesos-Stream-Id", e.StreamID())
 	req.Header.Set("Content-Type", "application/json")
-	res, err := client.Do(req)
+	res, err := e.Client.Do(req)
 
 	if err != nil {
 		logrus.WithField("func", "mesos.getAgentInfo").Error("Could not connect to master: ", err.Error())
@@ -365,6 +391,9 @@ func (e *Mesos) GetAgentInfo(agentID string) cfg.MesosSlaves {
 		// get the used agent info
 		for _, a := range agent.Slaves {
 			if a.ID == agentID {
+				e.agentCacheMu.Lock()
+				e.agentCache[agentID] = agentCacheEntry{agent: a, expires: time.Now().Add(agentInfoCacheTTL)}
+				e.agentCacheMu.Unlock()
 				return a
 			}
 		}
@@ -390,21 +419,14 @@ func (e *Mesos) GetNetworkInfo(taskID string) []*mesosproto.NetworkInfo {
 
 // GetTaskInfo get the task object to the given ID
 func (e *Mesos) GetTaskInfo(taskID string) cfg.MesosTasks {
-	client := &http.Client{}
-	// #nosec G402
-	client.Transport = &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	req, err := http.NewRequest("POST", mesosEndpoint(e.Framework, "/tasks/?task_id="+taskID+"&framework_id="+e.Framework.FrameworkInfo.Id.GetValue()), nil)
+	if err != nil {
+		logrus.WithField("func", "mesos.GetTaskInfo").Error("Could not create task request: ", err)
+		return cfg.MesosTasks{}
 	}
-
-	protocol := "https"
-	if !e.Framework.MesosSSL {
-		protocol = "http"
-	}
-	req, _ := http.NewRequest("POST", protocol+"://"+e.Framework.MesosMasterServer+"/tasks/?task_id="+taskID+"&framework_id="+e.Framework.FrameworkInfo.Id.GetValue(), nil)
-	req.Close = true
 	req.SetBasicAuth(e.Framework.Username, e.Framework.Password)
 	req.Header.Set("Content-Type", "application/json")
-	res, err := client.Do(req)
+	res, err := e.Client.Do(req)
 
 	if err != nil {
 		logrus.WithField("func", "mesos.GetTaskInfo").Error("Could not connect to mesos-master: ", err.Error())

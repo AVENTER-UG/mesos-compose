@@ -2,8 +2,10 @@ package api
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 
+	"github.com/AVENTER-UG/mesos-compose/redis"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	util "github.com/AVENTER-UG/util/util"
 	"github.com/gorilla/mux"
@@ -31,9 +33,15 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	composeYAML, err := io.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+
 	var data cfg.Compose
 
-	err := yaml.NewDecoder(r.Body).Decode(&data)
+	err = yaml.Unmarshal(composeYAML, &data)
 
 	if err != nil {
 		logrus.WithField("func", "api.V0ComposeUpdate").Error("Error: ", err)
@@ -53,17 +61,18 @@ func (e *API) V0ComposeUpdate(w http.ResponseWriter, r *http.Request) {
 		for keys.Next(e.Redis.CTX) {
 			// get the values of the current key
 			key := e.Redis.GetRedisKey(keys.Val())
-			task := e.Mesos.DecodeTask(key)
+			task := redis.DecodeTaskOrEmpty([]byte(key))
 			e.mapComposeServiceToMesosTask(vars, service, task)
 
 			// restore the old MesosAgent info
 			key = e.Redis.GetRedisKey(keys.Val())
-			updatedTask := e.Mesos.DecodeTask(key)
+			updatedTask := redis.DecodeTaskOrEmpty([]byte(key))
 			updatedTask.MesosAgent = task.MesosAgent
 			updatedTask.State = task.State
 			e.Redis.SaveTaskRedis(updatedTask)
 		}
 	}
+	e.Redis.SaveComposeYAML(vars["project"], composeYAML)
 
 	out, _ := json.Marshal(&data)
 	w.Write([]byte(util.PrettyJSON(out)))

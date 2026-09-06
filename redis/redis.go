@@ -3,8 +3,8 @@ package redis
 import (
 	"context"
 	"encoding/json"
+	"strings"
 
-	"github.com/AVENTER-UG/mesos-compose/mesos"
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	goredis "github.com/redis/go-redis/v9"
@@ -21,7 +21,6 @@ type Redis struct {
 	DB       int
 	PoolSize int
 	Prefix   string
-	Mesos    mesos.Mesos
 }
 
 // New will create a new Redis object
@@ -33,7 +32,6 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Redis {
 		PoolSize: cfg.RedisPoolSize,
 		Prefix:   frm.FrameworkName,
 		CTX:      context.Background(),
-		Mesos:    *mesos.New(cfg, frm),
 	}
 
 	return e
@@ -89,7 +87,7 @@ func (e *Redis) GetTaskFromEvent(update *mesosproto.Event_Update) *cfg.Command {
 		}
 		// get the values of the current key
 		key := e.GetRedisKey(keys.Val())
-		task := e.Mesos.DecodeTask(key)
+		task := DecodeTaskOrEmpty([]byte(key))
 
 		if task.TaskID == update.Status.TaskId.GetValue() {
 			task.State = update.Status.State.String()
@@ -111,7 +109,7 @@ func (e *Redis) GetTaskFromTaskID(taskID string) *cfg.Command {
 		}
 		// get the values of the current key
 		key := e.GetRedisKey(keys.Val())
-		task := e.Mesos.DecodeTask(key)
+		task := DecodeTaskOrEmpty([]byte(key))
 
 		if task.TaskID == taskID {
 			return task
@@ -135,7 +133,7 @@ func (e *Redis) CountRedisKey(pattern string, ignoreState string) int {
 		if ignoreState != "" {
 			// get the values of the current key
 			key := e.GetRedisKey(keys.Val())
-			task := e.Mesos.DecodeTask(key)
+			task := DecodeTaskOrEmpty([]byte(key))
 
 			if task.State == ignoreState {
 				continue
@@ -160,7 +158,7 @@ func (e *Redis) CountRedisKeyState(pattern string, state string) int {
 		if state != "" {
 			// get the values of the current key
 			key := e.GetRedisKey(keys.Val())
-			task := e.Mesos.DecodeTask(key)
+			task := DecodeTaskOrEmpty([]byte(key))
 
 			if task.State != state {
 				continue
@@ -178,6 +176,23 @@ func (e *Redis) SaveConfig(config cfg.Config) {
 	if err != nil {
 		logrus.WithField("func", "redis.SaveConfig").Error("Framework save config state into redis error:", err)
 	}
+}
+
+// SaveComposeYAML stores the raw compose YAML for a project.
+func (e *Redis) SaveComposeYAML(project string, data []byte) {
+	e.SetRedisKey(data, e.Prefix+":_yaml:"+project)
+}
+
+// GetComposeYAML returns the raw compose YAML for a project.
+func (e *Redis) GetComposeYAML(project string) (string, bool) {
+	data, err := e.Client.Get(e.CTX, e.Prefix+":_yaml:"+project).Result()
+	if err != nil {
+		if err != goredis.Nil {
+			logrus.WithField("func", "redis.GetComposeYAML").Error("Error getting compose YAML: ", err)
+		}
+		return "", false
+	}
+	return data, true
 }
 
 // PingRedis to check the health of redis
@@ -217,20 +232,20 @@ func (e *Redis) Connect() bool {
 // SaveTaskRedis store mesos task in DB
 func (e *Redis) SaveTaskRedis(cmd *cfg.Command) {
 	if cmd.TaskName != "" {
-		d, _ := json.Marshal(&cmd)
+		d, _ := EncodeTask(cmd)
 		e.SetRedisKey(d, cmd.TaskName+":"+cmd.TaskID)
 	}
 }
 
 // SaveFrameworkRedis store mesos framework in DB
 func (e *Redis) SaveFrameworkRedis(framework *cfg.FrameworkConfig) {
-	d, _ := json.Marshal(&framework)
+	d, _ := EncodeFramework(framework)
 	e.SetRedisKey(d, e.Prefix+":framework")
 }
 
 // CheckIfNotTask check if the redis key is a mesos task
 func (e *Redis) CheckIfNotTask(keys *goredis.ScanIterator) bool {
-	if keys.Val() == e.Prefix+":framework" || keys.Val() == e.Prefix+":framework_config" {
+	if keys.Val() == e.Prefix+":framework" || keys.Val() == e.Prefix+":framework_config" || strings.HasPrefix(keys.Val(), e.Prefix+":_yaml:") {
 		return true
 	}
 	return false

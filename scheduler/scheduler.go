@@ -1,10 +1,13 @@
 package scheduler
 
 import (
-	"bufio"
-	"net/http"
-	"strconv"
+	"context"
+	stdjson "encoding/json"
+	"errors"
+	"io"
 	"strings"
+	"sync/atomic"
+	"time"
 
 	api "github.com/AVENTER-UG/mesos-compose/api"
 	"github.com/AVENTER-UG/mesos-compose/mesos"
@@ -12,6 +15,10 @@ import (
 	"github.com/AVENTER-UG/mesos-compose/redis"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 	"github.com/AVENTER-UG/util/vault"
+	clusterdclient "github.com/m3scluster/clusterd-go/api/v1/lib/client"
+
+	clusterdscheduler "github.com/m3scluster/clusterd-go/api/v1/lib/scheduler"
+	clusterdcalls "github.com/m3scluster/clusterd-go/api/v1/lib/scheduler/calls"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/encoding/protojson"
 )
@@ -21,27 +28,22 @@ type Scheduler struct {
 	Config          *cfg.Config
 	Framework       *cfg.FrameworkConfig
 	Mesos           mesos.Mesos
-	Client          *http.Client
-	Req             *http.Request
 	API             *api.API
 	Vault           *vault.Vault
 	Redis           *redis.Redis
 	ConnectionError bool
+	Subscribed      chan struct{}
 }
 
-// Marshaler to serialize Protobuf Message to JSON
-var marshaller = protojson.MarshalOptions{
-	UseEnumNumbers: false,
-	Indent:         " ",
-	UseProtoNames:  true,
-}
+const streamLivenessTimeout = 2 * time.Minute
 
 // Subscribe to the mesos backend
 func Subscribe(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Scheduler {
 	e := &Scheduler{
-		Config:    cfg,
-		Framework: frm,
-		Mesos:     *mesos.New(cfg, frm),
+		Config:     cfg,
+		Framework:  frm,
+		Mesos:      *mesos.New(cfg, frm),
+		Subscribed: make(chan struct{}),
 	}
 
 	e.Mesos.Subscribe()
@@ -51,87 +53,102 @@ func Subscribe(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Scheduler {
 
 // EventLoop is the main loop for the mesos events.
 func (e *Scheduler) EventLoop() {
-	res, err := e.Mesos.Client.Do(e.Mesos.Req)
-
+	response, err := e.Mesos.ClusterdClient.Send(
+		clusterdclient.RequestSingleton(e.Mesos.ClusterdSubscribe),
+		clusterdclient.ResponseClassAuto,
+	)
 	if err != nil {
-		logrus.WithField("func", "scheduler.EventLoop").Errorf("Mesos Master connection error: %s", err.Error())
+		logrus.WithField("func", "scheduler.EventLoop").Error("Mesos subscription failed: ", err)
 		return
 	}
-	defer res.Body.Close()
-
-	reader := bufio.NewReader(res.Body)
-
-	line, err := reader.ReadString('\n')
-	if err != nil {
-		logrus.WithField("func", "scheduler.EventLoop").Errorf("Error read string from Mesos Master: %s", err.Error())
-		return
-	}
-	bytesCount, err := strconv.Atoi(strings.Trim(line, "\n"))
-	if err != nil {
-		logrus.WithField("func", "scheduler.EventLoop").Errorf("Error get bytescount from string: %s", err.Error())
-		return
-	}
-
-	for {
-		// Read line from Mesos
-		line, err = reader.ReadString('\n')
-		if err != nil {
-			logrus.WithField("func", "scheduler.EventLoop").Errorf("Error to read data from Mesos Master: %s", err.Error())
-			return
-		}
-		line = strings.Trim(line, "\n")
-
-		// skip if no data
-		if line == "" || len(line)-1 < bytesCount {
-			logrus.WithField("func", "scheduler.EventLoop").Tracef("Line %s, bytesCount: %d ", line, bytesCount)
-			logrus.WithField("func", "scheduler.EventLoop").Trace("No data from Mesos Master")
-			continue
-		}
-		data := line[:bytesCount]
-		bytesCount, _ = strconv.Atoi(line[bytesCount:])
-
-		// Read important data
-		var event mesosproto.Event // Event as ProtoBuf
-		err := protojson.Unmarshal([]byte(data), &event)
-		if err != nil {
-			logrus.WithField("func", "scheduler.EventLoop").Warnf("Could not unmarshal Mesos Master data: %s", err.Error())
-			continue
-		}
-
-		logrus.WithField("func", "scheduler.EventLoop").Tracef("Event %s", event.GetType().String())
-
-		switch event.Type.Number() {
-		case mesosproto.Event_SUBSCRIBED.Number():
-			logrus.WithField("func", "scheduler.EventLoop").Info("Subscribed")
-			logrus.WithField("func", "scheduler.EventLoop").Debugf("FrameworkId: %s", event.Subscribed.GetFrameworkId())
-			e.Framework.FrameworkInfo.Id = event.Subscribed.GetFrameworkId()
-			e.Framework.MesosStreamID = res.Header.Get("Mesos-Stream-Id")
-
-			e.reconcile()
-			e.Mesos.ForceSuppressFramework()
-
-			go e.Redis.SaveFrameworkRedis(e.Framework)
-			go e.Redis.SaveConfig(*e.Config)
-		case mesosproto.Event_UPDATE.Number():
-			if e.Config.ThreadEnable {
-				go e.HandleUpdate(&event)
-			} else {
-				e.HandleUpdate(&event)
-			}
-			go e.callPluginEvent(&event)
-		case mesosproto.Event_HEARTBEAT.Number():
-			if e.Framework.FrameworkInfo.Id != nil {
-				if e.Framework.FrameworkInfo.Id.GetValue() == "" {
-					logrus.WithField("func", "scheduler.EventLoop").Tracef("HEARBEAT: Could not find framework ID")
+	defer response.Close()
+	watchdogDone := make(chan struct{})
+	defer close(watchdogDone)
+	lastRecord := time.Now().UnixNano()
+	go func() {
+		ticker := time.NewTicker(streamLivenessTimeout / 2)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ticker.C:
+				last := time.Unix(0, atomic.LoadInt64(&lastRecord))
+				if time.Since(last) >= streamLivenessTimeout {
+					_ = response.Close()
 					return
 				}
+			case <-watchdogDone:
+				return
 			}
-		case mesosproto.Event_OFFERS.Number():
-			// Search Failed containers and restart them
-			err = e.HandleOffers(event.Offers)
-			if err != nil {
-				logrus.WithField("func", "scheduler.EventLoop").Warn("Switch Event HandleOffers: ", err)
+		}
+	}()
+
+	for {
+		var wireEvent clusterdscheduler.Event
+		if err := response.Decode(&wireEvent); err != nil {
+			if errors.Is(err, io.EOF) || errors.Is(err, context.Canceled) {
+				logrus.WithField("func", "scheduler.EventLoop").Debug("Mesos Master stream closed")
+			} else {
+				logrus.WithField("func", "scheduler.EventLoop").Error("Mesos stream decode failed: ", err)
 			}
+			return
+		}
+		atomic.StoreInt64(&lastRecord, time.Now().UnixNano())
+		if wireEvent.GetType() == clusterdscheduler.Event_SUBSCRIBED {
+			wireFrameworkID := wireEvent.GetSubscribed().GetFrameworkID()
+			frameworkID := wireFrameworkID.GetValue()
+			e.Framework.FrameworkInfo.Id = &mesosproto.FrameworkID{Value: &frameworkID}
+			select {
+			case <-e.Subscribed:
+			default:
+				close(e.Subscribed)
+			}
+			continue
+		}
+		if wireEvent.GetType() == clusterdscheduler.Event_HEARTBEAT {
+			continue
+		}
+		if wireEvent.GetType() == clusterdscheduler.Event_ERROR {
+			message := wireEvent.GetError().GetMessage()
+			logrus.WithField("func", "scheduler.EventLoop").Error("Mesos scheduler error: ", message)
+			if strings.Contains(strings.ToLower(message), "framework failed over") {
+				e.resetFrameworkIdentity()
+			}
+			return
+		}
+		data, err := stdjson.Marshal(&wireEvent)
+		if err != nil {
+			logrus.WithField("func", "scheduler.EventLoop").Error("Mesos event conversion failed: ", err)
+			return
+		}
+		var event mesosproto.Event
+		if err := protojson.Unmarshal(data, &event); err != nil {
+			logrus.WithField("func", "scheduler.EventLoop").Warn("Mesos event conversion failed: ", err)
+			continue
+		}
+		e.dispatchDomainEvent(&event)
+		if event.GetType() == mesosproto.Event_UPDATE {
+			go e.callPluginEvent(&event)
+		}
+	}
+}
+
+func (e *Scheduler) resetFrameworkIdentity() {
+	emptyID := ""
+	e.Framework.FrameworkInfo.Id = &mesosproto.FrameworkID{Value: &emptyID}
+	e.Mesos.SetStreamID("")
+	if e.Redis != nil {
+		e.Redis.SaveFrameworkRedis(e.Framework)
+	}
+}
+
+func (e *Scheduler) dispatchDomainEvent(event *mesosproto.Event) {
+	logrus.WithField("func", "scheduler.EventLoop").Tracef("Event %s", event.GetType().String())
+	switch event.Type.Number() {
+	case mesosproto.Event_UPDATE.Number():
+		e.HandleUpdate(event)
+	case mesosproto.Event_OFFERS.Number():
+		if err := e.HandleOffers(event.Offers); err != nil {
+			logrus.WithField("func", "scheduler.dispatchDomainEvent").Warn("HandleOffers: ", err)
 		}
 	}
 }
@@ -154,7 +171,7 @@ func (e *Scheduler) changeDiscoveryInfo(cmd *cfg.Command) *mesosproto.DiscoveryI
 
 // reconcile will ask Mesos about the current state of the given tasks
 func (e *Scheduler) reconcile() {
-	var oldTasks []*mesosproto.Call_Reconcile_Task
+	tasks := make(map[string]string)
 	keys := e.Redis.GetAllRedisKeys(e.Framework.FrameworkName + ":*")
 	for keys.Next(e.Redis.CTX) {
 		// continue if the key is not a mesos task
@@ -166,26 +183,16 @@ func (e *Scheduler) reconcile() {
 
 		key := e.Redis.GetRedisKey(keys.Val())
 
-		task := e.Mesos.DecodeTask(key)
+		task := redis.DecodeTaskOrEmpty([]byte(key))
 
 		if task.TaskID == "" || task.Agent == "" || task.State == "__NEW" || task.State == "__KILL" || task.State == "" {
 			continue
 		}
 
-		oldTasks = append(oldTasks, &mesosproto.Call_Reconcile_Task{
-			TaskId: &mesosproto.TaskID{
-				Value: &task.TaskID,
-			},
-			AgentId: &mesosproto.AgentID{
-				Value: &task.MesosAgent.ID,
-			},
-		})
+		tasks[task.TaskID] = task.MesosAgent.ID
 		logrus.WithField("func", "mesos.Reconcile").Debug("Reconcile Task: ", task.TaskID)
 	}
-	err := e.Mesos.Call(&mesosproto.Call{
-		Type:      mesosproto.Call_RECONCILE.Enum(),
-		Reconcile: &mesosproto.Call_Reconcile{Tasks: oldTasks},
-	})
+	err := e.Mesos.CallClusterd(clusterdcalls.Reconcile(clusterdcalls.ReconcileTasks(tasks)))
 
 	if err != nil {
 		logrus.WithField("func", "scheduler.reconcile").Debug("Reconcile Error: ", err)
@@ -194,11 +201,7 @@ func (e *Scheduler) reconcile() {
 
 // implicitReconcile will ask Mesos which tasks and there state are registert to this framework
 func (e *Scheduler) implicitReconcile() {
-	var noTasks []*mesosproto.Call_Reconcile_Task
-	err := e.Mesos.Call(&mesosproto.Call{
-		Type:      mesosproto.Call_RECONCILE.Enum(),
-		Reconcile: &mesosproto.Call_Reconcile{Tasks: noTasks},
-	})
+	err := e.Mesos.CallClusterd(clusterdcalls.Reconcile())
 
 	if err != nil {
 		logrus.WithField("func", "scheduler.implicitReconcile").Debug("Reconcile Error: ", err)

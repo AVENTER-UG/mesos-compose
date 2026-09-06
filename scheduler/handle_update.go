@@ -9,22 +9,13 @@ import (
 func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 	update := event.Update
 
-	msg := &mesosproto.Call{
-		Type: mesosproto.Call_ACKNOWLEDGE.Enum(),
-		Acknowledge: &mesosproto.Call_Acknowledge{
-			AgentId: update.Status.GetAgentId(),
-			TaskId:  update.Status.GetTaskId(),
-			Uuid:    update.Status.GetUuid(),
-		},
-	}
-
 	// get the task of the current event, change the state
 	task := e.Redis.GetTaskFromEvent(update)
 
 	// if these object have not TaskID it's currently unknown by these framework.
 	if task.TaskID == "" {
 		logrus.WithField("func", "scheduler.HandleUpdate").Debug("Could not found Task in Redis: ", update.Status.GetTaskId())
-		e.Mesos.Call(msg)
+		e.Mesos.AcknowledgeUpdate(update.Status)
 		return
 	}
 
@@ -38,7 +29,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 	switch *update.Status.State {
 	case mesosproto.TaskState_TASK_FAILED, mesosproto.TaskState_TASK_KILLED, mesosproto.TaskState_TASK_ERROR, mesosproto.TaskState_TASK_FINISHED:
 		if task.TaskID == "" {
-			e.Mesos.Call(msg)
+			e.Mesos.AcknowledgeUpdate(update.Status)
 			return
 		}
 		logrus.WithField("func", "scheduler.HandleUpdate").Warn("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")
@@ -49,7 +40,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		case "no":
 			e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			e.Mesos.ForceSuppressFramework()
-			e.Mesos.Call(msg)
+			e.Mesos.AcknowledgeUpdate(update.Status)
 			return
 		// only restart the task if it stopped by a failure
 		case "on-failure":
@@ -58,14 +49,14 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 			}
 			e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 			e.Mesos.ForceSuppressFramework()
-			e.Mesos.Call(msg)
+			e.Mesos.AcknowledgeUpdate(update.Status)
 			return
 		// only restart the tasks if it does not stopped
 		case "unless-stopped":
 			if update.Status.State.String() == mesosproto.TaskState_TASK_FINISHED.String() {
 				e.Redis.DelRedisKey(task.TaskName + ":" + task.TaskID)
 				e.Mesos.ForceSuppressFramework()
-				e.Mesos.Call(msg)
+				e.Mesos.AcknowledgeUpdate(update.Status)
 				return
 			}
 		}
@@ -75,7 +66,7 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		task.State = ""
 	case mesosproto.TaskState_TASK_LOST:
 		if task.TaskID == "" {
-			e.Mesos.Call(msg)
+			e.Mesos.AcknowledgeUpdate(update.Status)
 			return
 		}
 		logrus.WithField("func", "scheduler.HandleUpdate").Warn("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + ")")
@@ -84,7 +75,8 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		// Remove task if lost as a default behaviour.. This can be overriden using ENV variable "TASK_LOST_REMOVE_TASK" which will restart the task
 		if e.Config.TaskLostRemovesTask {
 			e.Mesos.ForceSuppressFramework()
-			e.Mesos.Call(msg)
+			e.Mesos.AcknowledgeUpdate(update.Status)
+			return
 		} else {
 			task.TaskID = e.API.IncreaseTaskCount(task.TaskID)
 			task.State = ""
@@ -96,7 +88,10 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 		}
 
 		task.MesosAgent = e.Mesos.GetAgentInfo(update.Status.GetAgentId().GetValue())
-		task.NetworkInfo = e.Mesos.GetNetworkInfo(task.TaskID)
+		task.NetworkInfo = update.Status.GetContainerStatus().GetNetworkInfos()
+		if len(task.NetworkInfo) == 0 {
+			task.NetworkInfo = e.Mesos.GetNetworkInfo(task.TaskID)
+		}
 		task.Agent = update.Status.GetAgentId().GetValue()
 	default:
 		logrus.WithField("func", "scheduler.HandleUpdate").Warn("Task State: " + task.State + " " + task.TaskID + " (" + task.TaskName + "). State not handled, no action has been taken")
@@ -105,5 +100,5 @@ func (e *Scheduler) HandleUpdate(event *mesosproto.Event) {
 	// save the new state
 	e.Redis.SaveTaskRedis(task)
 
-	e.Mesos.Call(msg)
+	e.Mesos.AcknowledgeUpdate(update.Status)
 }

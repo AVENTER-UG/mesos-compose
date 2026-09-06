@@ -3,10 +3,12 @@ package scheduler
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/sirupsen/logrus"
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
+	"github.com/AVENTER-UG/mesos-compose/redis"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
 )
 
@@ -38,32 +40,13 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 		}
 		logrus.WithField("func", "scheduler.HandleOffers").Info("Take Offer from " + takeOffer.GetHostname() + " for task " + task.TaskID + " (" + task.TaskName + ")")
 
-		var taskInfo []*mesosproto.TaskInfo
-		RefuseSeconds := 5.0
-
-		taskInfo = e.PrepareTaskInfoExecuteContainer(takeOffer.GetAgentId(), task)
-
-		// build mesos call object
-		accept := &mesosproto.Call{
-			Type: mesosproto.Call_ACCEPT.Enum(),
-			Accept: &mesosproto.Call_Accept{
-				OfferIds: []*mesosproto.OfferID{{
-					Value: takeOffer.Id.Value,
-				}},
-				Filters: &mesosproto.Filters{
-					RefuseSeconds: &RefuseSeconds,
-				},
-				Operations: []*mesosproto.Offer_Operation{{
-					Type: mesosproto.Offer_Operation_LAUNCH.Enum(),
-					Launch: &mesosproto.Offer_Operation_Launch{
-						TaskInfos: taskInfo,
-					}}}}}
+		taskInfo := e.PrepareTaskInfoExecuteContainer(takeOffer.GetAgentId(), task)
 
 		e.Redis.SaveTaskRedis(task)
 
 		logrus.WithField("func", "scheduler.HandleOffers").Debug("Offer Accept: ", takeOffer.GetId(), " On Node: ", takeOffer.GetHostname())
 
-		err := e.Mesos.Call(accept)
+		err := e.Mesos.AcceptOffer(takeOffer.GetId().GetValue(), taskInfo, 5*time.Second)
 		if err != nil {
 			logrus.WithField("func", "scheduler.HandleOffers").Error(err.Error())
 			return err
@@ -72,13 +55,20 @@ func (e *Scheduler) HandleOffers(offers *mesosproto.Event_Offers) error {
 		// decline unneeded offer
 		if len(offerIds) > 0 {
 			logrus.WithField("func", "scheduler.HandleOffer").Debug("Offer Decline: ", offerIds)
-			go e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
+			if err := e.Mesos.DeclineOffers(offerIds, 120*time.Second); err != nil {
+				logrus.WithField("func", "scheduler.HandleOffers").Warn("Offer decline failed: ", err)
+			}
 		}
+		return nil
 	default:
 		offerIds = e.getAllOfferIDs(offers)
 	}
 
-	e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
+	if len(offerIds) > 0 {
+		if err := e.Mesos.DeclineOffers(offerIds, 120*time.Second); err != nil {
+			logrus.WithField("func", "scheduler.HandleOffers").Warn("Offer decline failed: ", err)
+		}
+	}
 	return nil
 }
 
@@ -158,7 +148,6 @@ func (e *Scheduler) getOffer(offers *mesosproto.Event_Offers, cmd *cfg.Command) 
 		offerIds = e.removeOffer(offerIds, offerret.GetId().GetValue())
 	}
 
-	e.Mesos.Call(e.Mesos.DeclineOffer(offerIds))
 	return offerret, offerIds
 }
 
@@ -203,7 +192,7 @@ func (e *Scheduler) alreadyRunningOnHostname(cmd *cfg.Command) bool {
 		// get the values of the current key
 		key := e.Redis.GetRedisKey(keys.Val())
 
-		task := e.Mesos.DecodeTask(key)
+		task := redis.DecodeTaskOrEmpty([]byte(key))
 
 		// continue if it's a unvalid task
 		if task.TaskID == "" {
