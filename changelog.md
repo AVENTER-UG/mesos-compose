@@ -7,6 +7,7 @@
 - ADD: Offer Constraints on Host Lists `HOST_CONSTRAINT_LIST`
 - ADD: Optional ENV variable `TASK_LOST_REMOVE_TASK` to override the behaviour on
 			 TASK_LOST status from Mesos.
+- ADD: csi support              
 
 
 ## v1.2.0
