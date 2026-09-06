@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"encoding/json"
+	"strings"
 
 	"github.com/AVENTER-UG/mesos-compose/mesos"
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
@@ -180,6 +181,23 @@ func (e *Redis) SaveConfig(config cfg.Config) {
 	}
 }
 
+// SaveComposeYAML stores the raw compose YAML for a project.
+func (e *Redis) SaveComposeYAML(project string, data []byte) {
+	e.SetRedisKey(data, e.Prefix+":_yaml:"+project)
+}
+
+// GetComposeYAML returns the raw compose YAML for a project.
+func (e *Redis) GetComposeYAML(project string) (string, bool) {
+	data, err := e.Client.Get(e.CTX, e.Prefix+":_yaml:"+project).Result()
+	if err != nil {
+		if err != goredis.Nil {
+			logrus.WithField("func", "redis.GetComposeYAML").Error("Error getting compose YAML: ", err)
+		}
+		return "", false
+	}
+	return data, true
+}
+
 // PingRedis to check the health of redis
 func (e *Redis) PingRedis() error {
 	pong, err := e.Client.Ping(e.CTX).Result()
@@ -230,7 +248,7 @@ func (e *Redis) SaveFrameworkRedis(framework *cfg.FrameworkConfig) {
 
 // CheckIfNotTask check if the redis key is a mesos task
 func (e *Redis) CheckIfNotTask(keys *goredis.ScanIterator) bool {
-	if keys.Val() == e.Prefix+":framework" || keys.Val() == e.Prefix+":framework_config" {
+	if keys.Val() == e.Prefix+":framework" || keys.Val() == e.Prefix+":framework_config" || strings.HasPrefix(keys.Val(), e.Prefix+":_yaml:") {
 		return true
 	}
 	return false

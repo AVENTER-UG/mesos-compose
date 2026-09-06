@@ -9,6 +9,7 @@ services:
     command: "printf 'funktioniert' > /mnt/mvs/funktioniert.txt && sync && sleep 20"
     shell: true
     container_type: mesos
+   	network: default
     volumes:
       - "mvs-csi-proof:/mnt/mvs"
     deploy:
@@ -16,6 +17,11 @@ services:
         limits:
           cpus: 0.1
           memory: 64
+
+networks:
+  default:
+    external: true
+    driver: weave
 
 volumes:
   mvs-csi-proof:
@@ -31,3 +37,4 @@ volumes:
         access_mode: SINGLE_NODE_WRITER
       volume_context:
         source: //192.168.150.82/mvs
+
