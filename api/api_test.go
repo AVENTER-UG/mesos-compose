@@ -87,11 +87,11 @@ func TestCommandsRoutesVersions(t *testing.T) {
 func TestCommandsAddsCORSHeaders(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/api/compose/versions", nil)
-	req.Header.Set("Origin", "https://mesoscomposefrontend.weave.local:5173")
+	req.Header.Set("Origin", "https://frontend.example.invalid")
 
-	(&API{Config: &cfg.Config{CORSAllowedOrigins: []string{"https://mesoscomposefrontend.weave.local:5173"}}}).Commands().ServeHTTP(recorder, req)
+	(&API{Config: &cfg.Config{CORSAllowedOrigins: []string{"https://frontend.example.invalid"}}}).Commands().ServeHTTP(recorder, req)
 
-	if got, want := recorder.Header().Get("Access-Control-Allow-Origin"), "https://mesoscomposefrontend.weave.local:5173"; got != want {
+	if got, want := recorder.Header().Get("Access-Control-Allow-Origin"), "https://frontend.example.invalid"; got != want {
 		t.Fatalf("Access-Control-Allow-Origin = %q, want %q", got, want)
 	}
 }
