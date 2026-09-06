@@ -10,6 +10,7 @@ services:
     restart: always
     volumes:
       - "12345test:/tmp"
+      - "mvs-csi-proof:/mnt/mvs"
     environment:
       MYSQL_HOST: test
     hostname: test
@@ -97,5 +98,17 @@ networks:
 volumes:
   12345test:
     driver: local
-
+  mvs-csi-proof:
+    driver: csi_volume
+    plugin_name: org.apache.mesos.csi.smb
+    static_provisioning:
+      volume_id: mvs-csi-proof
+      volume_capability:
+        mount:
+          fs_type: cifs
+          mount_flags:
+            - vers=3.0
+        access_mode: SINGLE_NODE_WRITER
+      volume_context:
+        source: //192.168.150.82/mvs
 

@@ -415,21 +415,65 @@ func (e *API) getVolumes() []*mesosproto.Volume {
 		}
 
 		driver := "local"
-		if e.Compose.Volumes[p[0]].Driver != "" {
-			driver = e.Compose.Volumes[p[0]].Driver
+		volumeConfig := e.Compose.Volumes[p[0]]
+		if volumeConfig.Driver != "" {
+			driver = volumeConfig.Driver
 		}
 
-		tmp.Source = &mesosproto.Volume_Source{
-			Type: mesosproto.Volume_Source_DOCKER_VOLUME.Enum(),
-			DockerVolume: &mesosproto.Volume_Source_DockerVolume{
-				Name:   util.StringToPointer(p[0]),
-				Driver: util.StringToPointer(driver),
-			},
+		if strings.EqualFold(driver, "csi_volume") {
+			capability := volumeConfig.StaticProvisioning.VolumeCapability
+			mesosCapability := &mesosproto.Volume_Source_CSIVolume_VolumeCapability{
+				AccessMode: &mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode{
+					Mode: csiAccessMode(capability.AccessMode.Mode).Enum(),
+				},
+			}
+			if capability.Mount != nil {
+				mesosCapability.AccessType = &mesosproto.Volume_Source_CSIVolume_VolumeCapability_Mount{
+					Mount: &mesosproto.Volume_Source_CSIVolume_VolumeCapability_MountVolume{
+						FsType:     util.StringToPointer(capability.Mount.FsType),
+						MountFlags: capability.Mount.MountFlags,
+					},
+				}
+			}
+			tmp.Source = &mesosproto.Volume_Source{
+				Type: mesosproto.Volume_Source_CSI_VOLUME.Enum(),
+				CsiVolume: &mesosproto.Volume_Source_CSIVolume{
+					PluginName: util.StringToPointer(volumeConfig.PluginName),
+					StaticProvisioning: &mesosproto.Volume_Source_CSIVolume_StaticProvisioning{
+						VolumeId:         util.StringToPointer(volumeConfig.StaticProvisioning.VolumeID),
+						VolumeCapability: mesosCapability,
+						VolumeContext:    volumeConfig.StaticProvisioning.VolumeContext,
+					},
+				},
+			}
+		} else {
+			tmp.Source = &mesosproto.Volume_Source{
+				Type: mesosproto.Volume_Source_DOCKER_VOLUME.Enum(),
+				DockerVolume: &mesosproto.Volume_Source_DockerVolume{
+					Name:   util.StringToPointer(p[0]),
+					Driver: util.StringToPointer(driver),
+				},
+			}
 		}
 		volume = append(volume, tmp)
 	}
 
 	return volume
+}
+
+func csiAccessMode(mode string) mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode_Mode {
+	mode = strings.ToUpper(mode)
+	values := map[string]mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode_Mode{
+		"SINGLE_NODE_WRITER":       mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode_SINGLE_NODE_WRITER,
+		"SINGLE_NODE_READER_ONLY":  mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode_SINGLE_NODE_READER_ONLY,
+		"MULTI_NODE_READER_ONLY":   mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode_MULTI_NODE_READER_ONLY,
+		"MULTI_NODE_SINGLE_WRITER": mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode_MULTI_NODE_SINGLE_WRITER,
+		"MULTI_NODE_MULTI_WRITER":  mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode_MULTI_NODE_MULTI_WRITER,
+	}
+	if value, ok := values[mode]; ok {
+		return value
+	}
+	return mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode_UNKNOWN
 }
 
 // Get custome executer

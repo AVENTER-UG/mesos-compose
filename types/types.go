@@ -1,10 +1,12 @@
 package types
 
 import (
+	"encoding/json"
 	"plugin"
 	"time"
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
+	"gopkg.in/yaml.v3"
 )
 
 // Config is a struct of the framework configuration
@@ -154,7 +156,47 @@ type NetworksLong struct {
 
 // Volumes - The docker-compose volumes syntax
 type Volumes struct {
-	Driver string `yaml:"driver"`
+	Driver             string                `yaml:"driver"`
+	PluginName         string                `yaml:"plugin_name"`
+	StaticProvisioning CSIStaticProvisioning `yaml:"static_provisioning"`
+}
+
+// CSIStaticProvisioning describes a pre-provisioned CSI volume.
+type CSIStaticProvisioning struct {
+	VolumeID         string              `yaml:"volume_id"`
+	VolumeCapability CSIVolumeCapability `yaml:"volume_capability"`
+	VolumeContext    map[string]string   `yaml:"volume_context"`
+}
+
+// CSIVolumeCapability describes how a CSI volume is accessed.
+type CSIVolumeCapability struct {
+	Mount      *CSIVolumeMount `yaml:"mount"`
+	AccessMode CSIAccessMode   `yaml:"access_mode"`
+}
+
+// CSIVolumeMount contains filesystem mount options for a CSI volume.
+type CSIVolumeMount struct {
+	FsType     string   `yaml:"fs_type"`
+	MountFlags []string `yaml:"mount_flags"`
+}
+
+// CSIAccessMode accepts both the concise scalar form and Mesos' object form.
+type CSIAccessMode struct {
+	Mode string `yaml:"mode"`
+}
+
+func (m *CSIAccessMode) UnmarshalYAML(value *yaml.Node) error {
+	if value.Kind == yaml.ScalarNode {
+		m.Mode = value.Value
+		return nil
+	}
+	type accessMode CSIAccessMode
+	var decoded accessMode
+	if err := value.Decode(&decoded); err != nil {
+		return err
+	}
+	*m = CSIAccessMode(decoded)
+	return nil
 }
 
 // ErrorMsg hold the structure of error messages
@@ -226,6 +268,145 @@ type Command struct {
 	Health             *mesosproto.HealthCheck
 	MesosAgent         MesosSlaves
 	Attributes         []*mesosproto.Label
+}
+
+// UnmarshalJSON keeps Redis task recovery compatible with CSI volumes. The
+// generated protobuf JSON representation of the CSI access_type oneof cannot
+// be unmarshaled by encoding/json into its interface field.
+func (c *Command) UnmarshalJSON(data []byte) error {
+	type commandAlias Command
+	if err := json.Unmarshal(data, (*commandAlias)(c)); err == nil {
+		return nil
+	}
+
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	volumesData := fields["volumes"]
+	delete(fields, "volumes")
+	withoutVolumes, err := json.Marshal(fields)
+	if err != nil {
+		return err
+	}
+	*c = Command{}
+	if err := json.Unmarshal(withoutVolumes, (*commandAlias)(c)); err != nil {
+		return err
+	}
+	if volumesData == nil {
+		return nil
+	}
+
+	var volumeData []map[string]json.RawMessage
+	if err := json.Unmarshal(volumesData, &volumeData); err != nil {
+		return err
+	}
+	c.Volumes = make([]*mesosproto.Volume, 0, len(volumeData))
+	for _, fields := range volumeData {
+		sourceData := fields["source"]
+		delete(fields, "source")
+		volumeBytes, err := json.Marshal(fields)
+		if err != nil {
+			return err
+		}
+		var volume mesosproto.Volume
+		if err := json.Unmarshal(volumeBytes, &volume); err != nil {
+			return err
+		}
+		if sourceData != nil {
+			if err := unmarshalVolumeSource(sourceData, &volume); err != nil {
+				return err
+			}
+		}
+		c.Volumes = append(c.Volumes, &volume)
+	}
+	return nil
+}
+
+func unmarshalVolumeSource(data []byte, volume *mesosproto.Volume) error {
+	var source struct {
+		Type         *mesosproto.Volume_Source_Type         `json:"type"`
+		DockerVolume *mesosproto.Volume_Source_DockerVolume `json:"docker_volume"`
+		CSIVolume    json.RawMessage                        `json:"csi_volume"`
+	}
+	if err := json.Unmarshal(data, &source); err != nil {
+		return err
+	}
+	volume.Source = &mesosproto.Volume_Source{
+		Type:         source.Type,
+		DockerVolume: source.DockerVolume,
+	}
+	if source.CSIVolume == nil {
+		return nil
+	}
+
+	var csi struct {
+		PluginName         *string         `json:"plugin_name"`
+		StaticProvisioning json.RawMessage `json:"static_provisioning"`
+	}
+	if err := json.Unmarshal(source.CSIVolume, &csi); err != nil {
+		return err
+	}
+	var provisioning struct {
+		VolumeID         *string           `json:"volume_id"`
+		VolumeCapability json.RawMessage   `json:"volume_capability"`
+		VolumeContext    map[string]string `json:"volume_context"`
+	}
+	if err := json.Unmarshal(csi.StaticProvisioning, &provisioning); err != nil {
+		return err
+	}
+	var capability struct {
+		AccessType      json.RawMessage                                                 `json:"AccessType"`
+		ProtoAccessType json.RawMessage                                                 `json:"access_type"`
+		AccessMode      *mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode `json:"access_mode"`
+	}
+	if err := json.Unmarshal(provisioning.VolumeCapability, &capability); err != nil {
+		return err
+	}
+	mesosCapability := &mesosproto.Volume_Source_CSIVolume_VolumeCapability{
+		AccessMode: capability.AccessMode,
+	}
+	if len(capability.AccessType) == 0 {
+		capability.AccessType = capability.ProtoAccessType
+	}
+	if len(capability.AccessType) > 0 {
+		var accessType map[string]json.RawMessage
+		if err := json.Unmarshal(capability.AccessType, &accessType); err != nil {
+			return err
+		}
+		mountData := accessType["Mount"]
+		if mountData == nil {
+			mountData = accessType["mount"]
+		}
+		if mountData != nil {
+			originalMountData := mountData
+			var mountWrapper map[string]json.RawMessage
+			if err := json.Unmarshal(mountData, &mountWrapper); err != nil {
+				return err
+			}
+			if mountWrapper["Mount"] != nil {
+				mountData = mountWrapper["Mount"]
+			} else if mountWrapper["mount"] != nil {
+				mountData = mountWrapper["mount"]
+			} else {
+				mountData = originalMountData
+			}
+			var mount mesosproto.Volume_Source_CSIVolume_VolumeCapability_MountVolume
+			if err := json.Unmarshal(mountData, &mount); err != nil {
+				return err
+			}
+			mesosCapability.AccessType = &mesosproto.Volume_Source_CSIVolume_VolumeCapability_Mount{Mount: &mount}
+		}
+	}
+	volume.Source.CsiVolume = &mesosproto.Volume_Source_CSIVolume{
+		PluginName: csi.PluginName,
+		StaticProvisioning: &mesosproto.Volume_Source_CSIVolume_StaticProvisioning{
+			VolumeId:         provisioning.VolumeID,
+			VolumeCapability: mesosCapability,
+			VolumeContext:    provisioning.VolumeContext,
+		},
+	}
+	return nil
 }
 
 // State will have the state of all tasks stated by this framework

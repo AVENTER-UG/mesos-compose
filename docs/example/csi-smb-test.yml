@@ -1,0 +1,33 @@
+# Test task for Mesos CSI 1.13 with the SMB plugin.
+# The service volume is referenced in short syntax, while the CSI
+# configuration is defined at the top-level volumes section.
+version: '3.9'
+
+services:
+  csi-smb-proof:
+    image: alpine:latest
+    command: "printf 'funktioniert' > /mnt/mvs/funktioniert.txt && sync && sleep 20"
+    shell: true
+    container_type: mesos
+    volumes:
+      - "mvs-csi-proof:/mnt/mvs"
+    deploy:
+      resources:
+        limits:
+          cpus: 0.1
+          memory: 64
+
+volumes:
+  mvs-csi-proof:
+    driver: csi_volume
+    plugin_name: org.apache.mesos.csi.smb
+    static_provisioning:
+      volume_id: mvs-csi-proof
+      volume_capability:
+        mount:
+          fs_type: cifs
+          mount_flags:
+            - vers=3.0
+        access_mode: SINGLE_NODE_WRITER
+      volume_context:
+        source: //192.168.150.82/mvs

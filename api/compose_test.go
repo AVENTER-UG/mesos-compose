@@ -3,7 +3,9 @@ package api
 import (
 	"testing"
 
+	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
 	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	"gopkg.in/yaml.v3"
 )
 
 func TestGetShell(t *testing.T) {
@@ -211,5 +213,60 @@ func TestGetContainerTypeWithDefault(t *testing.T) {
 
 	if res != "docker" {
 		t.Errorf("getContainerType was incorrect. Got %s, want docker", res)
+	}
+}
+
+func TestGetVolumesCSI(t *testing.T) {
+	const composeYAML = `
+services:
+  app:
+    volumes:
+      - "12345test:/mnt/mvs"
+volumes:
+  12345test:
+    driver: csi_volume
+    plugin_name: org.apache.mesos.csi.smb
+    static_provisioning:
+      volume_id: mvs-csi-proof
+      volume_capability:
+        mount:
+          fs_type: cifs
+          mount_flags:
+            - vers=3.0
+        access_mode: SINGLE_NODE_WRITER
+      volume_context:
+        source: //192.168.150.82/mvs
+`
+
+	var compose cfg.Compose
+	if err := yaml.Unmarshal([]byte(composeYAML), &compose); err != nil {
+		t.Fatalf("unmarshal compose: %v", err)
+	}
+	e := API{Compose: compose}
+	e.Service = compose.Services["app"]
+	volumes := e.getVolumes()
+	if len(volumes) != 1 {
+		t.Fatalf("got %d volumes, want 1", len(volumes))
+	}
+	volume := volumes[0]
+	if volume.GetSource().GetType() != mesosproto.Volume_Source_CSI_VOLUME {
+		t.Fatalf("volume type = %s, want CSI_VOLUME", volume.GetSource().GetType())
+	}
+	csi := volume.GetSource().GetCsiVolume()
+	if csi.GetPluginName() != "org.apache.mesos.csi.smb" {
+		t.Errorf("plugin name = %q", csi.GetPluginName())
+	}
+	static := csi.GetStaticProvisioning()
+	if static.GetVolumeId() != "mvs-csi-proof" || static.GetVolumeContext()["source"] != "//192.168.150.82/mvs" {
+		t.Errorf("static provisioning = %#v", static)
+	}
+	if static.GetVolumeCapability().GetMount().GetFsType() != "cifs" {
+		t.Errorf("fs type = %q", static.GetVolumeCapability().GetMount().GetFsType())
+	}
+	if got := static.GetVolumeCapability().GetMount().GetMountFlags(); len(got) != 1 || got[0] != "vers=3.0" {
+		t.Errorf("mount flags = %#v", got)
+	}
+	if got := static.GetVolumeCapability().GetAccessMode().GetMode(); got != mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode_SINGLE_NODE_WRITER {
+		t.Errorf("access mode = %s", got)
 	}
 }

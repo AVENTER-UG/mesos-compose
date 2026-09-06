@@ -1,6 +1,7 @@
 package mesos
 
 import (
+	"encoding/json"
 	"testing"
 
 	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
@@ -19,6 +20,56 @@ func TestDecodeTask(t *testing.T) {
 	}
 	if got := e.DecodeTask(""); got.TaskID != "" {
 		t.Fatalf("empty input returned task %#v, want empty task", got)
+	}
+}
+
+func TestDecodeTaskWithCSIVolume(t *testing.T) {
+	fsType := "cifs"
+	pluginName := "org.apache.mesos.csi.smb"
+	volumeID := "mvs-csi-proof"
+	accessMode := mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode_SINGLE_NODE_WRITER
+	task := &cfg.Command{
+		TaskID: "csi-task",
+		Volumes: []*mesosproto.Volume{{
+			ContainerPath: stringPointer("/mnt/mvs"),
+			Mode:          mesosproto.Volume_RW.Enum(),
+			Source: &mesosproto.Volume_Source{
+				Type: mesosproto.Volume_Source_CSI_VOLUME.Enum(),
+				CsiVolume: &mesosproto.Volume_Source_CSIVolume{
+					PluginName: &pluginName,
+					StaticProvisioning: &mesosproto.Volume_Source_CSIVolume_StaticProvisioning{
+						VolumeId: &volumeID,
+						VolumeCapability: &mesosproto.Volume_Source_CSIVolume_VolumeCapability{
+							AccessType: &mesosproto.Volume_Source_CSIVolume_VolumeCapability_Mount{
+								Mount: &mesosproto.Volume_Source_CSIVolume_VolumeCapability_MountVolume{
+									FsType:     &fsType,
+									MountFlags: []string{"vers=3.0"},
+								},
+							},
+							AccessMode: &mesosproto.Volume_Source_CSIVolume_VolumeCapability_AccessMode{Mode: &accessMode},
+						},
+						VolumeContext: map[string]string{"source": "//192.168.150.82/mvs"},
+					},
+				},
+			},
+		}},
+	}
+	data, err := json.Marshal(task)
+	if err != nil {
+		t.Fatalf("marshal task: %v", err)
+	}
+
+	decoded := (&Mesos{}).DecodeTask(string(data))
+	if len(decoded.Volumes) != 1 {
+		t.Fatalf("decoded volumes = %d, want 1", len(decoded.Volumes))
+	}
+	csi := decoded.Volumes[0].GetSource().GetCsiVolume()
+	if csi.GetPluginName() != pluginName || csi.GetStaticProvisioning().GetVolumeId() != volumeID {
+		t.Fatalf("decoded CSI volume = %v", csi)
+	}
+	capability := csi.GetStaticProvisioning().GetVolumeCapability()
+	if capability.GetMount().GetFsType() != fsType || capability.GetAccessMode().GetMode() != accessMode {
+		t.Fatalf("decoded capability = %v", capability)
 	}
 }
 
