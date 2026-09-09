@@ -62,31 +62,37 @@ func (e *API) Commands() *mux.Router {
 	rtr.HandleFunc("/api/compose/v0/{project}", e.V0ComposeUpdate).Methods("UPDATE")
 	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}", e.V0ComposeKillService).Methods("DELETE")
 	rtr.HandleFunc("/api/compose/v0/{project}/{servicename}/restart", e.V0ComposeRestartService).Methods("PUT")
-	rtr.PathPrefix("/").Methods(http.MethodOptions).HandlerFunc(corsPreflight)
+	rtr.PathPrefix("/").Methods(http.MethodOptions).HandlerFunc(e.corsPreflight)
 
 	return rtr
 }
 
 func (e *API) corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		origin := r.Header.Get("Origin")
-		if origin != "" {
-			w.Header().Add("Vary", "Origin")
-			for _, allowedOrigin := range e.Config.CORSAllowedOrigins {
-				if origin == allowedOrigin {
-					w.Header().Set("Access-Control-Allow-Origin", origin)
-					w.Header().Set("Access-Control-Allow-Methods", "GET, PUT, UPDATE, DELETE, OPTIONS")
-					w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-					w.Header().Set("Access-Control-Allow-Credentials", "true")
-					break
-				}
-			}
-		}
+		e.setCORSHeaders(w, r)
 		next.ServeHTTP(w, r)
 	})
 }
 
-func corsPreflight(w http.ResponseWriter, r *http.Request) {
+func (e *API) setCORSHeaders(w http.ResponseWriter, r *http.Request) {
+	origin := r.Header.Get("Origin")
+	if origin == "" {
+		return
+	}
+	w.Header().Add("Vary", "Origin")
+	for _, allowedOrigin := range e.Config.CORSAllowedOrigins {
+		if origin == allowedOrigin {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			w.Header().Set("Access-Control-Allow-Methods", "GET, PUT, UPDATE, DELETE, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+			w.Header().Set("Access-Control-Allow-Credentials", "true")
+			return
+		}
+	}
+}
+
+func (e *API) corsPreflight(w http.ResponseWriter, r *http.Request) {
+	e.setCORSHeaders(w, r)
 	w.WriteHeader(http.StatusNoContent)
 }
 
