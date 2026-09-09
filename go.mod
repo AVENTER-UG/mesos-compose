@@ -1,4 +1,4 @@
-module github.com/AVENTER-UG/mesos-compose
+module github.com/m3scluster/mesos-compose
 
 go 1.26
 

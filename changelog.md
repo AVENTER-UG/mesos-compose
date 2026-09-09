@@ -65,15 +65,15 @@
 
 ## 1.0.3
 
-- FIX-SECURITY: https://github.com/AVENTER-UG/mesos-compose/security/dependabot/3
+- FIX-SECURITY: https://github.com/m3scluster/mesos-compose/security/dependabot/3
 
 ## 1.0.2
 
-- FIX-SECURITY: https://github.com/AVENTER-UG/mesos-compose/security/dependabot/2
+- FIX-SECURITY: https://github.com/m3scluster/mesos-compose/security/dependabot/2
 
 ## 1.0.1
 
-- FIX-SECURITY: https://github.com/AVENTER-UG/mesos-compose/security/dependabot/1
+- FIX-SECURITY: https://github.com/m3scluster/mesos-compose/security/dependabot/1
 
 ## 1.0.0
 

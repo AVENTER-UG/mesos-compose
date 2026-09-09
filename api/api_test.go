@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	cfg "github.com/m3scluster/mesos-compose/types"
 )
 
 func TestVersions(t *testing.T) {

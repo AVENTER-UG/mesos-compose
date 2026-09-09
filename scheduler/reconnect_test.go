@@ -3,9 +3,9 @@ package scheduler
 import (
 	"testing"
 
-	mesosclient "github.com/AVENTER-UG/mesos-compose/mesos"
-	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosclient "github.com/m3scluster/mesos-compose/mesos"
+	mesosproto "github.com/m3scluster/mesos-compose/proto"
+	cfg "github.com/m3scluster/mesos-compose/types"
 )
 
 func TestResetFrameworkIdentityClearsOnlySessionIdentity(t *testing.T) {

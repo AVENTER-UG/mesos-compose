@@ -11,8 +11,8 @@ import (
 
 	"time"
 
-	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosproto "github.com/m3scluster/mesos-compose/proto"
+	cfg "github.com/m3scluster/mesos-compose/types"
 	clusterd "github.com/m3scluster/clusterd-go/api/v1/lib"
 	"github.com/m3scluster/clusterd-go/api/v1/lib/encoding/codecs"
 	"github.com/m3scluster/clusterd-go/api/v1/lib/httpcli"

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	cfg "github.com/m3scluster/mesos-compose/types"
 	"github.com/sirupsen/logrus"
 )
 

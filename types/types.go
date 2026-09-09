@@ -5,7 +5,7 @@ import (
 	"plugin"
 	"time"
 
-	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
+	mesosproto "github.com/m3scluster/mesos-compose/proto"
 	"gopkg.in/yaml.v3"
 )
 

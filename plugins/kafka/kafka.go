@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
-	"github.com/AVENTER-UG/mesos-compose/redis"
+	mesosproto "github.com/m3scluster/mesos-compose/proto"
+	"github.com/m3scluster/mesos-compose/redis"
 	"github.com/AVENTER-UG/util/util"
 	"github.com/sirupsen/logrus"
 

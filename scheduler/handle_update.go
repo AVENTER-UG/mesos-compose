@@ -1,7 +1,7 @@
 package scheduler
 
 import (
-	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
+	mesosproto "github.com/m3scluster/mesos-compose/proto"
 	"github.com/sirupsen/logrus"
 )
 

@@ -7,9 +7,9 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
-	"github.com/AVENTER-UG/mesos-compose/redis"
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosproto "github.com/m3scluster/mesos-compose/proto"
+	"github.com/m3scluster/mesos-compose/redis"
+	cfg "github.com/m3scluster/mesos-compose/types"
 )
 
 // HandleOffers will handle the offers event of mesos

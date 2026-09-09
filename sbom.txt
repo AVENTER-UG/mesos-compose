@@ -1,6 +1,6 @@
 NAME                                             VERSION                             TYPE                       
 github.com/AVENTER-UG/go-logrus-formatter        v0.5.4                              go-module  (+1 duplicate)   
-github.com/AVENTER-UG/mesos-compose              UNKNOWN                             go-module  (+1 duplicate)   
+github.com/m3scluster/mesos-compose              UNKNOWN                             go-module  (+1 duplicate)
 github.com/AVENTER-UG/util                       v0.5.18                             go-module                   
 github.com/AVENTER-UG/util                       v0.5.6                              go-module                   
 github.com/Showmax/go-fqdn                       v1.0.0                              go-module                   

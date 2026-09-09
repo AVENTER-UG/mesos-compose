@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/AVENTER-UG/mesos-compose/redis"
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	"github.com/m3scluster/mesos-compose/redis"
+	cfg "github.com/m3scluster/mesos-compose/types"
 	"github.com/AVENTER-UG/util/util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"

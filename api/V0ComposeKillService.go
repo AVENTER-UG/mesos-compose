@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/AVENTER-UG/mesos-compose/redis"
+	"github.com/m3scluster/mesos-compose/redis"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )

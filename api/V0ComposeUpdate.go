@@ -5,8 +5,8 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/AVENTER-UG/mesos-compose/redis"
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	"github.com/m3scluster/mesos-compose/redis"
+	cfg "github.com/m3scluster/mesos-compose/types"
 	util "github.com/AVENTER-UG/util/util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
