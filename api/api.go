@@ -69,7 +69,9 @@ func (e *API) Commands() *mux.Router {
 
 func (e *API) corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		e.setCORSHeaders(w, r)
+		if r.Method != http.MethodOptions {
+			e.setCORSHeaders(w, r)
+		}
 		next.ServeHTTP(w, r)
 	})
 }

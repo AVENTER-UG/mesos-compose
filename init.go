@@ -59,12 +59,7 @@ func init() {
 	config.DiscoveryInfoNameDelimiter = util.Getenv("DISCOVERY_INFONAME_DELIMITER", ".")
 	config.DiscoveryPortNameDelimiter = util.Getenv("DISCOVERY_PORTNAME_DELIMITER", "_")
 	config.TaskLostRemovesTask, _ = strconv.ParseBool(util.Getenv("TASK_LOST_REMOVE_TASK", "true"))
-	for _, origin := range strings.Split(util.Getenv("CORS_ALLOWED_ORIGINS", ""), ",") {
-		origin = strings.TrimSpace(origin)
-		if origin != "" {
-			config.CORSAllowedOrigins = append(config.CORSAllowedOrigins, origin)
-		}
-	}
+	config.CORSAllowedOrigins = parseCORSAllowedOrigins(util.Getenv("CORS_ALLOWED_ORIGINS", ""))
 
 	// Enable plugins
 	if strings.Compare(util.Getenv("COMPOSE_PLUGINS_ENABLE", "false"), "false") == 0 {
@@ -134,6 +129,17 @@ func init() {
 	framework.FrameworkInfo.Principal = &config.Principal
 	framework.FrameworkInfo.Role = util.StringToPointer(framework.FrameworkRole)
 	framework.FrameworkInfo.Capabilities = append(framework.FrameworkInfo.Capabilities, capabilities)
+}
+
+func parseCORSAllowedOrigins(value string) []string {
+	var origins []string
+	for _, origin := range strings.Split(value, ",") {
+		origin = strings.Trim(strings.TrimSpace(origin), "\"'")
+		if origin != "" {
+			origins = append(origins, origin)
+		}
+	}
+	return origins
 }
 
 func loadPlugins(r *redis.Redis) {
