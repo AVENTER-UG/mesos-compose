@@ -13,9 +13,9 @@ import (
 	"github.com/Showmax/go-fqdn"
 	"github.com/sirupsen/logrus"
 
-	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
-	"github.com/AVENTER-UG/mesos-compose/redis"
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosproto "github.com/m3scluster/mesos-compose/proto"
+	"github.com/m3scluster/mesos-compose/redis"
+	cfg "github.com/m3scluster/mesos-compose/types"
 )
 
 var config cfg.Config
@@ -59,19 +59,7 @@ func init() {
 	config.DiscoveryInfoNameDelimiter = util.Getenv("DISCOVERY_INFONAME_DELIMITER", ".")
 	config.DiscoveryPortNameDelimiter = util.Getenv("DISCOVERY_PORTNAME_DELIMITER", "_")
 	config.TaskLostRemovesTask, _ = strconv.ParseBool(util.Getenv("TASK_LOST_REMOVE_TASK", "true"))
-	for _, origin := range strings.Split(util.Getenv("CORS_ALLOWED_ORIGINS", ""), ",") {
-		origin = strings.TrimSpace(origin)
-		if origin != "" {
-			config.CORSAllowedOrigins = append(config.CORSAllowedOrigins, origin)
-		}
-	}
-
-	// Enable Threads
-	if strings.Compare(util.Getenv("THREAD_ENABLE", "false"), "false") == 0 {
-		config.ThreadEnable = false
-	} else {
-		config.ThreadEnable = true
-	}
+	config.CORSAllowedOrigins = parseCORSAllowedOrigins(util.Getenv("CORS_ALLOWED_ORIGINS", ""))
 
 	// Enable plugins
 	if strings.Compare(util.Getenv("COMPOSE_PLUGINS_ENABLE", "false"), "false") == 0 {
@@ -141,6 +129,17 @@ func init() {
 	framework.FrameworkInfo.Principal = &config.Principal
 	framework.FrameworkInfo.Role = util.StringToPointer(framework.FrameworkRole)
 	framework.FrameworkInfo.Capabilities = append(framework.FrameworkInfo.Capabilities, capabilities)
+}
+
+func parseCORSAllowedOrigins(value string) []string {
+	var origins []string
+	for _, origin := range strings.Split(value, ",") {
+		origin = strings.Trim(strings.TrimSpace(origin), "\"'")
+		if origin != "" {
+			origins = append(origins, origin)
+		}
+	}
+	return origins
 }
 
 func loadPlugins(r *redis.Redis) {

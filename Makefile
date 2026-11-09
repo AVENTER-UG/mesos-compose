@@ -30,6 +30,12 @@ push:
 	@docker buildx build --sbom=true --provenance=true --platform linux/amd64 --push --build-arg TAG=${BRANCH} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:latest .
 	-docker buildx rm buildkit
 
+push_dev:
+	@echo ">>>> Publish Dev image "
+	-docker buildx create --use --name buildkit
+	@docker buildx build --sbom=true --provenance=true --platform linux/amd64 --push --build-arg TAG=${BRANCH} --build-arg BUILDDATE=${BUILDDATE} -t ${IMAGEFULLNAME}:dev .
+	-docker buildx rm buildkit
+
 update-gomod:
 	go get -u
 	go mod tidy

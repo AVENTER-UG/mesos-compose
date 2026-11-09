@@ -8,5 +8,5 @@ networks:
   default:
     external: true
     name: mesos-net
-		driver: mesos-net
+    driver: mesos-net
     

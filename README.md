@@ -3,7 +3,7 @@
 [![Docs](https://img.shields.io/static/v1?label=&message=Issues&color=brightgreen)](https://github.com/m3scluster/compose/issues)
 [![Chat](https://img.shields.io/static/v1?label=&message=Chat&color=brightgreen)](https://matrix.to/#/#mesosk3s:matrix.aventer.biz?via=matrix.aventer.biz)
 [![Docs](https://img.shields.io/static/v1?label=&message=Docs&color=brightgreen)](https://m3scluster.github.io/compose/)
-[![GoDoc](https://godoc.org/github.com/AVENTER-UG/mesos-compose?status.svg)](https://godoc.org/github.com/AVENTER-UG/mesos-compose) 
+[![GoDoc](https://godoc.org/github.com/m3scluster/mesos-compose?status.svg)](https://godoc.org/github.com/m3scluster/mesos-compose)
 [![Docker Pulls](https://img.shields.io/docker/pulls/avhost/mesos-compose)](https://hub.docker.com/repository/docker/avhost/mesos-compose/)
 
 Mesos Framework to use docker-compose based files.

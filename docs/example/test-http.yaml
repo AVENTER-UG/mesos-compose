@@ -20,4 +20,5 @@ services:
 networks:
   default:
     external: true
+    name: weave
     driver: weave

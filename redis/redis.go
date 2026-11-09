@@ -5,9 +5,8 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/AVENTER-UG/mesos-compose/mesos"
-	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosproto "github.com/m3scluster/mesos-compose/proto"
+	cfg "github.com/m3scluster/mesos-compose/types"
 	goredis "github.com/redis/go-redis/v9"
 
 	"github.com/sirupsen/logrus"
@@ -22,7 +21,6 @@ type Redis struct {
 	DB       int
 	PoolSize int
 	Prefix   string
-	Mesos    mesos.Mesos
 }
 
 // New will create a new Redis object
@@ -34,7 +32,6 @@ func New(cfg *cfg.Config, frm *cfg.FrameworkConfig) *Redis {
 		PoolSize: cfg.RedisPoolSize,
 		Prefix:   frm.FrameworkName,
 		CTX:      context.Background(),
-		Mesos:    *mesos.New(cfg, frm),
 	}
 
 	return e
@@ -90,7 +87,7 @@ func (e *Redis) GetTaskFromEvent(update *mesosproto.Event_Update) *cfg.Command {
 		}
 		// get the values of the current key
 		key := e.GetRedisKey(keys.Val())
-		task := e.Mesos.DecodeTask(key)
+		task := DecodeTaskOrEmpty([]byte(key))
 
 		if task.TaskID == update.Status.TaskId.GetValue() {
 			task.State = update.Status.State.String()
@@ -112,7 +109,7 @@ func (e *Redis) GetTaskFromTaskID(taskID string) *cfg.Command {
 		}
 		// get the values of the current key
 		key := e.GetRedisKey(keys.Val())
-		task := e.Mesos.DecodeTask(key)
+		task := DecodeTaskOrEmpty([]byte(key))
 
 		if task.TaskID == taskID {
 			return task
@@ -136,7 +133,7 @@ func (e *Redis) CountRedisKey(pattern string, ignoreState string) int {
 		if ignoreState != "" {
 			// get the values of the current key
 			key := e.GetRedisKey(keys.Val())
-			task := e.Mesos.DecodeTask(key)
+			task := DecodeTaskOrEmpty([]byte(key))
 
 			if task.State == ignoreState {
 				continue
@@ -161,7 +158,7 @@ func (e *Redis) CountRedisKeyState(pattern string, state string) int {
 		if state != "" {
 			// get the values of the current key
 			key := e.GetRedisKey(keys.Val())
-			task := e.Mesos.DecodeTask(key)
+			task := DecodeTaskOrEmpty([]byte(key))
 
 			if task.State != state {
 				continue
@@ -235,14 +232,14 @@ func (e *Redis) Connect() bool {
 // SaveTaskRedis store mesos task in DB
 func (e *Redis) SaveTaskRedis(cmd *cfg.Command) {
 	if cmd.TaskName != "" {
-		d, _ := json.Marshal(&cmd)
+		d, _ := EncodeTask(cmd)
 		e.SetRedisKey(d, cmd.TaskName+":"+cmd.TaskID)
 	}
 }
 
 // SaveFrameworkRedis store mesos framework in DB
 func (e *Redis) SaveFrameworkRedis(framework *cfg.FrameworkConfig) {
-	d, _ := json.Marshal(&framework)
+	d, _ := EncodeFramework(framework)
 	e.SetRedisKey(d, e.Prefix+":framework")
 }
 

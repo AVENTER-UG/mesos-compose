@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"strings"
 
-	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosproto "github.com/m3scluster/mesos-compose/proto"
+	cfg "github.com/m3scluster/mesos-compose/types"
 	"github.com/AVENTER-UG/util/util"
 	"github.com/sirupsen/logrus"
 )
@@ -21,7 +21,7 @@ func (e *Scheduler) defaultResources(cmd *cfg.Command) []*mesosproto.Resource {
 	disk := cmd.Disk
 	gpus := cmd.GPUs
 
-	// FIX: https://github.com/AVENTER-UG/mesos-compose/issues/8
+	// FIX: https://github.com/m3scluster/mesos-compose/issues/8
 	// If the task already exists from a prev mesos-compose version, disk
 	// would be unset.
 	if disk <= e.Config.Disk {
@@ -189,7 +189,7 @@ func (e *Scheduler) PrepareTaskInfoExecuteContainer(agent *mesosproto.AgentID, c
 	}
 
 	if cmd.Mesos.Executor.Command != "" {
-		// FIX: https://github.com/AVENTER-UG/mesos-compose/issues/7
+		// FIX: https://github.com/m3scluster/mesos-compose/issues/7
 		cmd.Executor.Resources = e.defaultResources(cmd)
 		msg.Executor = cmd.Executor
 		if cmd.ContainerType != "" {

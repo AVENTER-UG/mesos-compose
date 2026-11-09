@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	cfg "github.com/m3scluster/mesos-compose/types"
 	util "github.com/AVENTER-UG/util/util"
 	"github.com/sirupsen/logrus"
 )

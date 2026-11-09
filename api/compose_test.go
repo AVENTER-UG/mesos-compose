@@ -3,8 +3,8 @@ package api
 import (
 	"testing"
 
-	mesosproto "github.com/AVENTER-UG/mesos-compose/proto"
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	mesosproto "github.com/m3scluster/mesos-compose/proto"
+	cfg "github.com/m3scluster/mesos-compose/types"
 	"gopkg.in/yaml.v3"
 )
 

@@ -4,7 +4,8 @@ import (
 	"net/http"
 	"time"
 
-	cfg "github.com/AVENTER-UG/mesos-compose/types"
+	"github.com/m3scluster/mesos-compose/redis"
+	cfg "github.com/m3scluster/mesos-compose/types"
 	"github.com/AVENTER-UG/util/util"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
@@ -49,7 +50,7 @@ func (e *API) V0ComposeRestartService(w http.ResponseWriter, r *http.Request) {
 	newTask := new(cfg.Command)
 	for keys.Next(e.Redis.CTX) {
 		key := e.Redis.GetRedisKey(keys.Val())
-		task := e.Mesos.DecodeTask(key)
+		task := redis.DecodeTaskOrEmpty([]byte(key))
 		*newTask = *task
 		task.State = "__KILL"
 		task.Restart = "no"
